@@ -1,6 +1,18 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; // <-- added
+
 import "../styles/LoginPage.css";
 import nueatsLogo from "../assets/NUeats_wshadow.png";
+
+// Transition variants
+const pageVariants = {
+  initial: { opacity: 0 },
+  in: { opacity: 1 },
+  out: { opacity: 0 },
+};
+
+const pageTransition = { type: "wait", duration: 0.5 };
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -8,11 +20,7 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  /* const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Login attempt:", { email, password, rememberMe });
-  };
-  */
+  const navigate = useNavigate();
 
   //demo only!!
   const [showAlert, setShowAlert] = useState(false);
@@ -26,14 +34,28 @@ const LoginPage = () => {
     if (email === demoEmail && password === demoPassword) {
       setShowAlert(false);
       console.log("Demo account signed in successfully!");
-      // You can add redirect logic here
+      navigate("/dashboard"); // redirect
     } else {
       setShowAlert(true); // Show the alert
     }
   };
 
+  // New function to submit on Enter key
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <div className="login-container">
+    <motion.div
+      className="login-container"
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+    >
       <div className="login-content">
         <div className="logo-container">
           <img src={nueatsLogo} alt="NUeats Logo" className="logo-image" />
@@ -78,6 +100,7 @@ const LoginPage = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleKeyPress} // <-- Enter key support
                   placeholder="Enter your email"
                   className="form-input"
                 />
@@ -118,6 +141,7 @@ const LoginPage = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyPress} // <-- Enter key support
                   placeholder="Enter your password"
                   className="form-input"
                 />
@@ -135,7 +159,6 @@ const LoginPage = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                    {/* Iris: visible when showPassword is true */}
                     {showPassword && (
                       <circle
                         cx="12"
@@ -145,7 +168,6 @@ const LoginPage = () => {
                         strokeWidth="2"
                       />
                     )}
-                    {/* Slash line: visible when showPassword is false */}
                     {!showPassword && (
                       <path
                         d="M4 4L20 20"
@@ -174,7 +196,6 @@ const LoginPage = () => {
               </a>
             </div>
 
-            {/* Alert message */}
             {showAlert && (
               <div className="login-alert">
                 <svg
@@ -224,7 +245,7 @@ const LoginPage = () => {
       <div className="footer">
         © 2025 NUeats - NU-Dasmariñas Canteen. All rights reserved.
       </div>
-    </div>
+    </motion.div>
   );
 };
 
