@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/Sidebar.css";
 import nueatsLogo from "../assets/NUeats_wshadow.png";
 import nuOnlyYellow from "../assets/nu_only_yellow.png";
@@ -13,26 +14,91 @@ import {
   FiUser,
   FiSettings,
 } from "react-icons/fi";
-import { GiKnifeFork } from "react-icons/gi"; // fork & knife icon
+import { GiKnifeFork } from "react-icons/gi";
 import { GrRestaurant } from "react-icons/gr";
 
 const Sidebar = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-
   const [activeItem, setActiveItem] = useState("DASHBOARD");
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Update activeItem based on current route
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/dashboard":
+        setActiveItem("DASHBOARD");
+        break;
+      case "/orders":
+        setActiveItem("ORDERS");
+        break;
+      case "/menu":
+        setActiveItem("MENU");
+        break;
+      case "/inventory":
+        setActiveItem("INVENTORY");
+        break;
+      case "/analytics":
+        setActiveItem("ANALYTICS");
+        break;
+      case "/customers":
+        setActiveItem("CUSTOMERS");
+        break;
+      case "/settings":
+        setActiveItem("SETTINGS");
+        break;
+      default:
+        setActiveItem("");
+        break;
+    }
+  }, [location.pathname]);
+
   const menuItems = [
-    { id: "DASHBOARD", label: "DASHBOARD", icon: <FiHome /> },
-    { id: "ORDERS", label: "ORDERS", icon: <FiShoppingCart /> },
-    { id: "MENU", label: "MENU", icon: <GiKnifeFork /> },
-    { id: "INVENTORY", label: "INVENTORY", icon: <FiBox /> },
-    { id: "ANALYTICS", label: "ANALYTICS", icon: <FiBarChart2 /> },
-    { id: "CUSTOMERS", label: "CUSTOMERS", icon: <FiUsers /> },
-    { id: "SETTINGS", label: "SETTINGS", icon: <FiSettings /> },
+    {
+      id: "DASHBOARD",
+      label: "DASHBOARD",
+      icon: <FiHome />,
+      path: "/dashboard",
+    },
+    {
+      id: "ORDERS",
+      label: "ORDERS",
+      icon: <FiShoppingCart />,
+      path: "/orders",
+    },
+    { id: "MENU", label: "MENU", icon: <GiKnifeFork />, path: "/menu" },
+    {
+      id: "INVENTORY",
+      label: "INVENTORY",
+      icon: <FiBox />,
+      path: "/inventory",
+    },
+    {
+      id: "ANALYTICS",
+      label: "ANALYTICS",
+      icon: <FiBarChart2 />,
+      path: "/analytics",
+    },
+    {
+      id: "CUSTOMERS",
+      label: "CUSTOMERS",
+      icon: <FiUsers />,
+      path: "/customers",
+    },
+    {
+      id: "SETTINGS",
+      label: "SETTINGS",
+      icon: <FiSettings />,
+      path: "/settings",
+    },
   ];
 
-  const handleItemClick = (itemId) => {
-    setActiveItem(itemId);
+  const handleItemClick = (item) => {
+    setActiveItem(item.id);
+    if (item.path) {
+      navigate(item.path);
+    }
   };
 
   const handleProfileClick = () => {
@@ -63,7 +129,7 @@ const Sidebar = () => {
             <li key={item.id} className="nav-item">
               <button
                 className={`nav-link ${activeItem === item.id ? "active" : ""}`}
-                onClick={() => handleItemClick(item.id)}
+                onClick={() => handleItemClick(item)}
               >
                 <span className="nav-icon">{item.icon}</span>
                 <span className="nav-label">{item.label}</span>
@@ -91,7 +157,6 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* Profile Modal */}
         {isProfileModalOpen && (
           <>
             <div className="modal-overlay" onClick={handleModalClose}></div>
