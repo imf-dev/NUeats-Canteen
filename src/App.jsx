@@ -16,9 +16,12 @@ import Sidebar from "./components/Sidebar.jsx"; // make sure to import
 const AppWrapper = () => {
   const location = useLocation();
 
+  // Hide sidebar on login page
+  const hideSidebar = location.pathname === "/";
+
   return (
     <div className="app-container">
-      <Sidebar /> {/* Sidebar stays static */}
+      {!hideSidebar && <Sidebar />}
       <AnimatePresence exitBeforeEnter>
         <Routes location={location} key={location.pathname}>
           <Route

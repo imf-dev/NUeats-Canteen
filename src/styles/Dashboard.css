@@ -404,6 +404,11 @@ body {
   margin: 0 0 4px 0;
 }
 
+.order-card .customer-details {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
 .order-id {
   font-size: 12px;
   color: #718096;
@@ -476,6 +481,31 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  color: white;
+}
+
+.action-btn.btn-primary {
+  background-color: #3b82f6;
+}
+.action-btn.btn-primary:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.action-btn.btn-success {
+  background-color: #10b981;
+}
+.action-btn.btn-success:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+.action-btn.btn-warning {
+  background-color: #f59e0b;
+}
+.action-btn.btn-warning:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
 }
 
 .btn-primary {
