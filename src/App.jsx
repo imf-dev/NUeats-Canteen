@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,12 +9,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./App.css";
 import LoginPage from "./screens/LoginPage.jsx";
 import Dashboard from "./screens/Dashboard.jsx";
-import Orders from "./screens/Orders.jsx";
-import Menu from "./screens/Menu.jsx";
-import Sidebar from "./components/Sidebar.jsx"; // make sure to import
+import Orders from "./screens/Orders/Orders.jsx";
+import Menu from "./screens/Menu/Menu.jsx";
+import Inventory from "./screens/Inventory/Inventory.jsx";
+import Sidebar from "./components/common/Sidebar.jsx";
 
 const AppWrapper = () => {
   const location = useLocation();
+
+  // 🔥 Scroll to top when route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.pathname]);
 
   // Hide sidebar on login page
   const hideSidebar = location.pathname === "/";
@@ -73,6 +79,19 @@ const AppWrapper = () => {
                 exit={{ opacity: 0 }}
               >
                 <Menu />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/inventory"
+            element={
+              <motion.div
+                key="inventory"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Inventory />
               </motion.div>
             }
           />

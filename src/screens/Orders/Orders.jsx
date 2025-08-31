@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import OrdersModal from "../components/Orders_modal";
-import "../styles/Orders.css";
+import React, { useState, useEffect } from "react";
+import Sidebar from "../../components/common/Sidebar";
+import OrdersModal from "./Orders_modal";
+import "./Orders.css";
+import ScrollUpButton from "../../components/common/ScrollUpButton";
 
 import { FiSearch } from "react-icons/fi";
 
@@ -11,6 +12,8 @@ const Orders = () => {
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const [isFiltering, setIsFiltering] = useState(false);
 
   const statusOptions = [
     "All Status",
@@ -229,7 +232,11 @@ const Orders = () => {
               type="text"
               placeholder="Search orders by customer name or order ID..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setIsFiltering(true);
+                setTimeout(() => setIsFiltering(false), 100);
+              }}
               className="search-input"
             />
             <span className="search-icon">
@@ -240,7 +247,12 @@ const Orders = () => {
           <div className="status-filter">
             <button
               className="status-dropdown-btn"
-              onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+              onClick={() => {
+                setStatusFilter(status);
+                setIsStatusDropdownOpen(false);
+                setIsFiltering(true);
+                setTimeout(() => setIsFiltering(false), 100);
+              }}
             >
               {statusFilter}
               <span className="dropdown-arrow">▼</span>
@@ -267,7 +279,7 @@ const Orders = () => {
         </div>
 
         {/* Orders List */}
-        <div className="orders-list">
+        <div className={`orders-list ${isFiltering ? "filtering" : ""}`}>
           {filteredOrders.map((order) => {
             const statusConfig = getStatusConfig(order.status);
             return (
@@ -358,6 +370,7 @@ const Orders = () => {
         onClose={handleCloseModal}
         order={selectedOrder}
       />
+      <ScrollUpButton />
     </div>
   );
 };

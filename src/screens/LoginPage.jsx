@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion"; // <-- added
+import { motion } from "framer-motion";
 
 import "../styles/LoginPage.css";
 import nueatsLogo from "../assets/NUeats_wshadow.png";
@@ -40,7 +40,6 @@ const LoginPage = () => {
     }
   };
 
-  // New function to submit on Enter key
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSubmit(e);
@@ -49,32 +48,36 @@ const LoginPage = () => {
 
   return (
     <motion.div
-      className="login-container"
+      className="login_container"
       initial="initial"
       animate="in"
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
     >
-      <div className="login-content">
-        <div className="logo-container">
-          <img src={nueatsLogo} alt="NUeats Logo" className="logo-image" />
+      <div className="login_content">
+        <div className="login_logo-container">
+          <img
+            src={nueatsLogo}
+            alt="NUeats Logo"
+            className="login_logo-image"
+          />
         </div>
 
-        <h1 className="portal-title">Canteen Admin Portal</h1>
+        <h1 className="login_portal-title">Canteen Admin Portal</h1>
 
-        <div className="login-form-container">
-          <h2 className="form-title">Sign In</h2>
-          <p className="form-subtitle">Sign in with your account</p>
+        <div className="login_form-container">
+          <h2 className="login_form-title">Sign In</h2>
+          <p className="login_form-subtitle">Sign in with your account</p>
 
-          <div className="login-form">
-            <div className="form-group">
-              <label htmlFor="email" className="form-label">
+          <div className="login_form">
+            <div className="login_form-group">
+              <label htmlFor="email" className="login_form-label">
                 Email Address
               </label>
-              <div className="input-container">
+              <div className="login_input-container">
                 <svg
-                  className="input-icon"
+                  className="login_input-icon"
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
@@ -100,20 +103,20 @@ const LoginPage = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onKeyDown={handleKeyPress} // <-- Enter key support
+                  onKeyDown={handleKeyPress}
                   placeholder="Enter your email"
-                  className="form-input"
+                  className="login_form-input"
                 />
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="password" className="form-label">
+            <div className="login_form-group">
+              <label htmlFor="password" className="login_form-label">
                 Password
               </label>
-              <div className="input-container">
+              <div className="login_input-container">
                 <svg
-                  className="input-icon"
+                  className="login_input-icon"
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
@@ -141,17 +144,16 @@ const LoginPage = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={handleKeyPress} // <-- Enter key support
+                  onKeyDown={handleKeyPress}
                   placeholder="Enter your password"
-                  className="form-input"
+                  className="login_form-input"
                 />
                 <button
                   type="button"
-                  className="password-toggle"
+                  className="login_password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    {/* Eye outline */}
                     <path
                       d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12Z"
                       stroke="#9CA3AF"
@@ -181,23 +183,23 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <div className="form-options">
-              <label className="checkbox-container">
+            <div className="login_form-options">
+              <label className="login_checkbox-container">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="checkbox"
+                  className="login_checkbox"
                 />
                 Remember me
               </label>
-              <a href="#" className="forgot-password">
+              <a href="#" className="login_forgot-password">
                 Forgot Password?
               </a>
             </div>
 
             {showAlert && (
-              <div className="login-alert">
+              <div className="login_alert">
                 <svg
                   width="16"
                   height="16"
@@ -226,15 +228,15 @@ const LoginPage = () => {
 
             <button
               type="button"
-              className="signin-button"
+              className="login_signin-button"
               onClick={handleSubmit}
             >
               Sign In
             </button>
 
-            <div className="signup-link">
+            <div className="login_signup-link">
               Don't have an account?{" "}
-              <a href="#" className="signup-link-a">
+              <a href="#" className="login_signup-link-a">
                 Sign up here
               </a>
             </div>
@@ -242,7 +244,7 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <div className="footer">
+      <div className="login_footer">
         © 2025 NUeats - NU-Dasmariñas Canteen. All rights reserved.
       </div>
     </motion.div>

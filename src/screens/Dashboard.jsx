@@ -1,7 +1,10 @@
-import React from "react";
-import Sidebar from "../components/Sidebar";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+//import Sidebar from "../components/Sidebar";
 import "../styles/Dashboard.css";
-import { motion } from "framer-motion"; // <-- added
+import { motion } from "framer-motion";
+import ScrollUpButton from "../components/common/ScrollUpButton";
 
 import {
   FiShoppingBag,
@@ -127,71 +130,73 @@ const Dashboard = () => {
 
   const getStatusButton = (status) => {
     const statusConfig = {
-      preparing: { text: "Mark Ready", class: "btn-primary" },
-      ready: { text: "Complete Order", class: "btn-success" },
-      pending: { text: "Start Preparing", class: "btn-warning" },
-      completed: { text: "", class: "status-completed" },
-      cancelled: { text: "", class: "status-cancelled" },
+      preparing: { text: "Mark Ready", class: "dashboard_btn-primary" },
+      ready: { text: "Complete Order", class: "dashboard_btn-success" },
+      pending: { text: "Start Preparing", class: "dashboard_btn-warning" },
+      completed: { text: "", class: "dashboard_status-completed" },
+      cancelled: { text: "", class: "dashboard_status-cancelled" },
     };
 
     const config = statusConfig[status] || { text: "", class: "" };
 
     if (status === "completed" || status === "cancelled") {
       return (
-        <span className={`status-badge ${config.class}`}>
+        <span className={`dashboard_status-badge ${config.class}`}>
           {status === "completed" ? "✓ completed" : "✗ cancelled"}
         </span>
       );
     }
 
     return config.text ? (
-      <button className={`action-btn ${config.class}`}>{config.text}</button>
+      <button className={`dashboard_action-btn ${config.class}`}>
+        {config.text}
+      </button>
     ) : null;
   };
 
   return (
     <motion.div
-      className="dashboard-layout"
+      className="dashboard_action-btndashboard_layout"
       initial="initial"
       animate="in"
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
     >
-      <Sidebar />
+      {/*<Sidebar /> */}
 
-      <main className="dashboard-main">
-        <div className="dashboard-header">
+      <main className="dashboard_main">
+        <div className="dashboard_header">
           <h1>Dashboard</h1>
           <p>Here's what's happening today</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="stats-grid">
+        <div className="dashboard_stats-grid">
           {statsCards.map((card) => (
-            <div key={card.id} className={`stats-card ${card.color}`}>
-              <div className="stats-content">
-                <div className="stats-header">
-                  <span className="stats-title">{card.title}</span>
-                  <span className="stats-icon">{card.icon}</span>
+            <div key={card.id} className={`dashboard_stats-card ${card.color}`}>
+              <div className="dashboard_stats-content">
+                <div className="dashboard_stats-header">
+                  <span className="dashboard_stats-title">{card.title}</span>
+                  <span className="dashboard_stats-icon">{card.icon}</span>
                 </div>
-                <div className="stats-value">{card.value}</div>
-                <div className="stats-subtitle">{card.subtitle}</div>
+                <div className="dashboard_stats-value">{card.value}</div>
+                <div className="dashboard_stats-subtitle">{card.subtitle}</div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Charts Section */}
-        <div className="charts-section">
+        <div className="dashboard_charts-section">
           {/* Weekly Sales Chart */}
-          <div className="chart-container">
-            <div className="chart-header">
+          <div className="dashboard_chart-container">
+            <div className="dashboard_chart-header">
               <h3>Weekly Sales Overview</h3>
               <p>Daily sales and order volume for this week</p>
             </div>
-            <div className="weekly-chart">
-              <div className="chart-y-axis">
+            <div className="dashboard_weekly-chart">
+              <div className="dashboard_chart-y-axis">
                 <span>₱20K</span>
                 <span>₱15K</span>
                 <span>₱10K</span>
@@ -199,27 +204,27 @@ const Dashboard = () => {
                 <span>₱1K</span>
                 <span>0</span>
               </div>
-              <div className="chart-area">
+              <div className="dashboard_chart-area">
                 {weeklyData.map((data, index) => (
-                  <div key={data.day} className="chart-day">
-                    <div className="chart-bars">
+                  <div key={data.day} className="dashboard_chart-day">
+                    <div className="dashboard_chart-bars">
                       <div
-                        className="revenue-bar"
+                        className="dashboard_revenue-bar"
                         style={{
                           height: `${(data.revenue / getMaxRevenue()) * 100}%`,
                         }}
                       ></div>
                       <div
-                        className="orders-line-point"
+                        className="dashboard_orders-line-point"
                         style={{
                           bottom: `${(data.orders / getMaxOrders()) * 100}%`,
                         }}
                       ></div>
                     </div>
-                    <span className="day-label">{data.day}</span>
+                    <span className="dashboard_day-label">{data.day}</span>
                   </div>
                 ))}
-                <div className="orders-line">
+                <div className="dashboard_orders-line">
                   <svg width="100%" height="100%">
                     <path
                       d={`M ${(0 / (weeklyData.length - 1)) * 100}% ${
@@ -239,20 +244,24 @@ const Dashboard = () => {
                   </svg>
                 </div>
               </div>
-              <div className="chart-legend">
-                <div className="legend-item">
-                  <span className="legend-color revenue"></span>
+              <div className="dashboard_chart-legend">
+                <div className="dashboard_legend-item">
+                  <span className="dashboard_legend-color dashboard_revenue"></span>
                   <span>Revenue</span>
                 </div>
-                <div className="legend-item">
-                  <span className="legend-color orders"></span>
+                <div className="dashboard_legend-item">
+                  <span className="dashboard_legend-color dashboard_orders"></span>
                   <span>Orders</span>
                 </div>
-                <div className="chart-highlight">
-                  <div className="highlight-box">
-                    <span className="highlight-day">Thursday</span>
-                    <span className="highlight-orders">Orders: 80</span>
-                    <span className="highlight-revenue">Revenue: ₱12,400</span>
+                <div className="dashboard_chart-highlight">
+                  <div className="dashboard_highlight-box">
+                    <span className="dashboard_highlight-day">Thursday</span>
+                    <span className="dashboard_highlight-orders">
+                      Orders: 80
+                    </span>
+                    <span className="dashboard_highlight-revenue">
+                      Revenue: ₱12,400
+                    </span>
                   </div>
                 </div>
               </div>
@@ -260,18 +269,18 @@ const Dashboard = () => {
           </div>
 
           {/* Top Selling Items */}
-          <div className="top-selling-container">
-            <div className="top-selling-header">
+          <div className="dashboard_top-selling-container">
+            <div className="dashboard_top-selling-header">
               <p>Most popular menu items by quantity sold</p>
               <h3>Top 5 Selling Items This Week</h3>
             </div>
-            <div className="top-selling-list">
+            <div className="dashboard_top-selling-list">
               {topSellingItems.map((item, index) => (
-                <div key={index} className="selling-item">
-                  <span className="item-name">{item.name}</span>
-                  <div className="progress-container">
+                <div key={index} className="dashboard_selling-item">
+                  <span className="dashboard_item-name">{item.name}</span>
+                  <div className="dashboard_progress-container">
                     <div
-                      className="progress-bar"
+                      className="dashboard_progress-bar"
                       style={{
                         width: `${
                           (item.quantity / topSellingItems[0].quantity) * 100
@@ -282,7 +291,7 @@ const Dashboard = () => {
                   </div>
                 </div>
               ))}
-              <div className="progress-scale">
+              <div className="dashboard_progress-scale">
                 <span>0</span>
                 <span>50</span>
                 <span>100</span>
@@ -292,37 +301,44 @@ const Dashboard = () => {
         </div>
 
         {/* Current Orders */}
-        <div className="current-orders">
-          <div className="section-header">
+        <div className="dashboard_current-orders">
+          <div className="dashboard_section-header">
             <h3>Current Orders</h3>
             <p>Manage and track orders in real-time</p>
           </div>
-          <div className="orders-list">
+          <div className="dashboard_orders-list">
             {currentOrders.map((order, index) => (
-              <div key={index} className={`order-card ${order.status}`}>
-                <div className="order-info">
-                  <div className="customer-details">
+              <div
+                key={index}
+                className={`dashboard_order-card ${order.status}`}
+              >
+                <div className="dashboard_order-info">
+                  <div className="dashboard_customer-details">
                     <h4>{order.customerName}</h4>
-                    <span className="order-id">Order # {order.id}</span>
+                    <span className="dashboard_order-id">
+                      Order # {order.id}
+                    </span>
                   </div>
-                  <div className="order-details">
-                    <span className="order-items">{order.items}</span>
-                    <span className="order-time">{order.time}</span>
+                  <div className="dashboard_order-details">
+                    <span className="dashboard_order-items">{order.items}</span>
+                    <span className="dashboard_order-time">{order.time}</span>
                   </div>
                 </div>
-                <div className="order-actions">
-                  <span className="order-amount">{order.amount}</span>
-                  <div className="status-section">
+                <div className="dashboard_order-actions">
+                  <span className="dashboard_order-amount">{order.amount}</span>
+                  <div className="dashboard_status-section">
                     {order.status === "preparing" && (
-                      <span className="status-indicator preparing">
+                      <span className="dashboard_status-indicator preparing">
                         🔵 preparing
                       </span>
                     )}
                     {order.status === "ready" && (
-                      <span className="status-indicator ready">🟢 ready</span>
+                      <span className="dashboard_status-indicator ready">
+                        🟢 ready
+                      </span>
                     )}
                     {order.status === "pending" && (
-                      <span className="status-indicator pending">
+                      <span className="dashboard_status-indicator pending">
                         🟡 pending
                       </span>
                     )}
@@ -334,6 +350,7 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+      <ScrollUpButton />
     </motion.div>
   );
 };

@@ -1,0 +1,551 @@
+.inventorylist_inventory-list {
+  width: 100%;
+  /* Ensure it respects parent container constraints */
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Controls Section */
+.inventorylist_controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  /* Ensure controls don't overflow */
+  width: 100%;
+}
+
+.inventorylist_search-container {
+  flex: 1;
+  min-width: 280px; /* Reduced from 320px for better mobile fit */
+  max-width: 100%;
+}
+
+.inventorylist_search-input {
+  width: 100%;
+  height: 44px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.2s ease;
+  /* Use parent's font family instead of inherit to avoid conflicts */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  /* Prevent input from overflowing */
+  box-sizing: border-box;
+}
+
+.inventorylist_search-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.inventorylist_search-input::placeholder {
+  color: #94a3b8;
+}
+
+.inventorylist_category-dropdown {
+  position: relative;
+  min-width: 180px;
+  /* Prevent overflow */
+  max-width: 100%;
+}
+
+.inventorylist_category-select {
+  width: 100%;
+  height: 44px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 44px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  box-sizing: border-box;
+}
+
+.inventorylist_category-select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Items List */
+.inventorylist_items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Ensure proper containment */
+  width: 100%;
+}
+
+.inventorylist_item-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  /* Prevent cards from overflowing */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inventorylist_item-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  border-color: #cbd5e1;
+}
+
+/* Item Header */
+.inventorylist_item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px; /* Add consistent spacing */
+}
+
+.inventorylist_item-main-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* Allow flex shrinking to prevent overflow */
+  flex: 1;
+  min-width: 0;
+}
+
+.inventorylist_item-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.025em;
+  /* Prevent text overflow */
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.inventorylist_category-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  width: fit-content;
+  letter-spacing: 0.025em;
+  /* Prevent badge from shrinking too much */
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.inventorylist_item-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  /* Prevent actions from shrinking */
+  flex-shrink: 0;
+}
+
+.inventorylist_item-card:hover .inventorylist_item-actions {
+  opacity: 1;
+}
+
+.inventorylist_action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* Prevent button from shrinking */
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+.inventorylist_edit-btn:hover {
+  border-color: #10b981;
+  background: #ecfdf5;
+  color: #10b981;
+  transform: scale(1.05);
+}
+
+.inventorylist_delete-btn:hover {
+  border-color: #ef4444;
+  background: #fef2f2;
+  color: #ef4444;
+  transform: scale(1.05);
+}
+
+/* Item Details Grid */
+.inventorylist_item-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  align-items: start;
+  /* Ensure grid doesn't overflow */
+  width: 100%;
+}
+
+.inventorylist_detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0; /* Allow shrinking */
+}
+
+.inventorylist_detail-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.inventorylist_detail-value {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 16px;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.inventorylist_detail-value.current-stock {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.inventorylist_detail-value.price {
+  color: #059669;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* No Results */
+.inventorylist_no-results {
+  text-align: center;
+  padding: 64px 32px;
+  color: #64748b;
+}
+
+.inventorylist_no-results-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  opacity: 0.3;
+  color: #94a3b8;
+}
+
+.inventorylist_no-results h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.inventorylist_no-results p {
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* Delete Confirmation Modal Styles */
+.inventorylist_confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.inventorylist_confirmation-overlay.inventorylist_open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.inventorylist_confirmation-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.inventorylist_confirmation-overlay.inventorylist_open
+  .inventorylist_confirmation-modal {
+  transform: scale(1);
+}
+
+.inventorylist_confirmation-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.inventorylist_confirmation-message {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.inventorylist_confirmation-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.inventorylist_confirmation-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+}
+
+.inventorylist_confirm-cancel {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.inventorylist_confirm-cancel:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.inventorylist_confirm-ok {
+  background: #ef4444;
+  color: white;
+}
+
+.inventorylist_confirm-ok:hover {
+  background: #dc2626;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 1200px) {
+  .inventorylist_item-details-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .inventorylist_controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .inventorylist_search-container {
+    min-width: unset;
+  }
+
+  .inventorylist_item-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .inventorylist_item-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .inventorylist_item-main-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .inventorylist_item-actions {
+    opacity: 1;
+    align-self: flex-end;
+    position: absolute;
+    top: 16px;
+    right: 20px;
+  }
+
+  .inventorylist_item-card {
+    padding: 16px 20px;
+    position: relative;
+  }
+
+  .inventorylist_item-name {
+    font-size: 16px;
+    padding-right: 80px; /* Make room for actions */
+  }
+
+  .inventorylist_detail-value.current-stock {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .inventorylist_item-details-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .inventorylist_item-card {
+    padding: 16px;
+  }
+
+  .inventorylist_item-name {
+    font-size: 15px;
+    padding-right: 80px;
+  }
+
+  .inventorylist_no-results {
+    padding: 48px 24px;
+  }
+
+  .inventorylist_controls {
+    gap: 8px;
+  }
+
+  .inventorylist_search-container {
+    min-width: unset;
+  }
+
+  .inventorylist_category-dropdown {
+    min-width: unset;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeRotate {
+  from {
+    opacity: 0;
+    transform: rotate(-3deg) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+/* Controls fade in from top */
+.inventorylist_controls {
+  animation: fadeSlideUp 0.5s ease forwards;
+  opacity: 0;
+}
+
+/* Search input zooms in */
+.inventorylist_search-input {
+  animation: fadeZoom 0.6s ease forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
+
+/* Dropdown slides from left */
+.inventorylist_category-dropdown {
+  animation: fadeSlideRight 0.6s ease forwards;
+  opacity: 0;
+  animation-delay: 0.3s;
+}
+
+/* Item cards staggered slide-up */
+.inventorylist_item-card {
+  animation: fadeSlideUp 0.5s ease forwards;
+  opacity: 0;
+}
+.inventorylist_item-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.inventorylist_item-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.inventorylist_item-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.inventorylist_item-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Item details pop in with rotation */
+.inventorylist_detail-section {
+  animation: fadeRotate 0.5s ease forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
+
+/* No results zoom */
+.inventorylist_no-results {
+  animation: fadeZoom 0.5s ease forwards;
+  opacity: 0;
+}
+
+/* Confirmation modal zoom */
+.inventorylist_confirmation-modal {
+  animation: fadeZoom 0.4s ease forwards;
+  opacity: 0;
+}

@@ -1,0 +1,462 @@
+/* Modal Overlay */
+.inventory-edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Modal Container */
+.inventory-edit-modal {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow: hidden;
+  overflow-x: hidden;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s ease;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  position: relative;
+  margin: 0;
+}
+
+/* Add show class for when modal is open */
+.inventory-edit-modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.inventory-edit-modal-overlay.show .inventory-edit-modal {
+  transform: scale(1) translateY(0);
+}
+
+/* Confirmation Modal */
+.inventory-edit-confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Modal Header */
+.inventory-edit-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 28px 24px 28px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #fafafa;
+}
+
+.inventory-edit-modal-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.025em;
+}
+
+.inventory-edit-modal-header p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 400;
+}
+
+.inventory-edit-modal-close {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inventory-edit-modal-close:hover {
+  color: #374151;
+  background: #f1f5f9;
+  transform: scale(1.05);
+}
+
+/* Modal Content */
+.inventory-edit-modal-content {
+  padding: 24px 28px 32px 28px;
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Form Styles */
+.inventory-edit-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.inventory-edit-form-row.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.inventory-edit-form-row.three-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.inventory-edit-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inventory-edit-form-group.full-width {
+  margin-bottom: 20px;
+}
+
+.inventory-edit-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  letter-spacing: 0.025em;
+}
+
+.inventory-edit-form-group input,
+.inventory-edit-form-group select {
+  height: 48px;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f2937;
+  background: #f9fafb;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.inventory-edit-form-group input:focus,
+.inventory-edit-form-group select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  background: white;
+  transform: translateY(-1px);
+}
+
+.inventory-edit-form-group input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.inventory-edit-form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 16px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 48px;
+  cursor: pointer;
+}
+
+/* Error States */
+.inventory-edit-form-group input.error,
+.inventory-edit-form-group select.error {
+  border-color: #ef4444;
+  background: #fef2f2;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.error-message {
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 500;
+  margin-top: -4px;
+}
+
+/* Modal Footer */
+.inventory-edit-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 24px 28px 32px 28px;
+  border-top: 1px solid #e2e8f0;
+  background: #fafafa;
+}
+
+.inventory-edit-cancel-btn,
+.inventory-edit-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.inventory-edit-cancel-btn {
+  background: white;
+  color: #64748b;
+  border: 1px solid #d1d5db;
+}
+
+.inventory-edit-cancel-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #475569;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.inventory-edit-save-btn {
+  background: #0f172a;
+  color: white;
+}
+
+.inventory-edit-save-btn:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+/* Confirmation Modal */
+.inventory-edit-confirmation-overlay {
+  position: fixed;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100001 !important; /* Higher than main modal */
+  animation: fadeIn 0.15s ease-out;
+  margin: 0 !important;
+  transform: none !important;
+  inset: 0 !important;
+}
+
+.inventory-edit-confirmation-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.inventory-edit-confirmation-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+  position: relative;
+  margin: 0;
+}
+
+.inventory-edit-confirmation-overlay.show .inventory-edit-confirmation-modal {
+  transform: scale(1);
+}
+
+.inventory-edit-confirmation-modal h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+}
+
+.inventory-edit-confirmation-modal p {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.inventory-edit-confirmation-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.inventory-edit-confirmation-cancel,
+.inventory-edit-confirmation-confirm {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 100px;
+}
+
+.inventory-edit-confirmation-cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.inventory-edit-confirmation-cancel:hover {
+  background: #e2e8f0;
+  color: #475569;
+  transform: translateY(-1px);
+}
+
+.inventory-edit-confirmation-confirm {
+  background: #059669;
+  color: white;
+}
+
+.inventory-edit-confirmation-confirm:hover {
+  background: #047857;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+/* Remove body scroll lock and sidebar z-index overrides */
+/* Force modal to be above everything including sidebar - but with reasonable z-index */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .inventory-edit-modal {
+    max-width: 95%;
+    margin: 10px;
+  }
+
+  .inventory-edit-modal-header {
+    padding: 24px 20px 20px 20px;
+  }
+
+  .inventory-edit-modal-content {
+    padding: 20px;
+  }
+
+  .inventory-edit-modal-footer {
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  .inventory-edit-form-row,
+  .inventory-edit-form-row.two-columns,
+  .inventory-edit-form-row.three-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .inventory-edit-cancel-btn,
+  .inventory-edit-save-btn {
+    width: 100%;
+  }
+
+  .inventory-edit-confirmation-modal {
+    padding: 24px 20px;
+    margin: 20px;
+  }
+
+  .inventory-edit-confirmation-buttons {
+    flex-direction: column;
+  }
+
+  .inventory-edit-confirmation-cancel,
+  .inventory-edit-confirmation-confirm {
+    width: 100%;
+  }
+
+  .inventory-edit-modal-overlay {
+    align-items: center;
+    padding: 10px;
+  }
+
+  .inventory-edit-modal {
+    max-height: 95vh;
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .inventory-edit-modal-overlay {
+    padding: 10px;
+  }
+
+  .inventory-edit-modal {
+    max-width: 100%;
+  }
+
+  .inventory-edit-modal-header h2 {
+    font-size: 20px;
+  }
+
+  .inventory-edit-modal-header p {
+    font-size: 13px;
+  }
+
+  .inventory-edit-modal-content {
+    padding: 16px;
+  }
+
+  .inventory-edit-form-group input,
+  .inventory-edit-form-group select {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* Custom scrollbar for modal content */
+.inventory-edit-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.inventory-edit-modal-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.inventory-edit-modal-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.inventory-edit-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

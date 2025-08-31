@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/Sidebar.css";
-import nueatsLogo from "../assets/NUeats_wshadow.png";
-import nuOnlyYellow from "../assets/nu_only_yellow.png";
+import nueatsLogo from "../../assets/NUeats_wshadow.png";
+import nuOnlyYellow from "../../assets/nu_only_yellow.png";
 
 import {
   FiHome,
   FiShoppingCart,
-  FiList,
   FiBox,
   FiBarChart2,
   FiUsers,
@@ -96,9 +95,7 @@ const Sidebar = () => {
 
   const handleItemClick = (item) => {
     setActiveItem(item.id);
-    if (item.path) {
-      navigate(item.path);
-    }
+    if (item.path) navigate(item.path);
   };
 
   const handleProfileClick = () => {
@@ -112,27 +109,28 @@ const Sidebar = () => {
   const handleProfileAction = (action) => {
     console.log(`Profile action: ${action}`);
     setIsProfileModalOpen(false);
-    // Add your action handlers here
   };
 
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <div className="logo-container">
+        <div className="sidebar-logo-container">
           <img src={nueatsLogo} alt="NUeats Logo" className="sidebar-logo" />
         </div>
       </div>
 
       <nav className="sidebar-nav">
-        <ul className="nav-list">
+        <ul className="sidebar-nav-list">
           {menuItems.map((item) => (
-            <li key={item.id} className="nav-item">
+            <li key={item.id} className="sidebar-nav-item">
               <button
-                className={`nav-link ${activeItem === item.id ? "active" : ""}`}
+                className={`sidebar-nav-link ${
+                  activeItem === item.id ? "active" : ""
+                }`}
                 onClick={() => handleItemClick(item)}
               >
-                <span className="nav-icon">{item.icon}</span>
-                <span className="nav-label">{item.label}</span>
+                <span className="sidebar-nav-icon">{item.icon}</span>
+                <span className="sidebar-nav-label">{item.label}</span>
               </button>
             </li>
           ))}
@@ -141,53 +139,58 @@ const Sidebar = () => {
 
       <div className="sidebar-footer">
         <div
-          className={`admin-profile ${isProfileModalOpen ? "active" : ""}`}
+          className={`sidebar-admin-profile ${
+            isProfileModalOpen ? "active" : ""
+          }`}
           onClick={handleProfileClick}
         >
-          <div className="admin-avatar">
+          <div className="sidebar-admin-avatar">
             <img
               src={nuOnlyYellow}
               alt="Admin Avatar"
-              className="admin-avatar-img"
+              className="sidebar-admin-avatar-img"
             />
           </div>
-          <div className="admin-info">
-            <div className="admin-name">NUeats admin</div>
-            <div className="admin-email">nueats@gmail.com</div>
+          <div className="sidebar-admin-info">
+            <div className="sidebar-admin-name">NUeats admin</div>
+            <div className="sidebar-admin-email">nueats@gmail.com</div>
           </div>
         </div>
 
         {isProfileModalOpen && (
           <>
-            <div className="modal-overlay" onClick={handleModalClose}></div>
-            <div className="profile-modal">
-              <div className="modal-header">
+            <div
+              className="sidebar-modal-overlay"
+              onClick={handleModalClose}
+            ></div>
+            <div className="sidebar-profile-modal">
+              <div className="sidebar-modal-header">
                 <h3>My Account</h3>
               </div>
-              <div className="modal-content">
+              <div className="sidebar-modal-content">
                 <button
-                  className="modal-item"
+                  className="sidebar-modal-item"
                   onClick={() => handleProfileAction("profile")}
                 >
-                  <span className="modal-icon">
+                  <span className="sidebar-modal-icon">
                     <FiUser />
                   </span>
                   <span>Profile Settings</span>
                 </button>
                 <button
-                  className="modal-item"
+                  className="sidebar-modal-item"
                   onClick={() => handleProfileAction("restaurant")}
                 >
-                  <span className="modal-icon">
+                  <span className="sidebar-modal-icon">
                     <GrRestaurant />
                   </span>
                   <span>Restaurant Settings</span>
                 </button>
                 <button
-                  className="modal-item sign-out"
+                  className="sidebar-modal-item sidebar-sign-out"
                   onClick={() => handleProfileAction("signout")}
                 >
-                  <span className="modal-icon">↗</span>
+                  <span className="sidebar-modal-icon">↗</span>
                   <span>Sign Out</span>
                 </button>
               </div>
