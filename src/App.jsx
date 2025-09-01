@@ -13,6 +13,7 @@ import Orders from "./screens/Orders/Orders.jsx";
 import Menu from "./screens/Menu/Menu.jsx";
 import Inventory from "./screens/Inventory/Inventory.jsx";
 import Analytics from "./screens/Analytics/Analytics.jsx";
+import Settings from "./screens/Settings/Settings.jsx";
 import Sidebar from "./components/common/Sidebar.jsx";
 
 const AppWrapper = () => {
@@ -106,6 +107,19 @@ const AppWrapper = () => {
                 exit={{ opacity: 0 }}
               >
                 <Analytics />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <motion.div
+                key="settings"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Settings />
               </motion.div>
             }
           />

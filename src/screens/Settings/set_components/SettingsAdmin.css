@@ -1,0 +1,494 @@
+.settingsadmin_settings-admin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: settingsadmin_slideInUp 0.6s ease-out;
+}
+
+.settingsadmin_settings-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: settingsadmin_fadeInScale 0.5s ease-out;
+}
+
+.settingsadmin_settings-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.settingsadmin_card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.settingsadmin_card-title-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.settingsadmin_card-icon {
+  font-size: 20px;
+  color: #6366f1;
+  margin-top: 2px;
+}
+
+.settingsadmin_card-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.settingsadmin_card-header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.settingsadmin_toggle-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.settingsadmin_toggle-edit-btn:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.settingsadmin_toggle-edit-btn.settingsadmin_active {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: white;
+}
+
+.settingsadmin_toggle-edit-btn svg {
+  font-size: 18px;
+}
+
+.settingsadmin_profile-picture-section {
+  margin-bottom: 24px;
+}
+
+.settingsadmin_profile-picture-section h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.settingsadmin_profile-picture-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.settingsadmin_profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 3px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.settingsadmin_profile-picture:hover {
+  border-color: #6366f1;
+  transform: scale(1.05);
+}
+
+.settingsadmin_profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.settingsadmin_profile-initials {
+  font-size: 24px;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.settingsadmin_profile-picture-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.settingsadmin_upload-btn,
+.settingsadmin_remove-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.settingsadmin_upload-btn {
+  color: #6366f1;
+  border-color: #6366f1;
+}
+
+.settingsadmin_upload-btn:hover {
+  background: #6366f1;
+  color: white;
+}
+
+.settingsadmin_remove-btn {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.settingsadmin_remove-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.settingsadmin_remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settingsadmin_remove-btn:disabled:hover {
+  background: white;
+  color: #ef4444;
+}
+
+.settingsadmin_form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.settingsadmin_form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settingsadmin_form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.settingsadmin_form-group input {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.settingsadmin_form-group input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.settingsadmin_form-group input:disabled {
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.settingsadmin_password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.settingsadmin_password-input-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.settingsadmin_password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.settingsadmin_password-toggle:hover {
+  color: #374151;
+}
+
+.settingsadmin_security-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.settingsadmin_security-option:last-of-type {
+  border-bottom: none;
+  margin-bottom: 20px;
+}
+
+.settingsadmin_security-option-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settingsadmin_security-icon {
+  font-size: 18px;
+  color: #6366f1;
+}
+
+.settingsadmin_security-option h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.settingsadmin_security-option p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.settingsadmin_toggle-switch {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.settingsadmin_toggle-switch:hover {
+  color: #9ca3af;
+  transform: scale(1.1);
+}
+
+.settingsadmin_toggle-switch.settingsadmin_active {
+  color: #10b981;
+}
+
+.settingsadmin_dropdown {
+  position: relative;
+}
+
+.settingsadmin_dropdown-toggle {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.settingsadmin_dropdown-toggle:hover {
+  border-color: #6366f1;
+}
+
+.settingsadmin_dropdown.settingsadmin_open .settingsadmin_dropdown-toggle {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.settingsadmin_dropdown-arrow {
+  font-size: 12px;
+  color: #6b7280;
+  transition: transform 0.3s ease;
+}
+
+.settingsadmin_dropdown.settingsadmin_open .settingsadmin_dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.settingsadmin_dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  animation: settingsadmin_dropdownSlideIn 0.2s ease-out;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.settingsadmin_dropdown-item {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: background-color 0.2s ease;
+}
+
+.settingsadmin_dropdown-item:hover {
+  background-color: #f3f4f6;
+}
+
+.settingsadmin_dropdown-item:first-child {
+  border-radius: 6px 6px 0 0;
+}
+
+.settingsadmin_dropdown-item:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
+.settingsadmin_card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: 20px;
+}
+
+.settingsadmin_save-btn {
+  padding: 12px 24px;
+  background: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.settingsadmin_save-btn:hover {
+  background: #111827;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.settingsadmin_save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.settingsadmin_save-btn:disabled:hover {
+  background: #1f2937;
+}
+
+/* Animations */
+@keyframes settingsadmin_slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settingsadmin_fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes settingsadmin_dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settingsadmin_settings-admin-container {
+    padding: 0 16px;
+  }
+
+  .settingsadmin_settings-card {
+    padding: 20px;
+  }
+
+  .settingsadmin_form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .settingsadmin_card-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .settingsadmin_profile-picture-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .settingsadmin_profile-picture-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .settingsadmin_profile-picture-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .settingsadmin_upload-btn,
+  .settingsadmin_remove-btn {
+    justify-content: center;
+  }
+}
