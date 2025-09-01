@@ -1,0 +1,253 @@
+/* Custom Modal Overlay */
+.custommodal_custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.custommodal_custom-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal Content */
+.custommodal_custom-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 450px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  font-family: "Poppins", sans-serif;
+}
+
+.custommodal_custom-modal-overlay.open .custommodal_custom-modal-content {
+  transform: scale(1);
+}
+
+/* Modal Header */
+.custommodal_modal-header {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 12px;
+  position: relative;
+}
+
+.custommodal_modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  flex: 1;
+}
+
+/* Modal Icons */
+.custommodal_modal-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.custommodal_modal-icon.custommodal_success {
+  color: #10b981;
+}
+
+.custommodal_modal-icon.custommodal_warning {
+  color: #f59e0b;
+}
+
+.custommodal_modal-icon.custommodal_error {
+  color: #ef4444;
+}
+
+.custommodal_modal-icon.custommodal_info {
+  color: #3b82f6;
+}
+
+/* Close Button */
+.custommodal_modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.custommodal_modal-close-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Modal Body */
+.custommodal_modal-body {
+  padding: 20px 24px;
+}
+
+.custommodal_modal-body p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* Modal Footer */
+.custommodal_modal-footer {
+  padding: 16px 24px 24px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Modal Buttons */
+.custommodal_modal-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  min-width: 80px;
+}
+
+.custommodal_modal-btn.custommodal_primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.custommodal_modal-btn.custommodal_primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.custommodal_modal-btn.custommodal_secondary {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.custommodal_modal-btn.custommodal_secondary:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* Error/Delete Type Styling */
+.custommodal_custom-modal-content.error .custommodal_modal-header {
+  border-bottom-color: #fecaca;
+  background: #fef2f2;
+}
+
+.custommodal_custom-modal-content.error .custommodal_modal-header h3 {
+  color: #dc2626;
+}
+
+.custommodal_custom-modal-content.error
+  .custommodal_modal-btn.custommodal_primary {
+  background: #ef4444;
+  color: white;
+}
+
+.custommodal_custom-modal-content.error
+  .custommodal_modal-btn.custommodal_primary:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* Success Type Styling */
+.custommodal_custom-modal-content.success .custommodal_modal-header {
+  border-bottom-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.custommodal_custom-modal-content.success .custommodal_modal-header h3 {
+  color: #16a34a;
+}
+
+/* Warning Type Styling */
+.custommodal_custom-modal-content.warning .custommodal_modal-header {
+  border-bottom-color: #fed7aa;
+  background: #fffbeb;
+}
+
+.custommodal_custom-modal-content.warning .custommodal_modal-header h3 {
+  color: #d97706;
+}
+
+/* Info/Confirm Type Styling */
+.custommodal_custom-modal-content.confirm .custommodal_modal-header {
+  border-bottom-color: #bfdbfe;
+  background: #eff6ff;
+}
+
+.custommodal_custom-modal-content.confirm .custommodal_modal-header h3 {
+  color: #2563eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .custommodal_custom-modal-content {
+    max-width: 90%;
+    margin: 20px;
+  }
+
+  .custommodal_modal-header {
+    padding: 16px 20px;
+  }
+
+  .custommodal_modal-body {
+    padding: 16px 20px;
+  }
+
+  .custommodal_modal-footer {
+    padding: 12px 20px 20px;
+    flex-direction: column;
+  }
+
+  .custommodal_modal-btn {
+    width: 100%;
+    order: 2;
+  }
+
+  .custommodal_modal-btn.custommodal_secondary {
+    order: 1;
+  }
+}
+
+/* Animation for modal entrance */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.custommodal_custom-modal-content {
+  animation: modalSlideIn 0.3s ease-out;
+}

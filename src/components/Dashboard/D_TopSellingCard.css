@@ -1,0 +1,125 @@
+/* Top Selling Items */
+.dashboard_top-selling-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  animation: fadeScale 0.5s ease-out both;
+  animation-delay: 0.5s;
+}
+
+.dashboard_top-selling-header {
+  margin-bottom: 24px;
+}
+
+.dashboard_top-selling-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.dashboard_top-selling-header p {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+.dashboard_top-selling-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dashboard_selling-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.dashboard_selling-item:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.dashboard_selling-item:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.dashboard_selling-item:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.dashboard_selling-item:nth-child(4) {
+  animation-delay: 0.5s;
+}
+.dashboard_selling-item:nth-child(5) {
+  animation-delay: 0.6s;
+}
+
+.dashboard_item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dashboard_item-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a202c;
+}
+
+.dashboard_item-quantity {
+  font-size: 12px;
+  color: #718096;
+  font-weight: 500;
+}
+
+.dashboard_progress-container {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dashboard_progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+
+.dashboard_progress-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #718096;
+  margin-top: 8px;
+}
+
+/* Animations */
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard_top-selling-container {
+    padding: 16px;
+  }
+}

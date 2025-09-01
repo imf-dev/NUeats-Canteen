@@ -9,11 +9,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./App.css";
 import LoginPage from "./screens/LoginPage.jsx";
 import Dashboard from "./screens/Dashboard.jsx";
-import Orders from "./screens/Orders/Orders.jsx";
-import Menu from "./screens/Menu/Menu.jsx";
-import Inventory from "./screens/Inventory/Inventory.jsx";
+import Orders from "./screens/Orders.jsx";
+import Menu from "./screens/Menu.jsx";
+import Inventory from "./screens/Inventory.jsx";
 import Analytics from "./screens/Analytics/Analytics.jsx";
-import Settings from "./screens/Settings/Settings.jsx";
+import Settings from "./screens/Settings.jsx";
 import Sidebar from "./components/common/Sidebar.jsx";
 
 const AppWrapper = () => {

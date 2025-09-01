@@ -1,0 +1,18 @@
+/* Settings Store Main Container Styles */
+.settingsstore_settings-store {
+  width: 100%;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settingsstore_settings-store {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,155 @@
+/* Weekly Chart Container */
+.dashboard_chart-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  animation: fadeScale 0.5s ease-out both;
+  animation-delay: 0.5s;
+}
+
+.dashboard_chart-header {
+  margin-bottom: 24px;
+}
+
+.dashboard_chart-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.dashboard_chart-header p {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+/* Weekly Chart */
+.dashboard_weekly-chart {
+  position: relative;
+  height: 300px;
+  animation: fadeSlideUp 0.6s ease-out both;
+  animation-delay: 0.6s;
+}
+
+.dashboard_chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  margin-top: 16px;
+}
+
+.dashboard_legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.dashboard_legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.dashboard_legend-color.revenue {
+  background: #f59e0b;
+}
+
+.dashboard_legend-color.orders {
+  background: #4f46e5;
+}
+
+/* Chart Tooltip Styles */
+.dashboard_chart-tooltip {
+  background: white !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #e2e8f0 !important;
+  font-size: 12px !important;
+}
+
+.dashboard_tooltip-header h4 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #1a202c !important;
+  margin: 0 0 4px 0 !important;
+}
+
+.dashboard_tooltip-header p {
+  font-size: 12px !important;
+  color: #718096 !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.dashboard_tooltip-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.dashboard_tooltip-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  color: #4a5568 !important;
+}
+
+.dashboard_tooltip-color {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+}
+
+.dashboard_tooltip-color.revenue {
+  background: #f59e0b !important;
+}
+
+.dashboard_tooltip-color.orders {
+  background: #4f46e5 !important;
+}
+
+/* Animations */
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard_chart-container {
+    padding: 16px;
+  }
+
+  .dashboard_weekly-chart {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard_weekly-chart {
+    height: 200px;
+  }
+}

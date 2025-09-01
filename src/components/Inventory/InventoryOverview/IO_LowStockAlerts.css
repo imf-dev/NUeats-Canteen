@@ -1,0 +1,158 @@
+.lowstock_alert-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+  animation: fadeSlideUp 0.6s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.lowstock_alert-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.lowstock_alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.lowstock_alert-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.lowstock_alert-count {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Alert List */
+.lowstock_alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lowstock_alert-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.lowstock_alert-item:hover {
+  background: #fafafa;
+  border-color: #e2e8f0;
+  transform: translateX(2px);
+}
+
+.lowstock_alert-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lowstock_alert-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.lowstock_alert-category {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.lowstock_alert-stock {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.lowstock_stock-level {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lowstock_stock-level.lowstock_low {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+
+.lowstock_stock-level.lowstock_critical {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.lowstock_no-alerts {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Animations */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .lowstock_alert-card {
+    padding: 20px;
+  }
+
+  .lowstock_alert-item {
+    padding: 10px;
+  }
+
+  .lowstock_alert-name {
+    font-size: 13px;
+  }
+
+  .lowstock_alert-category {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lowstock_alert-card {
+    padding: 16px;
+  }
+
+  .lowstock_alert-header h3 {
+    font-size: 16px;
+  }
+
+  .lowstock_alert-count {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+}

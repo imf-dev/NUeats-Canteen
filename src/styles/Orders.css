@@ -1,0 +1,198 @@
+html,
+body {
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+}
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+.orders_layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.orders_main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 24px;
+}
+
+/* Header */
+.orders_header {
+  margin-bottom: 24px;
+}
+.orders_header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+.orders_header p {
+  font-size: 16px;
+  color: #718096;
+}
+
+/* Search + Filter */
+.orders_controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.orders_search_container {
+  position: relative;
+  flex: 1 1 250px;
+  max-width: 600px;
+  min-width: 200px;
+}
+.orders_search_input {
+  width: 100%;
+  padding-left: 40px !important;
+  padding-right: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+}
+.orders_search_input:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+.orders_search_icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+}
+
+/* Status Filter */
+.orders_status_filter {
+  position: relative;
+  flex: 0 0 auto;
+}
+.orders_status_dropdown_btn {
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #4a5568;
+  cursor: pointer;
+  min-width: 140px;
+  width: auto;
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+/* Status Dropdown Hover */
+.orders_status_dropdown_btn:hover {
+  background-color: #f7fafc;
+  border-color: #cbd5e1;
+}
+
+.orders_status_dropdown {
+  position: absolute;
+  min-width: 80%;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: -20px;
+  margin-right: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.orders_dropdown_item {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #4a5568;
+  background: none;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+}
+.orders_dropdown_item:hover {
+  background: #f7fafc;
+}
+.orders_dropdown_item.orders_active {
+  background: #e6fffa;
+  color: #065f46;
+}
+
+/* Orders List */
+.orders_list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.orders_no_orders {
+  text-align: center;
+  padding: 40px;
+  color: #718096;
+  font-size: 16px;
+}
+
+/* Entrance Animations */
+@keyframes orders_fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes orders_fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Apply animations to main elements */
+.orders_main {
+  animation: orders_fadeInUp 0.6s ease-out;
+}
+
+.orders_header {
+  animation: orders_fadeInLeft 0.6s ease-out 0.1s both;
+}
+
+.orders_controls {
+  animation: orders_fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.orders_list {
+  animation: orders_fadeInUp 0.6s ease-out 0.3s both;
+}
+
+/* Prevent animation conflicts with filtering */
+.orders_list.orders_filtering .orders_card {
+  animation: none;
+}
+
+/* Dropdown entrance animation */
+.orders_status_dropdown {
+  animation: orders_fadeInUp 0.2s ease-out;
+  transform-origin: top;
+}

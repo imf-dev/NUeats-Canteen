@@ -106,6 +106,40 @@ const Sidebar = () => {
     setIsProfileModalOpen(false);
   };
 
+  const clearBrowserHistory = () => {
+    // Clear browser history completely
+    if (window.history && window.history.pushState) {
+      // Get the current history length
+      const historyLength = window.history.length;
+
+      // Go back to the first entry and replace it
+      window.history.go(-historyLength);
+
+      // Replace the current state to clear history
+      setTimeout(() => {
+        window.history.replaceState(null, null, "/");
+      }, 100);
+
+      // Push a new clean state
+      setTimeout(() => {
+        window.history.pushState(null, null, "/");
+
+        // Set up back button prevention for login page
+        const handleBackButton = (event) => {
+          event.preventDefault();
+          window.history.pushState(null, null, "/");
+        };
+
+        window.addEventListener("popstate", handleBackButton);
+
+        // Clean up after a short delay (user should be on login page by then)
+        setTimeout(() => {
+          window.removeEventListener("popstate", handleBackButton);
+        }, 1000);
+      }, 200);
+    }
+  };
+
   const handleProfileAction = (action) => {
     setIsProfileModalOpen(false);
 
@@ -125,10 +159,13 @@ const Sidebar = () => {
         localStorage.clear();
         sessionStorage.clear();
 
-        // Clear browser history and navigate to login page
-        // This prevents using the back button to go back to protected pages
-        window.history.replaceState(null, null, "/");
-        navigate("/", { replace: true });
+        // Clear browser history completely
+        clearBrowserHistory();
+
+        // Navigate to login page with replace to prevent back navigation
+        setTimeout(() => {
+          navigate("/", { replace: true });
+        }, 300);
         break;
       default:
         console.log(`Profile action: ${action}`);

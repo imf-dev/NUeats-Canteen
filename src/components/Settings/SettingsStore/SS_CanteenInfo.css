@@ -1,0 +1,220 @@
+/* SS_CanteenInfo Styles */
+.ss-canteen-info_card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: ss-canteen-info_slideInUp 0.6s ease-out forwards;
+}
+
+.ss-canteen-info_card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes ss-canteen-info_slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card Header */
+.ss-canteen-info_card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ss-canteen-info_card-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ss-canteen-info_card-title h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.ss-canteen-info_card-icon {
+  font-size: 20px;
+  color: #6366f1;
+  margin-top: 2px;
+}
+
+.ss-canteen-info_card-title p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Toggle Edit Button */
+.ss-canteen-info_toggle-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ss-canteen-info_toggle-edit-btn:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.ss-canteen-info_toggle-edit-btn.ss-canteen-info_active {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: white;
+}
+
+.ss-canteen-info_toggle-edit-btn svg {
+  font-size: 18px;
+}
+
+/* Form Styles */
+.ss-canteen-info_form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.ss-canteen-info_form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ss-canteen-info_form-group.ss-canteen-info_full-width {
+  width: 100%;
+}
+
+.ss-canteen-info_form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.ss-canteen-info_form-group input,
+.ss-canteen-info_form-group textarea {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+  width: 100%;
+}
+
+.ss-canteen-info_form-group input:focus,
+.ss-canteen-info_form-group textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.ss-canteen-info_form-group input.ss-canteen-info_disabled,
+.ss-canteen-info_form-group textarea.ss-canteen-info_disabled {
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.ss-canteen-info_form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Address Section */
+.ss-canteen-info_address-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.ss-canteen-info_address-section h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+/* Save Button */
+.ss-canteen-info_save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ss-canteen-info_save-btn:hover {
+  background: #111827;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ss-canteen-info_save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ss-canteen-info_save-btn:disabled:hover {
+  background: #1f2937;
+}
+
+/* Card Actions */
+.ss-canteen-info_card-actions {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ss-canteen-info_card {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .ss-canteen-info_form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ss-canteen-info_card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

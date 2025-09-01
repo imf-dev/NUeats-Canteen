@@ -1,0 +1,277 @@
+/* Current Orders */
+.dashboard_current-orders {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  animation: fadeSlideRight 0.6s ease-out both;
+  animation-delay: 0.7s;
+}
+
+.dashboard_section-header {
+  margin-bottom: 24px;
+}
+
+.dashboard_section-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.dashboard_section-header p {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+.dashboard_orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dashboard_order-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border-left: 4px solid;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s ease-out forwards;
+}
+
+.dashboard_order-card:nth-child(1) {
+  animation-delay: 0.8s;
+}
+.dashboard_order-card:nth-child(2) {
+  animation-delay: 0.9s;
+}
+.dashboard_order-card:nth-child(3) {
+  animation-delay: 1s;
+}
+.dashboard_order-card:nth-child(4) {
+  animation-delay: 1.1s;
+}
+
+.dashboard_order-card:hover {
+  transform: translateX(4px);
+}
+
+.dashboard_order-card.preparing {
+  background: #f0f9ff;
+  border-left-color: #3b82f6;
+}
+
+.dashboard_order-card.ready {
+  background: #f0fdf4;
+  border-left-color: #10b981;
+}
+
+.dashboard_order-card.pending {
+  background: #fffbeb;
+  border-left-color: #f59e0b;
+}
+
+.dashboard_order-card.completed {
+  background: #f0fdf4;
+  border-left-color: #10b981;
+}
+
+.dashboard_order-card.cancelled {
+  background: #fef2f2;
+  border-left-color: #ef4444;
+}
+
+.dashboard_order-info {
+  display: flex;
+  gap: 24px;
+}
+
+.dashboard_customer-details h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 4px 0;
+}
+
+.dashboard_order-id {
+  font-size: 12px;
+  color: #718096;
+}
+
+.dashboard_order-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dashboard_order-items {
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.dashboard_order-time {
+  font-size: 12px;
+  color: #718096;
+}
+
+.dashboard_special-instructions {
+  font-size: 11px;
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.dashboard_order-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashboard_order-amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.dashboard_status-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.dashboard_status-indicator {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dashboard_status-indicator.preparing {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.dashboard_status-indicator.ready {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.dashboard_status-indicator.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dashboard_action-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.dashboard_btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.dashboard_btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.dashboard_btn-success {
+  background: #10b981;
+  color: white;
+}
+
+.dashboard_btn-success:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.dashboard_btn-warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.dashboard_btn-warning:hover {
+  background: #d97706;
+  transform: translateY(-1px);
+}
+
+.dashboard_status-badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.dashboard_status-completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.dashboard_status-cancelled {
+  background: #fecaca;
+  color: #dc2626;
+}
+
+/* Animations */
+@keyframes fadeSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard_current-orders {
+    padding: 16px;
+  }
+
+  .dashboard_order-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .dashboard_order-actions {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard_order-info {
+    gap: 12px;
+  }
+
+  .dashboard_status-section {
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,266 @@
+/* Grid */
+.mcards_items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
+}
+
+/* Item Card */
+.mcards_item-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.mcards_item-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.mcards_item-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.mcards_item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.mcards_item-card:hover .mcards_item-image {
+  transform: scale(1.05);
+}
+
+.mcards_unavailable-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mcards_unavailable-badge {
+  background: #ef4444;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mcards_item-content {
+  padding: 20px;
+}
+
+.mcards_item-category {
+  margin-bottom: 12px;
+}
+
+.mcards_category-badge {
+  display: inline-block;
+  background: #f3f4f6;
+  color: #4b5563;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.mcards_item-name {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.mcards_item-description {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.mcards_item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mcards_item-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.mcards_item-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mcards_availability-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
+}
+
+.mcards_availability-btn.mcards_disable {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.mcards_availability-btn.mcards_disable:hover {
+  background: #fecaca;
+}
+
+.mcards_availability-btn.mcards_enable {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.mcards_availability-btn.mcards_enable:hover {
+  background: #bbf7d0;
+}
+
+.mcards_action-btn {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mcards_action-btn svg {
+  font-size: 16px;
+  color: #374151;
+}
+
+.mcards_edit-btn svg {
+  font-size: 18px;
+  color: #3650c7;
+}
+
+.mcards_delete-btn svg {
+  font-size: 18px;
+  color: #dc2626 !important;
+}
+
+.mcards_edit-btn:hover {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.mcards_delete-btn:hover {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.mcards_edit-btn:hover svg {
+  color: #16a34a;
+}
+
+.mcards_delete-btn:hover svg {
+  color: #dc2626;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .mcards_items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .mcards_items-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mcards_item-content {
+    padding: 16px;
+  }
+
+  .mcards_item-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .mcards_item-actions {
+    justify-content: center;
+  }
+}
+
+/* Animation for cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Grid items staggered (gentle slide-up) */
+.mcards_item-card {
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+}
+.mcards_item-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.mcards_item-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.mcards_item-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.mcards_item-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Item content fades softly */
+.mcards_item-content {
+  animation: fadeInScale 0.4s ease forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
