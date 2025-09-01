@@ -76,44 +76,44 @@ const InventoryOverview = () => {
   };
 
   return (
-    <div className="inventory-overview">
+    <div className="inventoryover_inventory-overview">
       {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon total">
+      <div className="inventoryover_stats-grid">
+        <div className="inventoryover_stat-card">
+          <div className="inventoryover_stat-icon inventoryover_total">
             <FaBoxes />
           </div>
-          <div className="stat-content">
+          <div className="inventoryover_stat-content">
             <h3>{totalItems}</h3>
             <p>Total Items</p>
           </div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-icon low-stock">
+        <div className="inventoryover_stat-card">
+          <div className="inventoryover_stat-icon inventoryover_low-stock">
             <FaExclamationTriangle />
           </div>
-          <div className="stat-content">
+          <div className="inventoryover_stat-content">
             <h3>{lowStockItems.length}</h3>
             <p>Low Stock Items</p>
           </div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-icon out-of-stock">
+        <div className="inventoryover_stat-card">
+          <div className="inventoryover_stat-icon inventoryover_out-of-stock">
             <FaTimes />
           </div>
-          <div className="stat-content">
+          <div className="inventoryover_stat-content">
             <h3>{outOfStockItems.length}</h3>
             <p>Out of Stock</p>
           </div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-icon value">
+        <div className="inventoryover_stat-card">
+          <div className="inventoryover_stat-icon inventoryover_value">
             <FaDollarSign />
           </div>
-          <div className="stat-content">
+          <div className="inventoryover_stat-content">
             <h3>{formatCurrency(totalValue)}</h3>
             <p>Total Inventory Value</p>
           </div>
@@ -121,15 +121,15 @@ const InventoryOverview = () => {
       </div>
 
       {/* Charts Section */}
-      <div className="charts-section">
+      <div className="inventoryover_charts-section">
         {/* Category Distribution */}
-        <div className="chart-card">
+        <div className="inventoryover_chart-card">
           <h3>Category Distribution</h3>
-          <div className="category-chart">
+          <div className="inventoryover_category-chart">
             {categoryStats.map((stat, index) => (
               <div
                 key={stat.category}
-                className="category-bar"
+                className="inventoryover_category-bar"
                 onMouseEnter={(e) =>
                   handleMouseEnter(
                     {
@@ -145,30 +145,34 @@ const InventoryOverview = () => {
                 }
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="category-label">{stat.category}</div>
-                <div className="bar-container">
+                <div className="inventoryover_category-label">
+                  {stat.category}
+                </div>
+                <div className="inventoryover_bar-container">
                   <div
-                    className="bar"
+                    className="inventoryover_bar"
                     style={{
                       width: `${stat.percentage}%`,
                       backgroundColor: `hsl(${index * 50}, 70%, 60%)`,
                     }}
                   ></div>
                 </div>
-                <div className="category-value">{stat.totalItems}</div>
+                <div className="inventoryover_category-value">
+                  {stat.totalItems}
+                </div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Stock Levels */}
-        <div className="chart-card">
+        <div className="inventoryover_chart-card">
           <h3>Top Stock Levels</h3>
-          <div className="stock-chart">
+          <div className="inventoryover_stock-chart">
             {topStockItems.map((item, index) => (
               <div
                 key={item.id}
-                className="stock-bar"
+                className="inventoryover_stock-bar"
                 onMouseEnter={(e) =>
                   handleMouseEnter(
                     {
@@ -180,10 +184,10 @@ const InventoryOverview = () => {
                 }
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="stock-label">{item.name}</div>
-                <div className="bar-container">
+                <div className="inventoryover_stock-label">{item.name}</div>
+                <div className="inventoryover_bar-container">
                   <div
-                    className="bar"
+                    className="inventoryover_bar"
                     style={{
                       width: `${(item.currentStock / item.maxStock) * 100}%`,
                       backgroundColor:
@@ -191,7 +195,7 @@ const InventoryOverview = () => {
                     }}
                   ></div>
                 </div>
-                <div className="stock-value">
+                <div className="inventoryover_stock-value">
                   {item.currentStock} {item.unit}
                 </div>
               </div>
@@ -201,26 +205,32 @@ const InventoryOverview = () => {
       </div>
 
       {/* Low Stock Alerts */}
-      <div className="alerts-section">
-        <div className="alert-card">
-          <div className="alert-header">
+      <div className="inventoryover_alerts-section">
+        <div className="inventoryover_alert-card">
+          <div className="inventoryover_alert-header">
             <h3>
               <FaExclamationTriangle style={{ marginRight: "8px" }} />
               Low Stock Alerts
             </h3>
-            <span className="alert-count">{lowStockItems.length} items</span>
+            <span className="inventoryover_alert-count">
+              {lowStockItems.length} items
+            </span>
           </div>
-          <div className="alert-list">
+          <div className="inventoryover_alert-list">
             {lowStockList.map((item) => (
-              <div key={item.id} className="alert-item">
-                <div className="alert-info">
-                  <span className="alert-name">{item.name}</span>
-                  <span className="alert-category">{item.category}</span>
+              <div key={item.id} className="inventoryover_alert-item">
+                <div className="inventoryover_alert-info">
+                  <span className="inventoryover_alert-name">{item.name}</span>
+                  <span className="inventoryover_alert-category">
+                    {item.category}
+                  </span>
                 </div>
-                <div className="alert-stock">
+                <div className="inventoryover_alert-stock">
                   <span
-                    className={`stock-level ${
-                      item.currentStock <= 5 ? "critical" : "low"
+                    className={`inventoryover_stock-level ${
+                      item.currentStock <= 5
+                        ? "inventoryover_critical"
+                        : "inventoryover_low"
                     }`}
                   >
                     {item.currentStock} {item.unit}
@@ -232,24 +242,26 @@ const InventoryOverview = () => {
         </div>
 
         {/* Recent Updates */}
-        <div className="updates-card">
+        <div className="inventoryover_updates-card">
           <h3>Recent Updates</h3>
-          <div className="updates-list">
+          <div className="inventoryover_updates-list">
             {inventoryData
               .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated))
               .slice(0, 5)
               .map((item) => (
-                <div key={item.id} className="update-item">
-                  <div className="update-info">
-                    <span className="update-name">{item.name}</span>
-                    <span className="update-date">
+                <div key={item.id} className="inventoryover_update-item">
+                  <div className="inventoryover_update-info">
+                    <span className="inventoryover_update-name">
+                      {item.name}
+                    </span>
+                    <span className="inventoryover_update-date">
                       {new Date(item.lastUpdated).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
                       })}
                     </span>
                   </div>
-                  <div className="update-stock">
+                  <div className="inventoryover_update-stock">
                     {item.currentStock} {item.unit}
                   </div>
                 </div>
@@ -261,7 +273,7 @@ const InventoryOverview = () => {
       {/* Hover Tooltip */}
       {hoveredItem && (
         <div
-          className="hover-tooltip"
+          className="inventoryover_hover-tooltip"
           style={{
             left: hoveredPosition.x,
             top: hoveredPosition.y - 10,
@@ -270,8 +282,10 @@ const InventoryOverview = () => {
         >
           {hoveredItem.type === "category" ? (
             <>
-              <div className="tooltip-title">{hoveredItem.name}</div>
-              <div className="tooltip-content">
+              <div className="inventoryover_tooltip-title">
+                {hoveredItem.name}
+              </div>
+              <div className="inventoryover_tooltip-content">
                 <div>Items: {hoveredItem.totalItems}</div>
                 <div>Total Stock: {hoveredItem.totalStock}</div>
                 <div>Low Stock: {hoveredItem.lowStock}</div>
@@ -280,8 +294,10 @@ const InventoryOverview = () => {
             </>
           ) : (
             <>
-              <div className="tooltip-title">{hoveredItem.name}</div>
-              <div className="tooltip-content">
+              <div className="inventoryover_tooltip-title">
+                {hoveredItem.name}
+              </div>
+              <div className="inventoryover_tooltip-content">
                 <div>
                   Current: {hoveredItem.currentStock} {hoveredItem.unit}
                 </div>

@@ -40,24 +40,26 @@ const Inventory = () => {
   };
 
   return (
-    <div className="inventory-management">
-      <header className="inventory-header">
-        <div className="header-content">
+    <div className="inventory_management">
+      <header className="inventory_header">
+        <div className="inventory_header_content">
           <h1>Inventory Management</h1>
           <p>Track inventory levels and monitor top selling items</p>
         </div>
-        <button className="add-item-btn" onClick={handleAddNewItem}>
-          <span className="btn-icon">+</span>
+        <button className="inventory_add_item_btn" onClick={handleAddNewItem}>
+          <span className="inventory_btn_icon">+</span>
           Add New Item
         </button>
       </header>
 
-      <div className="tabs-container">
-        <div className="tabs">
+      <div className="inventory_tabs_container">
+        <div className="inventory_tabs">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`tab ${activeTab === tab.id ? "active" : ""}`}
+              className={`inventory_tab ${
+                activeTab === tab.id ? "inventory_active" : ""
+              }`}
               onClick={() => setActiveTab(tab.id)}
             >
               {tab.label}
@@ -67,21 +69,23 @@ const Inventory = () => {
       </div>
 
       <div
-        className={`tab-content ${activeTab ? "switching" : ""}`}
+        className={`inventory_tab_content ${
+          activeTab ? "inventory_switching" : ""
+        }`}
         key={activeTab}
       >
         {activeTab === "overview" && (
-          <div className="tab-panel">
+          <div className="inventory_tab_panel">
             <InventoryOverview />
           </div>
         )}
         {activeTab === "top-selling" && (
-          <div className="tab-panel">
+          <div className="inventory_tab_panel">
             <InventoryTopSelling />
           </div>
         )}
         {activeTab === "inventory-list" && (
-          <div className="tab-panel">
+          <div className="inventory_tab_panel">
             <InventoryList />
           </div>
         )}
@@ -95,8 +99,6 @@ const Inventory = () => {
         onSave={handleSaveNewItem}
         isAddMode={true} // Add this prop to indicate add mode
       />
-
-      {/* ScrollUpButton placed here will work across all tabs */}
       <ScrollUpButton />
     </div>
   );

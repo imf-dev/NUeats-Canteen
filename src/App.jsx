@@ -12,6 +12,7 @@ import Dashboard from "./screens/Dashboard.jsx";
 import Orders from "./screens/Orders/Orders.jsx";
 import Menu from "./screens/Menu/Menu.jsx";
 import Inventory from "./screens/Inventory/Inventory.jsx";
+import Analytics from "./screens/Analytics/Analytics.jsx";
 import Sidebar from "./components/common/Sidebar.jsx";
 
 const AppWrapper = () => {
@@ -92,6 +93,19 @@ const AppWrapper = () => {
                 exit={{ opacity: 0 }}
               >
                 <Inventory />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <motion.div
+                key="analytics"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Analytics />
               </motion.div>
             }
           />

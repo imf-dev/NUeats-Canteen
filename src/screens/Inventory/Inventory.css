@@ -6,7 +6,7 @@
 }
 
 /* Main Layout */
-.inventory-management {
+.inventory_management {
   margin-left: 240px;
   flex: 1;
   padding: 24px;
@@ -16,14 +16,14 @@
 }
 
 /* Header */
-.inventory-header {
+.inventory_header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 32px;
 }
 
-.header-content h1 {
+.inventory_header_content h1 {
   margin: 0;
   font-size: 32px;
   font-weight: 700;
@@ -31,13 +31,13 @@
   margin-bottom: 4px;
 }
 
-.header-content p {
+.inventory_header_content p {
   margin: 0;
   font-size: 16px;
   color: #6b7280;
 }
 
-.add-item-btn {
+.inventory_add_item_btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -54,24 +54,24 @@
   transition: all 0.2s ease;
 }
 
-.add-item-btn:hover {
+.inventory_add_item_btn:hover {
   background: #2d3a8c;
   transform: translateY(-1px);
 }
 
-.btn-icon {
+.inventory_btn_icon {
   font-size: 18px;
   font-weight: bold;
 }
 
 /* Tab Container */
-.tabs-container {
+.inventory_tabs_container {
   margin-bottom: 24px;
   width: 100%;
 }
 
 /* Tabs */
-.tabs {
+.inventory_tabs {
   display: flex;
   width: 100%;
   background: #ebebec;
@@ -82,7 +82,7 @@
   border: 1px solid #e2e8f0;
 }
 
-.tab {
+.inventory_tab {
   flex: 1;
   background: transparent;
   border: none;
@@ -99,23 +99,23 @@
   z-index: 1;
 }
 
-.tab:first-child {
+.inventory_tab:first-child {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 
-.tab:last-child {
+.inventory_tab:last-child {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
 
-.tab:hover:not(.active) {
+.inventory_tab:hover:not(.inventory_active) {
   color: #475569;
   background: rgba(255, 255, 255, 0.6);
   transform: translateY(-1px);
 }
 
-.tab.active {
+.inventory_tab.inventory_active {
   color: #334155;
   background: white;
   font-weight: 600;
@@ -124,25 +124,25 @@
 }
 
 /* Tab Content */
-.tab-content {
+.inventory_tab_content {
   background: white;
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.tab-panel {
+.inventory_tab_panel {
   width: 100%;
 }
 
-.tab-panel h3 {
+.inventory_tab_panel h3 {
   color: #1a1a1a;
   font-size: 18px;
   font-weight: 600;
 }
 
 /* Controls */
-.inventory-controls {
+.inventory_controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -150,20 +150,20 @@
   gap: 16px;
 }
 
-.inventory-tabs-wrapper {
+.inventory_tabs_wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.inventory-tabs {
+.inventory_tab_buttons {
   display: flex;
   gap: 12px;
   margin-bottom: 32px;
   flex-wrap: wrap;
 }
 
-.tab-btn {
+.inventory_tab_btn {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -175,12 +175,12 @@
   transition: all 0.2s ease;
 }
 
-.tab-btn:hover {
+.inventory_tab_btn:hover {
   border-color: #3b4cb8;
   color: #3b4cb8;
 }
 
-.tab-btn.active {
+.inventory_tab_btn.inventory_active {
   background: #1e1b4b;
   border-color: #1e1b4b;
   color: white;
@@ -188,59 +188,59 @@
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .inventory-management {
+  .inventory_management {
     width: calc(100% - 200px);
   }
 }
 
 @media (max-width: 768px) {
-  .inventory-management {
+  .inventory_management {
     padding: 16px;
     width: 100%;
   }
 
-  .inventory-header {
+  .inventory_header {
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
   }
 
-  .header-content h1 {
+  .inventory_header_content h1 {
     font-size: 24px;
   }
 
-  .add-item-btn {
+  .inventory_add_item_btn {
     align-self: flex-start;
   }
 
-  .tab {
+  .inventory_tab {
     padding: 10px 16px;
     font-size: 13px;
   }
 
-  .inventory-tabs {
+  .inventory_tab_buttons {
     gap: 6px;
   }
 
-  .tab-btn {
+  .inventory_tab_btn {
     padding: 6px 12px;
     font-size: 13px;
   }
 }
 
 @media (max-width: 480px) {
-  .inventory-management {
+  .inventory_management {
     padding: 12px;
   }
 
-  .tab {
+  .inventory_tab {
     padding: 8px 12px;
     font-size: 12px;
   }
 }
 
 /* Entrance Animations */
-@keyframes fadeInUp {
+@keyframes inventory_fadeInUp {
   from {
     opacity: 0;
     transform: translateY(30px);
@@ -251,7 +251,7 @@
   }
 }
 
-@keyframes fadeInLeft {
+@keyframes inventory_fadeInLeft {
   from {
     opacity: 0;
     transform: translateX(-30px);
@@ -262,7 +262,7 @@
   }
 }
 
-@keyframes fadeInScale {
+@keyframes inventory_fadeInScale {
   from {
     opacity: 0;
     transform: scale(0.95);
@@ -274,23 +274,23 @@
 }
 
 /* Apply animations to main elements */
-.inventory-management {
-  animation: fadeInUp 0.6s ease-out;
+.inventory_management {
+  animation: inventory_fadeInUp 0.6s ease-out;
 }
 
-.inventory-header {
-  animation: fadeInLeft 0.6s ease-out 0.1s both;
+.inventory_header {
+  animation: inventory_fadeInLeft 0.6s ease-out 0.1s both;
 }
 
-.tabs-container {
-  animation: fadeInUp 0.6s ease-out 0.2s both;
+.inventory_tabs_container {
+  animation: inventory_fadeInUp 0.6s ease-out 0.2s both;
 }
 
-.tab-content {
-  animation: fadeInScale 0.6s ease-out 0.3s both;
+.inventory_tab_content {
+  animation: inventory_fadeInScale 0.6s ease-out 0.3s both;
 }
 
 /* Prevent animation conflicts with tab switching */
-.tab-content.switching {
+.inventory_tab_content.inventory_switching {
   animation: none;
 }
