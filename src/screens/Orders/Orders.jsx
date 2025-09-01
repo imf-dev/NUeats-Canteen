@@ -120,20 +120,28 @@ const Orders = () => {
     const configs = {
       preparing: {
         label: "preparing",
-        class: "preparing",
-        bgClass: "bg-preparing",
+        class: "orders_preparing",
+        bgClass: "orders_bg_preparing",
       },
-      ready: { label: "ready", class: "ready", bgClass: "bg-ready" },
-      pending: { label: "pending", class: "pending", bgClass: "bg-pending" },
+      ready: {
+        label: "ready",
+        class: "orders_ready",
+        bgClass: "orders_bg_ready",
+      },
+      pending: {
+        label: "pending",
+        class: "orders_pending",
+        bgClass: "orders_bg_pending",
+      },
       completed: {
         label: "completed",
-        class: "completed",
-        bgClass: "bg-completed",
+        class: "orders_completed",
+        bgClass: "orders_bg_completed",
       },
       cancelled: {
         label: "cancelled",
-        class: "cancelled",
-        bgClass: "bg-cancelled",
+        class: "orders_cancelled",
+        bgClass: "orders_bg_cancelled",
       },
     };
     return configs[status] || { label: status, class: status, bgClass: "" };
@@ -154,47 +162,53 @@ const Orders = () => {
       case "preparing":
         return (
           <>
-            <button className="btn btn-primary">Mark Ready</button>
+            <button className="orders_btn orders_btn_primary">
+              Mark Ready
+            </button>
             <button
-              className="btn btn-secondary"
+              className="orders_btn orders_btn_secondary"
               onClick={() => handleViewDetails(order)}
             >
               👁 View Details
             </button>
-            <button className="btn btn-danger">Cancel</button>
+            <button className="orders_btn orders_btn_danger">Cancel</button>
           </>
         );
       case "ready":
         return (
           <>
-            <button className="btn btn-primary">Complete Order</button>
+            <button className="orders_btn orders_btn_primary">
+              Complete Order
+            </button>
             <button
-              className="btn btn-secondary"
+              className="orders_btn orders_btn_secondary"
               onClick={() => handleViewDetails(order)}
             >
               👁 View Details
             </button>
-            <button className="btn btn-danger">Cancel</button>
+            <button className="orders_btn orders_btn_danger">Cancel</button>
           </>
         );
       case "pending":
         return (
           <>
-            <button className="btn btn-primary">Start Preparing</button>
+            <button className="orders_btn orders_btn_primary">
+              Start Preparing
+            </button>
             <button
-              className="btn btn-secondary"
+              className="orders_btn orders_btn_secondary"
               onClick={() => handleViewDetails(order)}
             >
               👁 View Details
             </button>
-            <button className="btn btn-danger">Cancel</button>
+            <button className="orders_btn orders_btn_danger">Cancel</button>
           </>
         );
       case "completed":
       case "cancelled":
         return (
           <button
-            className="btn btn-secondary"
+            className="orders_btn orders_btn_secondary"
             onClick={() => handleViewDetails(order)}
           >
             👁 View Details
@@ -216,18 +230,18 @@ const Orders = () => {
   });
 
   return (
-    <div className="orders-layout">
+    <div className="orders_layout">
       <Sidebar />
 
-      <main className="orders-main">
-        <div className="orders-header">
+      <main className="orders_main">
+        <div className="orders_header">
           <h1>Orders Management</h1>
           <p>Track and manage all orders</p>
         </div>
 
         {/* Search + Filter */}
-        <div className="orders-controls">
-          <div className="search-container">
+        <div className="orders_controls">
+          <div className="orders_search_container">
             <input
               type="text"
               placeholder="Search orders by customer name or order ID..."
@@ -237,37 +251,34 @@ const Orders = () => {
                 setIsFiltering(true);
                 setTimeout(() => setIsFiltering(false), 100);
               }}
-              className="search-input"
+              className="orders_search_input"
             />
-            <span className="search-icon">
+            <span className="orders_search_icon">
               <FiSearch />
             </span>
           </div>
 
-          <div className="status-filter">
+          <div className="orders_status_filter">
             <button
-              className="status-dropdown-btn"
-              onClick={() => {
-                setStatusFilter(status);
-                setIsStatusDropdownOpen(false);
-                setIsFiltering(true);
-                setTimeout(() => setIsFiltering(false), 100);
-              }}
+              className="orders_status_dropdown_btn"
+              onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
             >
               {statusFilter}
               <span className="dropdown-arrow">▼</span>
             </button>
             {isStatusDropdownOpen && (
-              <div className="status-dropdown">
+              <div className="orders_status_dropdown">
                 {statusOptions.map((status) => (
                   <button
                     key={status}
-                    className={`dropdown-item ${
-                      statusFilter === status ? "active" : ""
+                    className={`orders_dropdown_item ${
+                      statusFilter === status ? "orders_active" : ""
                     }`}
                     onClick={() => {
                       setStatusFilter(status);
                       setIsStatusDropdownOpen(false);
+                      setIsFiltering(true);
+                      setTimeout(() => setIsFiltering(false), 100);
                     }}
                   >
                     {status}
@@ -279,77 +290,83 @@ const Orders = () => {
         </div>
 
         {/* Orders List */}
-        <div className={`orders-list ${isFiltering ? "filtering" : ""}`}>
+        <div className={`orders_list ${isFiltering ? "orders_filtering" : ""}`}>
           {filteredOrders.map((order) => {
             const statusConfig = getStatusConfig(order.status);
             return (
               <div
                 key={order.id}
-                className={`order-card ${statusConfig.bgClass}`}
+                className={`orders_card ${statusConfig.bgClass}`}
               >
                 {/* Header */}
-                <div className="order-header">
-                  <div className="order-title">
+                <div className="orders_header_card">
+                  <div className="orders_title">
                     <h3>Order #{order.id}</h3>
-                    <span className={`status-badge ${statusConfig.class}`}>
+                    <span
+                      className={`orders_status_badge ${statusConfig.class}`}
+                    >
                       {statusConfig.label}
                     </span>
                   </div>
-                  <div className="order-meta">
+                  <div className="orders_meta">
                     <span
                       className={
-                        order.status === "cancelled" ? "cancelled-price" : ""
+                        order.status === "cancelled"
+                          ? "orders_cancelled_price"
+                          : ""
                       }
                     >
                       {order.total}
                     </span>
-                    <p className="ordered-time">Ordered: {order.orderedTime}</p>
+                    <p className="orders_ordered_time">
+                      Ordered: {order.orderedTime}
+                    </p>
                   </div>
                 </div>
 
-                <hr className="divider" />
+                <hr className="orders_divider" />
 
                 {/* Customer Info */}
-                <div className="customer-info">
+                <div className="orders_customer_info">
                   <p>
                     Customer: {order.customer} • Phone: {order.phone}
                   </p>
                   {order.completedTime && (
-                    <p className="completion-info">
+                    <p className="orders_completion_info">
                       ✓ Completed at {order.completedTime}
                     </p>
                   )}
                   {order.cancelledTime && (
-                    <p className="cancellation-info">
+                    <p className="orders_cancellation_info">
                       ✗ Cancelled at {order.cancelledTime}
                     </p>
                   )}
                   {order.cancelReason && (
-                    <p className="cancel-reason">
+                    <p className="orders_cancel_reason">
                       Reason: {order.cancelReason}
                     </p>
                   )}
                 </div>
 
-                <hr className="divider" />
+                <hr className="orders_divider" />
 
                 {/* Items */}
-                <div className="order-items">
+                <div className="orders_items">
                   <h4>Order Items:</h4>
                   <ul>
                     {order.items.map((item, index) => (
                       <li key={index}>
                         {item.name}
-                        <span className="item-price">{item.price}</span>
+                        <span className="orders_item_price">{item.price}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <hr className="divider" />
+                <hr className="orders_divider" />
 
                 {/* Actions */}
-                <div className="order-actions">
+                <div className="orders_actions">
                   {getActionButtons(order.status, order)}
                 </div>
               </div>
@@ -358,7 +375,7 @@ const Orders = () => {
         </div>
 
         {filteredOrders.length === 0 && (
-          <div className="no-orders">
+          <div className="orders_no_orders">
             <p>No orders found matching your criteria.</p>
           </div>
         )}

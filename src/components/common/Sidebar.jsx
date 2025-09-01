@@ -184,7 +184,7 @@ const Sidebar = () => {
                   <span className="sidebar-modal-icon">
                     <GrRestaurant />
                   </span>
-                  <span>Restaurant Settings</span>
+                  <span>Store Settings</span>
                 </button>
                 <button
                   className="sidebar-modal-item sidebar-sign-out"

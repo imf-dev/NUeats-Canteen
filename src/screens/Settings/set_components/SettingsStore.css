@@ -1,0 +1,511 @@
+/* Settings Store Styles */
+.settingsstore_settings-store {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Entrance Animation */
+.settingsstore_settings-store .settingsstore_card {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: settingsstore_slideInUp 0.6s ease-out forwards;
+}
+
+.settingsstore_settings-store .settingsstore_card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.settingsstore_settings-store .settingsstore_card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.settingsstore_settings-store .settingsstore_card:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+@keyframes settingsstore_slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card Styles */
+.settingsstore_card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+  width: 100%;
+}
+
+.settingsstore_card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Card Header */
+.settingsstore_card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.settingsstore_card-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.settingsstore_card-title h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.settingsstore_card-icon {
+  font-size: 20px;
+  color: #6366f1;
+  margin-top: 2px;
+}
+
+.settingsstore_card-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+/* Toggle Edit Button */
+.settingsstore_toggle-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.settingsstore_toggle-edit-btn:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.settingsstore_toggle-edit-btn.settingsstore_active {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: white;
+}
+
+.settingsstore_toggle-edit-btn svg {
+  font-size: 18px;
+}
+
+/* Form Styles */
+.settingsstore_form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.settingsstore_form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsstore_form-group.settingsstore_full-width {
+  width: 100%;
+}
+
+.settingsstore_form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.settingsstore_form-group input,
+.settingsstore_form-group textarea,
+.settingsstore_form-group select {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+  width: 100%;
+}
+
+.settingsstore_form-group input:focus,
+.settingsstore_form-group textarea:focus,
+.settingsstore_form-group select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.settingsstore_form-group input.settingsstore_disabled,
+.settingsstore_form-group textarea.settingsstore_disabled {
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.settingsstore_form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Address Section */
+.settingsstore_address-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.settingsstore_address-section h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+/* Operating Hours Styles */
+.settingsstore_hours-list {
+  margin-bottom: 24px;
+}
+
+.settingsstore_hour-row {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f3f4f6;
+  transition: all 0.3s ease;
+}
+
+.settingsstore_hour-row:hover {
+  background: #f8fafc;
+  margin: 0 -12px;
+  padding: 16px 12px;
+  border-radius: 8px;
+}
+
+.settingsstore_day-name {
+  font-weight: 500;
+  color: #1f2937;
+  min-width: 120px;
+  font-size: 14px;
+}
+
+.settingsstore_hour-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+/* Toggle Switch */
+.settingsstore_toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.settingsstore_toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settingsstore_slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d1d5db;
+  transition: 0.3s;
+  border-radius: 28px;
+}
+
+.settingsstore_slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .settingsstore_slider {
+  background-color: #10b981;
+}
+
+input:checked + .settingsstore_slider:before {
+  transform: translateX(24px);
+}
+
+.settingsstore_status {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  min-width: 50px;
+}
+
+.settingsstore_time-select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.settingsstore_time-select:hover {
+  border-color: #6366f1;
+}
+
+.settingsstore_time-select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.settingsstore_to {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Payment Methods Styles */
+.settingsstore_payment-options {
+  margin-bottom: 24px;
+}
+
+.settingsstore_payment-option {
+  padding: 16px 0;
+  border-bottom: 1px solid #f3f4f6;
+  transition: all 0.3s ease;
+}
+
+.settingsstore_payment-option:hover {
+  background: #f8fafc;
+  margin: 0 -12px;
+  padding: 16px 12px;
+  border-radius: 8px;
+}
+
+.settingsstore_payment-option:last-child {
+  border-bottom: none;
+}
+
+.settingsstore_checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.settingsstore_checkbox-label input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.settingsstore_checkmark {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  margin-right: 12px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.settingsstore_checkbox-label:hover .settingsstore_checkmark {
+  border-color: #6366f1;
+}
+
+.settingsstore_checkbox-label input:checked ~ .settingsstore_checkmark {
+  background-color: #6366f1;
+  border-color: #6366f1;
+}
+
+.settingsstore_checkbox-label input:checked ~ .settingsstore_checkmark:after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.settingsstore_payment-name {
+  user-select: none;
+}
+
+/* Save Button */
+.settingsstore_save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.settingsstore_save-btn:hover {
+  background: #111827;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.settingsstore_save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.settingsstore_save-btn:disabled:hover {
+  background: #1f2937;
+}
+
+/* Card Actions */
+.settingsstore_card-actions {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Notification */
+.settingsstore_notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: settingsstore_slideInFromRight 0.4s ease-out;
+  min-width: 300px;
+}
+
+.settingsstore_notification.settingsstore_success {
+  background: #f0fff4;
+  color: #22543d;
+  border: 1px solid #c6f6d5;
+}
+
+.settingsstore_notification.settingsstore_error {
+  background: #fed7d7;
+  color: #742a2a;
+  border: 1px solid #feb2b2;
+}
+
+.settingsstore_notification.settingsstore_info {
+  background: #ebf4ff;
+  color: #2a4365;
+  border: 1px solid #bee3f8;
+}
+
+@keyframes settingsstore_slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settingsstore_settings-store {
+    padding: 16px;
+  }
+
+  .settingsstore_card {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .settingsstore_form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .settingsstore_card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .settingsstore_hour-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .settingsstore_hour-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .settingsstore_day-name {
+    min-width: auto;
+  }
+
+  .settingsstore_notification {
+    right: 16px;
+    left: 16px;
+    min-width: auto;
+  }
+}

@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 20px;
   animation: settingsadmin_slideInUp 0.6s ease-out;
+  width: 100%;
 }
 
 .settingsadmin_settings-card {
@@ -12,6 +13,7 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   animation: settingsadmin_fadeInScale 0.5s ease-out;
+  width: 100%;
 }
 
 .settingsadmin_settings-card:hover {
@@ -205,6 +207,7 @@
   font-size: 14px;
   background: white;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .settingsadmin_form-group input:focus {
@@ -223,6 +226,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .settingsadmin_password-input-container input {
@@ -243,6 +247,13 @@
 
 .settingsadmin_password-toggle:hover {
   color: #374151;
+}
+
+.settingsadmin_password-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+  line-height: 1.4;
 }
 
 .settingsadmin_security-option {
@@ -302,6 +313,7 @@
 
 .settingsadmin_dropdown {
   position: relative;
+  width: 100%;
 }
 
 .settingsadmin_dropdown-toggle {
@@ -414,6 +426,158 @@
   background: #1f2937;
 }
 
+/* Custom Modal Styles */
+.settingsadmin_custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: settingsadmin_modalFadeIn 0.3s ease-out;
+}
+
+.settingsadmin_custom-modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: settingsadmin_modalSlideIn 0.3s ease-out;
+  transform-origin: center;
+}
+
+.settingsadmin_modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.settingsadmin_modal-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.settingsadmin_modal-icon.settingsadmin_success {
+  color: #10b981;
+}
+
+.settingsadmin_modal-icon.settingsadmin_warning {
+  color: #f59e0b;
+}
+
+.settingsadmin_modal-icon.settingsadmin_error {
+  color: #ef4444;
+}
+
+.settingsadmin_modal-icon.settingsadmin_info {
+  color: #6366f1;
+}
+
+.settingsadmin_modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  flex: 1;
+}
+
+.settingsadmin_modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.settingsadmin_modal-close-btn:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.settingsadmin_modal-body {
+  padding: 20px 24px;
+}
+
+.settingsadmin_modal-body p {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.settingsadmin_modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.settingsadmin_modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.settingsadmin_modal-btn.settingsadmin_primary {
+  background: #6366f1;
+  color: white;
+}
+
+.settingsadmin_modal-btn.settingsadmin_primary:hover {
+  background: #5855eb;
+  transform: translateY(-1px);
+}
+
+.settingsadmin_modal-btn.settingsadmin_secondary {
+  background: #f9fafb;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.settingsadmin_modal-btn.settingsadmin_secondary:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Modal type-specific content styling */
+.settingsadmin_custom-modal-content.success .settingsadmin_modal-header {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+}
+
+.settingsadmin_custom-modal-content.warning .settingsadmin_modal-header {
+  background: linear-gradient(135deg, #fffbeb 0%, #fefce8 100%);
+}
+
+.settingsadmin_custom-modal-content.error .settingsadmin_modal-header {
+  background: linear-gradient(135deg, #fef2f2 0%, #fefefe 100%);
+}
+
+.settingsadmin_custom-modal-content.confirm .settingsadmin_modal-header {
+  background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+}
+
 /* Animations */
 @keyframes settingsadmin_slideInUp {
   from {
@@ -448,6 +612,26 @@
   }
 }
 
+@keyframes settingsadmin_modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes settingsadmin_modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .settingsadmin_settings-admin-container {
@@ -479,6 +663,20 @@
   .settingsadmin_profile-picture-actions {
     justify-content: center;
   }
+
+  .settingsadmin_custom-modal-content {
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+
+  .settingsadmin_modal-footer {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .settingsadmin_modal-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -490,5 +688,21 @@
   .settingsadmin_upload-btn,
   .settingsadmin_remove-btn {
     justify-content: center;
+  }
+
+  .settingsadmin_settings-card {
+    padding: 16px;
+  }
+
+  .settingsadmin_modal-header {
+    padding: 16px 20px;
+  }
+
+  .settingsadmin_modal-body {
+    padding: 16px 20px;
+  }
+
+  .settingsadmin_modal-footer {
+    padding: 12px 20px 16px;
   }
 }

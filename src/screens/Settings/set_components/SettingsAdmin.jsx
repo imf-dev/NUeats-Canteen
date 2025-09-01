@@ -7,15 +7,102 @@ import {
   FaLock,
   FaEye,
   FaEyeSlash,
-  FaShield,
+  FaShieldAlt,
   FaToggleOn,
   FaToggleOff,
   FaBell,
   FaClock,
   FaKey,
+  FaTimes,
+  FaCheck,
+  FaExclamationTriangle,
+  FaInfoCircle,
 } from "react-icons/fa";
 import { adminDemoData } from "../../../demodata/adminDemoData";
 import "./SettingsAdmin.css";
+
+// Custom Modal Component
+const CustomModal = ({
+  isOpen,
+  onClose,
+  type,
+  title,
+  message,
+  onConfirm,
+  confirmText = "OK",
+}) => {
+  if (!isOpen) return null;
+
+  const getModalIcon = () => {
+    switch (type) {
+      case "success":
+        return (
+          <FaCheck className="settingsadmin_modal-icon settingsadmin_success" />
+        );
+      case "warning":
+        return (
+          <FaExclamationTriangle className="settingsadmin_modal-icon settingsadmin_warning" />
+        );
+      case "error":
+        return (
+          <FaExclamationTriangle className="settingsadmin_modal-icon settingsadmin_error" />
+        );
+      case "confirm":
+        return (
+          <FaInfoCircle className="settingsadmin_modal-icon settingsadmin_info" />
+        );
+      default:
+        return (
+          <FaInfoCircle className="settingsadmin_modal-icon settingsadmin_info" />
+        );
+    }
+  };
+
+  return (
+    <div className="settingsadmin_custom-modal-overlay" onClick={onClose}>
+      <div
+        className={`settingsadmin_custom-modal-content ${type}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="settingsadmin_modal-header">
+          {getModalIcon()}
+          <h3>{title}</h3>
+          <button className="settingsadmin_modal-close-btn" onClick={onClose}>
+            <FaTimes />
+          </button>
+        </div>
+        <div className="settingsadmin_modal-body">
+          <p>{message}</p>
+        </div>
+        <div className="settingsadmin_modal-footer">
+          {type === "confirm" ? (
+            <>
+              <button
+                className="settingsadmin_modal-btn settingsadmin_secondary"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="settingsadmin_modal-btn settingsadmin_primary"
+                onClick={onConfirm}
+              >
+                {confirmText}
+              </button>
+            </>
+          ) : (
+            <button
+              className="settingsadmin_modal-btn settingsadmin_primary"
+              onClick={onClose}
+            >
+              {confirmText}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const SettingsAdmin = () => {
   const [profileData, setProfileData] = useState(adminDemoData.profile);
@@ -45,6 +132,16 @@ const SettingsAdmin = () => {
   const [sessionTimeoutOpen, setSessionTimeoutOpen] = useState(false);
   const [passwordExpiryOpen, setPasswordExpiryOpen] = useState(false);
 
+  // Modal states
+  const [modal, setModal] = useState({
+    isOpen: false,
+    type: "info",
+    title: "",
+    message: "",
+    onConfirm: null,
+    confirmText: "OK",
+  });
+
   const fileInputRef = useRef(null);
 
   const sessionTimeoutOptions = [
@@ -62,6 +159,35 @@ const SettingsAdmin = () => {
     "1 year",
   ];
 
+  // Modal helper functions
+  const showModal = (
+    type,
+    title,
+    message,
+    onConfirm = null,
+    confirmText = "OK"
+  ) => {
+    setModal({
+      isOpen: true,
+      type,
+      title,
+      message,
+      onConfirm,
+      confirmText,
+    });
+  };
+
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      type: "info",
+      title: "",
+      message: "",
+      onConfirm: null,
+      confirmText: "OK",
+    });
+  };
+
   const getInitials = (firstName, lastName) => {
     return `${firstName?.charAt(0) || ""}${
       lastName?.charAt(0) || ""
@@ -71,26 +197,77 @@ const SettingsAdmin = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showModal(
+          "error",
+          "File Too Large",
+          "Please select an image file smaller than 5MB."
+        );
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith("image/")) {
+        showModal(
+          "error",
+          "Invalid File Type",
+          "Please select a valid image file (JPG, PNG, GIF, etc.)."
+        );
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         setProfileData((prev) => ({
           ...prev,
           profilePicture: e.target.result,
         }));
+        showModal(
+          "success",
+          "Image Uploaded",
+          "Profile picture has been uploaded successfully!"
+        );
+      };
+      reader.onerror = () => {
+        showModal(
+          "error",
+          "Upload Failed",
+          "There was an error uploading your image. Please try again."
+        );
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveProfilePicture = () => {
-    if (
-      window.confirm("Are you sure you want to remove your profile picture?")
-    ) {
-      setProfileData((prev) => ({
-        ...prev,
-        profilePicture: null,
-      }));
+    if (!profileData.profilePicture) {
+      showModal(
+        "warning",
+        "No Profile Picture",
+        "There is no profile picture to remove."
+      );
+      return;
     }
+
+    showModal(
+      "confirm",
+      "Remove Profile Picture",
+      "Are you sure you want to remove your profile picture?",
+      () => {
+        setProfileData((prev) => ({
+          ...prev,
+          profilePicture: null,
+        }));
+        showModal(
+          "success",
+          "Picture Removed",
+          "Profile picture has been removed successfully!"
+        );
+        closeModal();
+      },
+      "Remove"
+    );
   };
 
   const handleProfileInputChange = (field, value) => {
@@ -116,10 +293,23 @@ const SettingsAdmin = () => {
 
   const toggleEditMode = () => {
     if (isEditMode) {
-      // Reset to original data when canceling edit
+      // Check if there are unsaved changes before exiting edit mode
+      if (hasProfileChanges()) {
+        showModal(
+          "confirm",
+          "Unsaved Changes",
+          "You have unsaved changes. Are you sure you want to discard them?",
+          () => {
+            setProfileData(originalProfileData);
+            setIsEditMode(false);
+            closeModal();
+          },
+          "Discard Changes"
+        );
+        return;
+      }
       setProfileData(originalProfileData);
     } else {
-      // Save current data as original when entering edit mode
       setOriginalProfileData(profileData);
     }
     setIsEditMode(!isEditMode);
@@ -140,75 +330,230 @@ const SettingsAdmin = () => {
     return passwords.new !== "" || passwords.confirm !== "";
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ""));
+  };
+
   const handleSaveProfile = () => {
+    if (!isEditMode) {
+      showModal(
+        "warning",
+        "Edit Mode Required",
+        "Please enable edit mode to make changes to your profile."
+      );
+      return;
+    }
+
     const emptyFields = [];
+    const invalidFields = [];
+
+    // Check for empty required fields
     if (!profileData.firstName.trim()) emptyFields.push("First Name");
     if (!profileData.lastName.trim()) emptyFields.push("Last Name");
     if (!profileData.email.trim()) emptyFields.push("Email Address");
     if (!profileData.phone.trim()) emptyFields.push("Phone Number");
 
+    // Check for valid email format
+    if (profileData.email.trim() && !validateEmail(profileData.email)) {
+      invalidFields.push("Email Address (invalid format)");
+    }
+
+    // Check for valid phone format
+    if (profileData.phone.trim() && !validatePhone(profileData.phone)) {
+      invalidFields.push("Phone Number (invalid format)");
+    }
+
     if (emptyFields.length > 0) {
-      alert(`Please fill in the following fields: ${emptyFields.join(", ")}`);
+      showModal(
+        "error",
+        "Missing Required Fields",
+        `Please fill in the following required fields: ${emptyFields.join(
+          ", "
+        )}`
+      );
+      return;
+    }
+
+    if (invalidFields.length > 0) {
+      showModal(
+        "error",
+        "Invalid Information",
+        `Please correct the following fields: ${invalidFields.join(", ")}`
+      );
       return;
     }
 
     if (!hasProfileChanges()) {
-      alert("No changes were made to save.");
+      showModal(
+        "warning",
+        "No Changes Made",
+        "You haven't made any changes to save."
+      );
       return;
     }
 
     setOriginalProfileData(profileData);
     setIsEditMode(false);
-    alert("Profile saved successfully!");
+    showModal(
+      "success",
+      "Profile Saved",
+      "Your profile has been saved successfully!"
+    );
+  };
+
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!hasUpperCase) {
+      return "Password must contain at least one uppercase letter";
+    }
+    if (!hasLowerCase) {
+      return "Password must contain at least one lowercase letter";
+    }
+    if (!hasNumbers) {
+      return "Password must contain at least one number";
+    }
+    if (!hasSpecialChar) {
+      return "Password must contain at least one special character";
+    }
+    return null;
   };
 
   const handleUpdatePassword = () => {
     if (!passwords.new.trim() || !passwords.confirm.trim()) {
-      alert("Please fill in both new password fields.");
+      showModal(
+        "error",
+        "Missing Password Fields",
+        "Please fill in both new password and confirm password fields."
+      );
       return;
     }
 
     if (!hasPasswordChanges()) {
-      alert("No password changes were made.");
+      showModal(
+        "warning",
+        "No Password Changes",
+        "You haven't made any password changes to save."
+      );
       return;
     }
 
     if (passwords.new !== passwords.confirm) {
-      alert("New password and confirm password do not match.");
+      showModal(
+        "error",
+        "Password Mismatch",
+        "New password and confirm password do not match. Please try again."
+      );
       return;
     }
 
     if (passwords.new === passwords.current) {
-      alert("New password must be different from current password.");
+      showModal(
+        "error",
+        "Same Password",
+        "New password must be different from your current password."
+      );
       return;
     }
 
-    setCredentialsData((prev) => ({
-      ...prev,
-      currentPassword: passwords.new,
-    }));
+    // Validate password strength
+    const passwordValidation = validatePassword(passwords.new);
+    if (passwordValidation) {
+      showModal("error", "Weak Password", passwordValidation);
+      return;
+    }
 
-    setPasswords({
-      current: passwords.new,
-      new: "",
-      confirm: "",
-    });
+    showModal(
+      "confirm",
+      "Update Password",
+      "Are you sure you want to update your password? You will need to use the new password for future logins.",
+      () => {
+        setCredentialsData((prev) => ({
+          ...prev,
+          currentPassword: passwords.new,
+        }));
 
-    alert("Password updated successfully!");
+        setPasswords({
+          current: passwords.new,
+          new: "",
+          confirm: "",
+        });
+
+        showModal(
+          "success",
+          "Password Updated",
+          "Your password has been updated successfully! Please remember to use your new password for future logins."
+        );
+        closeModal();
+      },
+      "Update Password"
+    );
   };
 
   const handleSaveSecuritySettings = () => {
     if (!hasCredentialChanges()) {
-      alert("No security settings were changed.");
+      showModal(
+        "warning",
+        "No Changes Made",
+        "You haven't made any changes to your security settings."
+      );
       return;
     }
 
-    setOriginalCredentialsData(credentialsData);
-    alert("Security settings saved successfully!");
+    showModal(
+      "confirm",
+      "Save Security Settings",
+      "Are you sure you want to save these security settings? Some changes may affect how you access your account.",
+      () => {
+        setOriginalCredentialsData(credentialsData);
+        showModal(
+          "success",
+          "Security Settings Saved",
+          "Your security settings have been saved successfully!"
+        );
+        closeModal();
+      },
+      "Save Settings"
+    );
   };
+
+  // Close dropdowns when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = () => {
+      setSessionTimeoutOpen(false);
+      setPasswordExpiryOpen(false);
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <div className="settingsadmin_settings-admin-container">
+      {/* Custom Modal */}
+      <CustomModal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        onConfirm={modal.onConfirm}
+        confirmText={modal.confirmText}
+      />
+
       {/* Admin Profile Card */}
       <div className="settingsadmin_settings-card">
         <div className="settingsadmin_card-header">
@@ -253,7 +598,6 @@ const SettingsAdmin = () => {
               <button
                 className="settingsadmin_remove-btn"
                 onClick={handleRemoveProfilePicture}
-                disabled={!profileData.profilePicture}
               >
                 <FaTrash />
                 Remove
@@ -271,7 +615,7 @@ const SettingsAdmin = () => {
 
         <div className="settingsadmin_form-row">
           <div className="settingsadmin_form-group">
-            <label>First Name</label>
+            <label>First Name *</label>
             <input
               type="text"
               value={profileData.firstName}
@@ -279,11 +623,11 @@ const SettingsAdmin = () => {
                 handleProfileInputChange("firstName", e.target.value)
               }
               disabled={!isEditMode}
-              placeholder="First Name"
+              placeholder="Enter your first name"
             />
           </div>
           <div className="settingsadmin_form-group">
-            <label>Last Name</label>
+            <label>Last Name *</label>
             <input
               type="text"
               value={profileData.lastName}
@@ -291,14 +635,14 @@ const SettingsAdmin = () => {
                 handleProfileInputChange("lastName", e.target.value)
               }
               disabled={!isEditMode}
-              placeholder="Last Name"
+              placeholder="Enter your last name"
             />
           </div>
         </div>
 
         <div className="settingsadmin_form-row">
           <div className="settingsadmin_form-group">
-            <label>Email Address</label>
+            <label>Email Address *</label>
             <input
               type="email"
               value={profileData.email}
@@ -306,11 +650,11 @@ const SettingsAdmin = () => {
                 handleProfileInputChange("email", e.target.value)
               }
               disabled={!isEditMode}
-              placeholder="Email Address"
+              placeholder="Enter your email address"
             />
           </div>
           <div className="settingsadmin_form-group">
-            <label>Phone Number</label>
+            <label>Phone Number *</label>
             <input
               type="tel"
               value={profileData.phone}
@@ -318,7 +662,7 @@ const SettingsAdmin = () => {
                 handleProfileInputChange("phone", e.target.value)
               }
               disabled={!isEditMode}
-              placeholder="Phone Number"
+              placeholder="Enter your phone number"
             />
           </div>
         </div>
@@ -353,7 +697,7 @@ const SettingsAdmin = () => {
               type={passwordVisibility.current ? "text" : "password"}
               value={passwords.current}
               onChange={(e) => handlePasswordChange("current", e.target.value)}
-              placeholder="Current Password"
+              placeholder="Your current password"
               readOnly
             />
             <button
@@ -367,13 +711,13 @@ const SettingsAdmin = () => {
         </div>
 
         <div className="settingsadmin_form-group">
-          <label>New Password</label>
+          <label>New Password *</label>
           <div className="settingsadmin_password-input-container">
             <input
               type={passwordVisibility.new ? "text" : "password"}
               value={passwords.new}
               onChange={(e) => handlePasswordChange("new", e.target.value)}
-              placeholder="New Password"
+              placeholder="Enter your new password"
             />
             <button
               type="button"
@@ -383,16 +727,20 @@ const SettingsAdmin = () => {
               {passwordVisibility.new ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
+          <small className="settingsadmin_password-hint">
+            Password must be at least 8 characters with uppercase, lowercase,
+            numbers, and special characters
+          </small>
         </div>
 
         <div className="settingsadmin_form-group">
-          <label>Confirm New Password</label>
+          <label>Confirm New Password *</label>
           <div className="settingsadmin_password-input-container">
             <input
               type={passwordVisibility.confirm ? "text" : "password"}
               value={passwords.confirm}
               onChange={(e) => handlePasswordChange("confirm", e.target.value)}
-              placeholder="Confirm New Password"
+              placeholder="Confirm your new password"
             />
             <button
               type="button"
@@ -418,7 +766,7 @@ const SettingsAdmin = () => {
       <div className="settingsadmin_settings-card">
         <div className="settingsadmin_card-header">
           <div className="settingsadmin_card-title-section">
-            <FaShield className="settingsadmin_card-icon" />
+            <FaShieldAlt className="settingsadmin_card-icon" />
             <div>
               <h3>Security Settings</h3>
               <p>Configure security preferences for admin account</p>
@@ -490,7 +838,11 @@ const SettingsAdmin = () => {
             >
               <button
                 className="settingsadmin_dropdown-toggle"
-                onClick={() => setSessionTimeoutOpen(!sessionTimeoutOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSessionTimeoutOpen(!sessionTimeoutOpen);
+                  setPasswordExpiryOpen(false);
+                }}
               >
                 {credentialsData.sessionTimeout}
                 <span className="settingsadmin_dropdown-arrow">▼</span>
@@ -525,7 +877,11 @@ const SettingsAdmin = () => {
             >
               <button
                 className="settingsadmin_dropdown-toggle"
-                onClick={() => setPasswordExpiryOpen(!passwordExpiryOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPasswordExpiryOpen(!passwordExpiryOpen);
+                  setSessionTimeoutOpen(false);
+                }}
               >
                 {credentialsData.passwordExpiry}
                 <span className="settingsadmin_dropdown-arrow">▼</span>
