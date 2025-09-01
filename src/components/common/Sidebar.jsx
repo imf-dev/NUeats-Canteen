@@ -107,8 +107,33 @@ const Sidebar = () => {
   };
 
   const handleProfileAction = (action) => {
-    console.log(`Profile action: ${action}`);
     setIsProfileModalOpen(false);
+
+    switch (action) {
+      case "profile":
+        // Navigate to Settings page with admin tab active
+        navigate("/settings", { state: { activeTab: "admin" } });
+        setActiveItem("SETTINGS");
+        break;
+      case "restaurant":
+        // Navigate to Settings page with store tab active
+        navigate("/settings", { state: { activeTab: "store" } });
+        setActiveItem("SETTINGS");
+        break;
+      case "signout":
+        // Clear any stored user data (localStorage, sessionStorage, etc.)
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // Clear browser history and navigate to login page
+        // This prevents using the back button to go back to protected pages
+        window.history.replaceState(null, null, "/");
+        navigate("/", { replace: true });
+        break;
+      default:
+        console.log(`Profile action: ${action}`);
+        break;
+    }
   };
 
   return (
