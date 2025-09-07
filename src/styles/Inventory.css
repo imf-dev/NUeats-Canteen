@@ -1,16 +1,9 @@
-* {
-  transition: all 0.2s ease-in-out;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 /* Main Layout */
 .inventory_management {
   margin-left: 240px;
   flex: 1;
   padding: 24px;
-  background-color: #f8f9fa;
+  background-color: #faf7ea;
   min-height: 100vh;
   width: calc(100% - 250px);
 }

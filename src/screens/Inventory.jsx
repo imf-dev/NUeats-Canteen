@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "../styles/Inventory.css";
-import InventoryList from "./Inventory/inv_components/InventoryList";
+import InventoryList from "../components/Inventory/InventoryList";
 import InventoryOverview from "../components/Inventory/InventoryOverview";
 import InventoryTopSelling from "../components/Inventory/InventoryTop";
 import ScrollUpButton from "../components/common/ScrollUpButton";
-import Inventory_EditModal from "./Inventory/inv_components/Inventory_EditModal";
+import Inventory_EditModal from "../components/Inventory/InventoryList/IL_EditModal";
 
 const Inventory = () => {
   const [activeTab, setActiveTab] = useState("overview");

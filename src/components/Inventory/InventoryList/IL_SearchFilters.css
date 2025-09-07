@@ -1,0 +1,156 @@
+/* Controls Section */
+.searchfilters_controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  /* Ensure controls don't overflow */
+  width: 100%;
+}
+
+.searchfilters_search-container {
+  flex: 1;
+  min-width: 280px; /* Reduced from 320px for better mobile fit */
+  max-width: 100%;
+}
+
+.searchfilters_search-input {
+  width: 100%;
+  height: 44px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.2s ease;
+  /* Use parent's font family instead of inherit to avoid conflicts */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  /* Prevent input from overflowing */
+  box-sizing: border-box;
+}
+
+.searchfilters_search-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.searchfilters_search-input::placeholder {
+  color: #94a3b8;
+}
+
+.searchfilters_category-dropdown {
+  position: relative;
+  min-width: 180px;
+  /* Prevent overflow */
+  max-width: 100%;
+}
+
+.searchfilters_category-select {
+  width: 100%;
+  height: 44px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 44px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  box-sizing: border-box;
+}
+
+.searchfilters_category-select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 768px) {
+  .searchfilters_controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .searchfilters_search-container {
+    min-width: unset;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchfilters_controls {
+    gap: 8px;
+  }
+
+  .searchfilters_search-container {
+    min-width: unset;
+  }
+
+  .searchfilters_category-dropdown {
+    min-width: unset;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Controls fade in from top */
+.searchfilters_controls {
+  animation: fadeSlideUp 0.5s ease forwards;
+  opacity: 0;
+}
+
+/* Search input zooms in */
+.searchfilters_search-input {
+  animation: fadeZoom 0.6s ease forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
+}
+
+/* Dropdown slides from left */
+.searchfilters_category-dropdown {
+  animation: fadeSlideRight 0.6s ease forwards;
+  opacity: 0;
+  animation-delay: 0.3s;
+}

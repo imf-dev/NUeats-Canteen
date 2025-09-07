@@ -1,0 +1,54 @@
+.customer-analytics {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 24px;
+}
+
+.analytics-container {
+  margin: 0 auto;
+  width: 100%; /* Ensure container takes full width up to max-width */
+}
+
+.analytics-single-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+/* Ensure all analytics sections stretch full width */
+.analytics-single-column > * {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .customer-analytics {
+    padding: 16px;
+  }
+
+  .analytics-single-column {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .customer-analytics {
+    padding: 12px;
+  }
+
+  .analytics-single-column {
+    gap: 12px;
+  }
+}
+
+/* If you want to remove the max-width constraint and make cards span the entire viewport width */
+/* 
+.analytics-container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+}
+*/

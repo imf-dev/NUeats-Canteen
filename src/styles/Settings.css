@@ -5,17 +5,17 @@
   box-sizing: border-box;
 }
 
-/* Main Layout - Match Inventory styling */
+/* Main Layout - Match Customer styling */
 .settings_management {
   margin-left: 240px;
   flex: 1;
   padding: 24px;
-  background-color: #f8f9fa;
+  background-color: #faf7ea;
   min-height: 100vh;
   width: calc(100% - 250px);
 }
 
-/* Header - Match Inventory styling */
+/* Header - Match Customer styling */
 .settings_header {
   display: flex;
   justify-content: space-between;
@@ -37,13 +37,13 @@
   color: #6b7280;
 }
 
-/* Tab Container - Match Inventory styling */
+/* Tab Container - Match Customer styling */
 .settings_tabs_container {
   margin-bottom: 24px;
   width: 100%;
 }
 
-/* Tabs - Match Inventory styling exactly */
+/* Tabs - Match Customer styling exactly */
 .settings_tabs {
   display: flex;
   width: 100%;
@@ -96,7 +96,7 @@
   transform: translateY(-1px);
 }
 
-/* Tab Content - Match Inventory styling */
+/* Tab Content - Match Customer styling */
 .settings_tab_content {
   background: transparent;
   border-radius: 8px;
@@ -113,18 +113,19 @@
   font-weight: 600;
 }
 
-/* Responsive Design - Match Inventory styling */
-@media (max-width: 1200px) {
+/* Responsive Design - EXACTLY MATCH CUSTOMERS */
+
+/* Large Tablets */
+@media (max-width: 1024px) {
   .settings_management {
-    width: calc(100% - 200px);
+    padding: 20px;
   }
 }
 
+/* Tablets */
 @media (max-width: 768px) {
   .settings_management {
     padding: 16px;
-    width: 100%;
-    margin-left: 0;
   }
 
   .settings_header {
@@ -143,8 +144,10 @@
   }
 }
 
+/* Mobile - Keep margin-left like Customers */
 @media (max-width: 480px) {
   .settings_management {
+    padding: 12px;
     padding: 12px;
   }
 
@@ -154,7 +157,7 @@
   }
 }
 
-/* Entrance Animations - Match Inventory styling */
+/* Entrance Animations - Match Customer styling */
 @keyframes settings_fadeInUp {
   from {
     opacity: 0;

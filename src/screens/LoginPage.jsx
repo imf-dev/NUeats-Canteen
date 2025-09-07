@@ -34,9 +34,13 @@ const LoginPage = () => {
     if (email === demoEmail && password === demoPassword) {
       setShowAlert(false);
       console.log("Demo account signed in successfully!");
-      navigate("/dashboard"); // redirect
+
+      // Save login state (can be token or simple flag)
+      localStorage.setItem("isAuthenticated", "true");
+
+      navigate("/NUeats-Canteen/dashboard/");
     } else {
-      setShowAlert(true); // Show the alert
+      setShowAlert(true);
     }
   };
 

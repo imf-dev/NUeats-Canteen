@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MdClose, MdSave, MdCancel, MdAdd } from "react-icons/md";
-import "./Inventory_EditModal.css";
+import "./IL_EditModal.css";
 import { categories } from "../../../demodata/inventoryDemoData";
 
 const Inventory_EditModal = ({

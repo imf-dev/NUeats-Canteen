@@ -20,11 +20,98 @@ body {
   top: 0;
   z-index: 1000;
   transition: transform 0.3s ease;
+
+  /* Entrance animation */
+  animation: slideInFromLeft 0.8s ease-out;
 }
 
+/* Entrance animation keyframes */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Staggered animation for nav items */
+.sidebar-nav-item {
+  margin-bottom: 4px;
+  animation: slideInNavItem 0.6s ease-out backwards;
+}
+
+/* Individual nav item animation with delay */
+.sidebar-nav-item:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.sidebar-nav-item:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.sidebar-nav-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.sidebar-nav-item:nth-child(4) {
+  animation-delay: 0.35s;
+}
+.sidebar-nav-item:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.sidebar-nav-item:nth-child(6) {
+  animation-delay: 0.45s;
+}
+.sidebar-nav-item:nth-child(7) {
+  animation-delay: 0.5s;
+}
+
+@keyframes slideInNavItem {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Header animation */
 .sidebar-header {
   padding: 24px 20px;
   border-bottom: 1.5px solid #ffd33a;
+  animation: fadeInScale 0.8s ease-out 0.1s backwards;
+}
+
+@keyframes fadeInScale {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Footer animation */
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1.5px solid #ffd33a;
+  margin-top: auto;
+  animation: slideUpFade 0.6s ease-out 0.6s backwards;
+}
+
+@keyframes slideUpFade {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .sidebar-logo-container {
@@ -61,10 +148,6 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.sidebar-nav-item {
-  margin-bottom: 4px;
 }
 
 .sidebar-nav-link {
@@ -121,18 +204,13 @@ body {
   letter-spacing: 0.8px;
 }
 
-.sidebar-footer {
-  padding: 20px;
-  border-top: 1.5px solid #ffd33a;
-  margin-top: auto;
-}
-
 .sidebar-admin-profile {
   position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 /* Hover effect */
 .sidebar-admin-profile:hover {
   background: rgba(255, 255, 255, 0.1);
@@ -173,7 +251,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start; /* aligns content to the left */
+  align-items: flex-start;
 }
 
 .sidebar-admin-name {

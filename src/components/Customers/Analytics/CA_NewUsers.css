@@ -1,0 +1,172 @@
+.ca-new-users-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  animation: ca-new-users-slideInUp 0.6s ease-out;
+}
+
+.ca-new-users-section-header {
+  margin-bottom: 20px;
+}
+
+.ca-new-users-section-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.ca-new-users-section-header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.ca-new-users-content {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.ca-new-users-stats-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 160px;
+}
+
+.ca-new-users-stat-card {
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+  animation: ca-new-users-fadeInScale 0.8s ease-out;
+}
+
+.ca-new-users-stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.ca-new-users-total-users {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.ca-new-users-today-users {
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+}
+
+.ca-new-users-stat-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+  animation: ca-new-users-countUp 1s ease-out;
+}
+
+.ca-new-users-stat-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.ca-new-users-stat-sublabel {
+  font-size: 10px;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.ca-new-users-chart-container {
+  flex: 1;
+  height: 200px;
+  animation: ca-new-users-slideInRight 0.8s ease-out;
+}
+
+.ca-new-users-chart-tooltip {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ca-new-users-tooltip-label {
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.ca-new-users-tooltip-value {
+  margin: 0;
+  color: #f59e0b;
+}
+
+/* Animations */
+@keyframes ca-new-users-slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ca-new-users-fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ca-new-users-slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ca-new-users-countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ca-new-users-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ca-new-users-stats-cards {
+    flex-direction: row;
+    min-width: 100%;
+    justify-content: space-around;
+  }
+
+  .ca-new-users-chart-container {
+    width: 100%;
+    height: 180px;
+  }
+}

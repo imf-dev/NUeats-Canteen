@@ -2,6 +2,7 @@ html,
 body {
   height: 100%;
   font-family: "Poppins", sans-serif;
+  background: #faf7ea;
 }
 * {
   transition: all 0.2s ease-in-out;

@@ -1,0 +1,232 @@
+.cac-customer-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cac-customer-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border: 2px solid #c0c0c0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 80px;
+}
+
+.cac-customer-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Active customer - full opacity white background */
+.cac-customer-card.cac-active {
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+/* Inactive customer - lighter opacity */
+.cac-customer-card.cac-inactive {
+  background-color: #ffffff;
+  opacity: 0.5;
+}
+
+/* Suspended customer - red tinted background */
+.cac-customer-card.cac-suspended {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  opacity: 1;
+}
+
+.cac-customer-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.cac-customer-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cac-avatar-initials {
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.cac-customer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cac-customer-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.cac-customer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cac-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.cac-contact-icon {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.cac-customer-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cac-orders-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.cac-order-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.cac-last-order {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.cac-customer-status {
+  display: flex;
+  align-items: center;
+}
+
+.cac-status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.cac-status-active {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.cac-status-inactive {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.cac-status-suspended {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.cac-view-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background-color: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.cac-view-button:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.cac-no-customers {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.cac-no-customers p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .cac-customer-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 16px;
+  }
+
+  .cac-customer-info {
+    gap: 12px;
+  }
+
+  .cac-customer-stats {
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  .cac-orders-info {
+    align-items: flex-start;
+  }
+
+  .cac-customer-contact {
+    gap: 3px;
+  }
+
+  .cac-contact-item {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cac-customer-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cac-avatar-initials {
+    font-size: 14px;
+  }
+
+  .cac-customer-name {
+    font-size: 15px;
+  }
+
+  .cac-customer-card {
+    padding: 14px;
+  }
+}

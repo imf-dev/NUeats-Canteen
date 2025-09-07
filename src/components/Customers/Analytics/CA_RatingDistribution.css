@@ -1,0 +1,206 @@
+.ca-rating-distribution-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  animation: ca-rating-dist-slideInUp 0.6s ease-out;
+}
+
+.ca-rating-distribution-section-header {
+  margin-bottom: 24px;
+}
+
+.ca-rating-distribution-section-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.ca-rating-distribution-section-header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.ca-rating-distribution-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.ca-rating-distribution-bars {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ca-rating-distribution-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  animation: ca-rating-dist-slideInLeft 0.6s ease-out forwards;
+}
+
+.ca-rating-distribution-stars {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 70px;
+}
+
+.ca-rating-distribution-star-icon {
+  color: #f59e0b;
+  font-size: 16px;
+}
+
+.ca-rating-distribution-number {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.ca-rating-distribution-progress-container {
+  flex: 1; /* let it grow to take up available space */
+  height: 8px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ca-rating-distribution-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  border-radius: 4px;
+  transition: width 0.8s ease-out;
+  transform-origin: left;
+  animation: ca-rating-dist-progressFill 1s ease-out forwards;
+  width: 0%;
+}
+
+.ca-rating-distribution-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  min-width: 24px;
+  text-align: right;
+}
+
+.ca-rating-distribution-average {
+  text-align: center;
+  padding: 16px;
+  border-left: 1px solid #e5e7eb;
+  min-width: 100px;
+  animation: ca-rating-dist-fadeInScale 0.8s ease-out;
+}
+
+.ca-rating-distribution-average-number {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+  animation: ca-rating-dist-countUp 1.2s ease-out;
+}
+
+.ca-rating-distribution-average-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Animations */
+@keyframes ca-rating-dist-slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ca-rating-dist-slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ca-rating-dist-progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target-width);
+  }
+}
+
+@keyframes ca-rating-dist-fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ca-rating-dist-countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hover Effects */
+.ca-rating-distribution-row:hover {
+  transform: translateX(4px);
+  transition: transform 0.2s ease;
+}
+
+.ca-rating-distribution-row:hover .ca-rating-distribution-progress-bar {
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ca-rating-distribution-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ca-rating-distribution-average {
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 20px;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .ca-rating-distribution-row {
+    gap: 12px;
+  }
+
+  .ca-rating-distribution-stars {
+    min-width: 60px;
+  }
+
+  .ca-rating-distribution-number {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,261 @@
+.cc-complaint-cards-container {
+  margin: 20px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: cc-slideInUp 0.4s ease-out forwards;
+}
+
+.cc-complaint-card {
+  background: white;
+  border: none;
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 0;
+  padding: 20px;
+  transition: all 0.3s ease;
+  animation: cc-slideInUp 0.4s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+  box-shadow: none;
+}
+
+.cc-complaint-card:last-child {
+  border-bottom: none;
+}
+
+.cc-complaint-card:hover {
+  background: #f8f9fa;
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+.cc-complaint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.cc-complaint-user-info {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.cc-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cc-user-icon {
+  font-size: 20px;
+  color: #6c757d;
+}
+
+.cc-complaint-main-info {
+  flex: 1;
+}
+
+.cc-complaint-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.cc-complaint-meta {
+  font-size: 13px;
+  color: #6c757d;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.cc-customer-name {
+  color: #495057;
+  font-weight: 500;
+}
+
+.cc-complaint-id,
+.cc-complaint-date {
+  color: #6c757d;
+}
+
+.cc-complaint-description {
+  font-size: 14px;
+  color: #495057;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cc-status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: lowercase;
+  transition: all 0.2s ease;
+}
+
+.cc-status-open {
+  background: #fef3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.cc-status-resolved {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.cc-admin-response {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  border-left: 3px solid #6c5ce7;
+  animation: cc-fadeIn 0.3s ease-out;
+}
+
+.cc-response-header {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.cc-admin-icon {
+  font-size: 16px;
+  color: #6c5ce7;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.cc-response-text {
+  font-size: 14px;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.cc-response-meta {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.cc-admin-name {
+  color: #6c5ce7;
+  font-weight: 500;
+}
+
+.cc-response-time {
+  color: #6c757d;
+}
+
+.cc-resolution-box {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: #155724;
+  animation: cc-fadeIn 0.3s ease-out;
+}
+
+.cc-complaint-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.cc-complaint-category {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.cc-respond-button {
+  background: #2c3e50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cc-respond-button:hover {
+  background: #34495e;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.3);
+}
+
+.cc-respond-button:active {
+  transform: translateY(0);
+}
+
+.cc-respond-icon {
+  font-size: 14px;
+}
+
+.cc-no-complaints {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+  font-size: 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+@keyframes cc-slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cc-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .cc-complaint-card {
+    padding: 16px;
+  }
+
+  .cc-complaint-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cc-status-badge {
+    align-self: flex-start;
+  }
+
+  .cc-complaint-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

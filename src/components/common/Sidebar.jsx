@@ -26,25 +26,25 @@ const Sidebar = () => {
   // Update activeItem based on current route
   useEffect(() => {
     switch (location.pathname) {
-      case "/dashboard":
+      case "/NUeats-Canteen/dashboard/":
         setActiveItem("DASHBOARD");
         break;
-      case "/orders":
+      case "/NUeats-Canteen/orders/":
         setActiveItem("ORDERS");
         break;
-      case "/menu":
+      case "/NUeats-Canteen/menu/":
         setActiveItem("MENU");
         break;
-      case "/inventory":
+      case "/NUeats-Canteen/inventory/":
         setActiveItem("INVENTORY");
         break;
-      case "/analytics":
+      case "/NUeats-Canteen/analytics/":
         setActiveItem("ANALYTICS");
         break;
-      case "/customers":
+      case "/NUeats-Canteen/customers/":
         setActiveItem("CUSTOMERS");
         break;
-      case "/settings":
+      case "/NUeats-Canteen/settings/":
         setActiveItem("SETTINGS");
         break;
       default:
@@ -58,38 +58,43 @@ const Sidebar = () => {
       id: "DASHBOARD",
       label: "DASHBOARD",
       icon: <FiHome />,
-      path: "/dashboard",
+      path: "/NUeats-Canteen/dashboard/",
     },
     {
       id: "ORDERS",
       label: "ORDERS",
       icon: <FiShoppingCart />,
-      path: "/orders",
+      path: "/NUeats-Canteen/orders/",
     },
-    { id: "MENU", label: "MENU", icon: <GiKnifeFork />, path: "/menu" },
+    {
+      id: "MENU",
+      label: "MENU",
+      icon: <GiKnifeFork />,
+      path: "/NUeats-Canteen/menu/",
+    },
     {
       id: "INVENTORY",
       label: "INVENTORY",
       icon: <FiBox />,
-      path: "/inventory",
+      path: "/NUeats-Canteen/inventory/",
     },
     {
       id: "ANALYTICS",
       label: "ANALYTICS",
       icon: <FiBarChart2 />,
-      path: "/analytics",
+      path: "/NUeats-Canteen/analytics/",
     },
     {
       id: "CUSTOMERS",
       label: "CUSTOMERS",
       icon: <FiUsers />,
-      path: "/customers",
+      path: "/NUeats-Canteen/customers/",
     },
     {
       id: "SETTINGS",
       label: "SETTINGS",
       icon: <FiSettings />,
-      path: "/settings",
+      path: "/NUeats-Canteen/settings/",
     },
   ];
 
@@ -146,27 +151,25 @@ const Sidebar = () => {
     switch (action) {
       case "profile":
         // Navigate to Settings page with admin tab active
-        navigate("/settings", { state: { activeTab: "admin" } });
+        navigate("/NUeats-Canteen/settings/", {
+          state: { activeTab: "admin" },
+        });
         setActiveItem("SETTINGS");
         break;
       case "restaurant":
         // Navigate to Settings page with store tab active
-        navigate("/settings", { state: { activeTab: "store" } });
+        navigate("/NUeats-Canteen/settings/", {
+          state: { activeTab: "store" },
+        });
         setActiveItem("SETTINGS");
         break;
       case "signout":
-        // Clear any stored user data (localStorage, sessionStorage, etc.)
-        localStorage.clear();
+        localStorage.removeItem("isAuthenticated");
         sessionStorage.clear();
-
-        // Clear browser history completely
-        clearBrowserHistory();
-
-        // Navigate to login page with replace to prevent back navigation
-        setTimeout(() => {
-          navigate("/", { replace: true });
-        }, 300);
+        navigate("/NUeats-Canteen/", { replace: true });
+        window.location.reload(); // ensures fresh state
         break;
+
       default:
         console.log(`Profile action: ${action}`);
         break;

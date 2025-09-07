@@ -1,11 +1,3 @@
-html,
-body {
-  height: 100%;
-  font-family: "Poppins", sans-serif;
-}
-* {
-  transition: all 0.2s ease-in-out;
-}
 /* App Layout */
 .menu_app-layout {
   display: flex;
@@ -21,7 +13,7 @@ body {
   flex: 1;
   margin-left: 240px; /* sidebar width */
   padding: 24px;
-  background-color: #f8fafc;
+  background-color: #faf7ea;
 }
 
 .menu_management {

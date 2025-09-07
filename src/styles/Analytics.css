@@ -1,12 +1,11 @@
-/* Analytics.css - Enhanced Responsive Version */
-
 .analytics_analytics-container {
-  margin-left: 240px;
+  margin-left: 240px; /* NEVER REMOVE THIS - same as Customers */
   padding: 32px;
   background: #f5f6fa;
   min-height: 100vh;
   animation: fadeIn 0.8s ease-out;
   transition: margin-left 0.3s ease;
+  background-color: #faf7ea;
 }
 
 .analytics_analytics-header {
@@ -51,7 +50,7 @@
   animation-fill-mode: both;
   position: relative;
   overflow: hidden;
-  min-width: 0; /* Prevents overflow */
+  min-width: 0;
 }
 
 .analytics_stat-card:nth-child(1) {
@@ -111,7 +110,7 @@
 
 .analytics_stat-content {
   flex: 1;
-  min-width: 0; /* Prevents text overflow */
+  min-width: 0;
 }
 
 .analytics_stat-content h3 {
@@ -153,12 +152,6 @@
   color: #e53e3e;
 }
 
-.analytics_stat-subtitle {
-  font-size: clamp(12px, 1.5vw, 14px);
-  color: #718096;
-  font-weight: 400;
-}
-
 /* Analytics Grid - More Flexible */
 .analytics_analytics-grid {
   display: grid;
@@ -175,15 +168,7 @@
   transition: all 0.3s ease;
   animation: slideInUp 1s ease-out;
   animation-fill-mode: both;
-  min-width: 0; /* Prevents overflow */
-}
-
-.analytics_popular-items-card {
-  animation-delay: 0.5s;
-}
-
-.analytics_hourly-performance-card {
-  animation-delay: 0.6s;
+  min-width: 0;
 }
 
 .analytics_analytics-card:hover {
@@ -353,29 +338,6 @@
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(-8px);
-}
-
-.analytics_tooltip-header {
-  font-weight: 700;
-  color: #667eea;
-  margin-bottom: 8px;
-  font-size: clamp(12px, 1.8vw, 14px);
-}
-
-.analytics_tooltip-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.analytics_tooltip-stats div {
-  font-size: clamp(10px, 1.5vw, 12px);
-  color: #cbd5e0;
-}
-
-.analytics_tooltip-stats span {
-  font-weight: 600;
-  color: white;
 }
 
 .analytics_bar-label {
@@ -573,28 +535,6 @@
   }
 }
 
-@keyframes pulseGlow {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Base Animations */
 @keyframes fadeIn {
   from {
@@ -627,53 +567,10 @@
   }
 }
 
-/* Enhanced Responsive Breakpoints */
-
-/* Large Tablets and Small Desktops */
-@media (max-width: 1400px) {
-  .analytics_analytics-container {
-    margin-left: 200px;
-  }
-
-  .analytics_line-chart {
-    min-width: 450px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .analytics_analytics-container {
-    margin-left: 180px;
-    padding: 24px;
-  }
-
-  .analytics_analytics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .analytics_line-chart {
-    min-width: 400px;
-  }
-}
-
-/* Tablets */
-@media (max-width: 1024px) {
-  .analytics_analytics-container {
-    margin-left: 0;
-    padding: 20px;
-  }
-
-  .analytics_stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-
-  .analytics_line-chart {
-    min-width: 350px;
-  }
-}
-
+/* RESPONSIVE - EXACTLY LIKE CUSTOMERS (ONLY CHANGE PADDING, NEVER MARGIN-LEFT) */
 @media (max-width: 768px) {
   .analytics_analytics-container {
-    padding: 16px;
+    padding: 16px; /* Only change padding like Customers */
   }
 
   .analytics_stats-grid {
@@ -689,6 +586,8 @@
   .analytics_stat-card {
     padding: 16px;
     gap: 12px;
+    flex-direction: row;
+    text-align: left;
   }
 
   .analytics_analytics-card {
@@ -710,18 +609,11 @@
     min-width: 100%;
     height: clamp(350px, 40vh, 450px);
   }
-
-  /* Stack stat cards vertically on mobile */
-  .analytics_stat-card {
-    flex-direction: row;
-    text-align: left;
-  }
 }
 
-/* Small Mobile Phones */
 @media (max-width: 480px) {
   .analytics_analytics-container {
-    padding: 12px;
+    padding: 12px; /* Only change padding like Customers */
   }
 
   .analytics_stats-grid {
@@ -772,26 +664,11 @@
     padding: 6px 8px;
     max-width: 120px;
   }
-
-  /* Better mobile tooltip positioning */
-  .analytics_bar-tooltip {
-    position: fixed;
-    bottom: auto;
-    top: 10px;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 1000;
-  }
-
-  .analytics_bar-tooltip::after {
-    display: none;
-  }
 }
 
-/* Extra Small Devices */
 @media (max-width: 360px) {
   .analytics_analytics-container {
-    padding: 8px;
+    padding: 8px; /* Only change padding like Customers */
   }
 
   .analytics_stat-card {
@@ -817,100 +694,5 @@
 
   .analytics_line-chart {
     min-width: 260px;
-  }
-}
-
-/* Landscape Mobile Orientation */
-@media (max-height: 500px) and (orientation: landscape) {
-  .analytics_analytics-container {
-    padding: 16px;
-  }
-
-  .analytics_bar-chart {
-    height: clamp(150px, 20vh, 200px);
-  }
-
-  .analytics_line-chart {
-    height: clamp(150px, 20vh, 200px);
-  }
-
-  .analytics_stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-}
-
-/* High DPI Displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .analytics_stat-card {
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  }
-
-  .analytics_analytics-card {
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  }
-}
-
-/* Print Styles */
-@media print {
-  .analytics_analytics-container {
-    margin-left: 0;
-    padding: 20px;
-    background: white;
-  }
-
-  .analytics_stat-card,
-  .analytics_analytics-card {
-    box-shadow: none;
-    border: 1px solid #e2e8f0;
-    break-inside: avoid;
-  }
-
-  .analytics_analytics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .analytics_stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Accessibility Improvements */
-@media (prefers-reduced-motion: reduce) {
-  .analytics_analytics-container,
-  .analytics_analytics-header,
-  .analytics_stat-card,
-  .analytics_analytics-card,
-  .analytics_bar,
-  .analytics_bar-fill,
-  .analytics_area-fill,
-  .analytics_line-path,
-  .analytics_data-point,
-  .analytics_data-point-inner {
-    animation: none !important;
-    transition: none !important;
-  }
-
-  .analytics_stat-card:hover,
-  .analytics_analytics-card:hover,
-  .analytics_bar-item:hover {
-    transform: none !important;
-  }
-}
-
-/* High Contrast Mode */
-@media (prefers-contrast: high) {
-  .analytics_stat-card,
-  .analytics_analytics-card {
-    border-width: 2px;
-    border-color: #2d3748;
-  }
-
-  .analytics_bar-fill {
-    background: #2d3748;
-  }
-
-  .analytics_line-path {
-    stroke: #2d3748;
-    stroke-width: 4;
   }
 }

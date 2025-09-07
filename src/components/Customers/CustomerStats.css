@@ -1,0 +1,113 @@
+.cs-customer-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.cs-stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Color variants */
+.cs-stat-card.blue {
+  border-left-color: #3182ce;
+}
+.cs-stat-card.green {
+  border-left-color: #38a169;
+}
+.cs-stat-card.yellow {
+  border-left-color: #d69e2e;
+}
+.cs-stat-card.orange {
+  border-left-color: #dd6b20;
+}
+
+.cs-stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.cs-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.cs-stat-card:hover::before {
+  transform: scaleX(1);
+}
+
+.cs-stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cs-stat-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: 0.025em;
+}
+
+.cs-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.cs-stat-card:hover .cs-stat-icon {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  transform: scale(1.1);
+}
+
+.cs-stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.cs-stat-card:hover .cs-stat-value {
+  color: #6366f1;
+}
+
+@media (max-width: 768px) {
+  .cs-customer-stats {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .cs-stat-card {
+    padding: 20px;
+  }
+
+  .cs-stat-value {
+    font-size: 28px;
+  }
+}

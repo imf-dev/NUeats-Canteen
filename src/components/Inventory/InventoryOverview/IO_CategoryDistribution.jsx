@@ -3,7 +3,7 @@ import "./IO_CategoryDistribution.css";
 
 const I_CategoryDistribution = ({ inventoryData, categories }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [hoveredPosition, setHoveredPosition] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const totalItems = inventoryData.length;
 
@@ -30,13 +30,56 @@ const I_CategoryDistribution = ({ inventoryData, categories }) => {
   });
 
   const handleMouseEnter = (item, event) => {
-    // Use the original positioning strategy
-    const rect = event.currentTarget.getBoundingClientRect();
-    setHoveredItem(item);
-    setHoveredPosition({
-      x: rect.left + rect.width / 2,
-      y: rect.top,
+    setHoveredItem({
+      type: "category",
+      name: item.name,
+      totalItems: item.totalItems,
+      totalStock: item.totalStock,
+      lowStock: item.lowStock,
+      percentage: item.percentage,
     });
+    updateMousePosition(event);
+  };
+
+  const handleMouseMove = (event) => {
+    if (hoveredItem) {
+      updateMousePosition(event);
+    }
+  };
+
+  const updateMousePosition = (event) => {
+    // Get the container's bounding rect for relative positioning
+    const container =
+      event.currentTarget.closest(".inventoryover_inventory-overview") ||
+      document.body;
+    const containerRect = container.getBoundingClientRect();
+
+    // Calculate relative position within the container
+    const relativeX = event.clientX - containerRect.left;
+    const relativeY = event.clientY - containerRect.top;
+
+    // Tooltip dimensions (approximate)
+    const tooltipWidth = 240;
+    const tooltipHeight = 120;
+
+    // Position tooltip to the right of cursor with relative positioning
+    let x = relativeX + 15; // Right side of cursor
+    let y = relativeY - tooltipHeight - 100; // Center on cursor vertically
+
+    // Adjust if tooltip would overflow container
+    if (x + tooltipWidth > containerRect.width) {
+      x = relativeX - tooltipWidth - 15; // Show on left side
+    }
+
+    if (y < 0) {
+      y = 10; // Minimum distance from container top
+    }
+
+    if (y + tooltipHeight > containerRect.height) {
+      y = containerRect.height - tooltipHeight - 10; // Adjust for container bottom
+    }
+
+    setMousePosition({ x, y });
   };
 
   const handleMouseLeave = () => {
@@ -54,7 +97,6 @@ const I_CategoryDistribution = ({ inventoryData, categories }) => {
             onMouseEnter={(e) =>
               handleMouseEnter(
                 {
-                  type: "category",
                   name: stat.category,
                   totalItems: stat.totalItems,
                   totalStock: stat.totalStock,
@@ -64,6 +106,7 @@ const I_CategoryDistribution = ({ inventoryData, categories }) => {
                 e
               )
             }
+            onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
             <div className="category_category-label">{stat.category}</div>
@@ -81,22 +124,33 @@ const I_CategoryDistribution = ({ inventoryData, categories }) => {
         ))}
       </div>
 
-      {/* Hover Tooltip */}
+      {/* Fixed Tooltip with proper positioning */}
       {hoveredItem && (
         <div
           className="category_hover-tooltip"
           style={{
-            left: hoveredPosition.x,
-            top: hoveredPosition.y - 10,
-            transform: "translateX(-50%) translateY(-100%)",
+            left: `${mousePosition.x}px`,
+            top: `${mousePosition.y}px`,
           }}
         >
           <div className="category_tooltip-title">{hoveredItem.name}</div>
           <div className="category_tooltip-content">
-            <div>Items: {hoveredItem.totalItems}</div>
-            <div>Total Stock: {hoveredItem.totalStock}</div>
-            <div>Low Stock: {hoveredItem.lowStock}</div>
-            <div>Percentage: {hoveredItem.percentage.toFixed(1)}%</div>
+            <div>
+              <span>Items:</span>
+              <span>{hoveredItem.totalItems}</span>
+            </div>
+            <div>
+              <span>Total Stock:</span>
+              <span>{hoveredItem.totalStock}</span>
+            </div>
+            <div>
+              <span>Low Stock:</span>
+              <span>{hoveredItem.lowStock}</span>
+            </div>
+            <div>
+              <span>Percentage:</span>
+              <span>{hoveredItem.percentage.toFixed(1)}%</span>
+            </div>
           </div>
         </div>
       )}

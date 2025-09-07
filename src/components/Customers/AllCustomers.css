@@ -1,0 +1,19 @@
+/* AllCustomers.css */
+
+.ac-all-customers {
+  background: transparent;
+  min-height: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ac-all-customers {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .ac-all-customers {
+    padding: 0;
+  }
+}

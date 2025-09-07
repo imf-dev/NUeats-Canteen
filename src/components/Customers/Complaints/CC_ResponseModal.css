@@ -1,0 +1,376 @@
+/* Modal Overlay */
+.crm-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000 !important;
+  margin: 0 !important;
+  padding: 20px;
+  animation: crm-fadeIn 0.2s ease-out;
+  /* Ensure it's not affected by parent containers */
+  inset: 0 !important;
+}
+
+/* Modal Container */
+.crm-modal-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: crm-slideInUp 0.3s ease-out;
+  position: relative;
+  margin: 0;
+  transform: none;
+}
+
+/* Modal Header */
+.crm-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.crm-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.crm-close-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6c757d;
+}
+
+.crm-close-button:hover:not(:disabled) {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.crm-close-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.crm-close-icon {
+  font-size: 24px;
+}
+
+/* Modal Content */
+.crm-modal-content {
+  padding: 24px;
+  max-height: calc(90vh - 140px);
+  overflow-y: auto;
+}
+
+/* Complaint Summary */
+.crm-complaint-summary {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #e9ecef;
+}
+
+.crm-complaint-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.crm-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.crm-user-icon {
+  font-size: 20px;
+  color: #6c757d;
+}
+
+.crm-complaint-info {
+  flex: 1;
+}
+
+.crm-complaint-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.crm-complaint-meta {
+  font-size: 13px;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.crm-customer-name {
+  color: #495057;
+  font-weight: 500;
+}
+
+.crm-complaint-date {
+  color: #6c757d;
+}
+
+.crm-status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: lowercase;
+  flex-shrink: 0;
+}
+
+.crm-status-open {
+  background: #fef3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.crm-status-resolved {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.crm-complaint-description {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #e9ecef;
+}
+
+.crm-complaint-description p {
+  margin: 0;
+  font-size: 14px;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.crm-complaint-category {
+  font-size: 13px;
+  color: #6c757d;
+}
+
+.crm-category-text {
+  color: #495057;
+  font-weight: 500;
+}
+
+/* Response Form */
+.crm-response-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.crm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.crm-form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.crm-response-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #495057;
+  background: white;
+  resize: vertical;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.crm-response-textarea:focus {
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+}
+
+.crm-response-textarea:disabled {
+  background: #f8f9fa;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.crm-response-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Form Actions */
+.crm-form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.crm-cancel-button {
+  background: white;
+  color: #6c757d;
+  border: 2px solid #e9ecef;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.crm-cancel-button:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #d1d5db;
+  color: #495057;
+}
+
+.crm-submit-button {
+  background: #6c5ce7;
+  color: white;
+  border: 2px solid #6c5ce7;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crm-submit-button:hover:not(:disabled) {
+  background: #5b4cdb;
+  border-color: #5b4cdb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 92, 231, 0.3);
+}
+
+.crm-submit-button:disabled {
+  background: #d1d5db;
+  border-color: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.crm-send-icon {
+  font-size: 16px;
+}
+
+.crm-loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: crm-spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes crm-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes crm-slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes crm-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .crm-modal-overlay {
+    padding: 10px;
+  }
+
+  .crm-modal-container {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+
+  .crm-modal-header {
+    padding: 20px 20px 16px 20px;
+  }
+
+  .crm-modal-content {
+    padding: 20px;
+  }
+
+  .crm-complaint-summary {
+    padding: 16px;
+  }
+
+  .crm-complaint-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .crm-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .crm-cancel-button,
+  .crm-submit-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

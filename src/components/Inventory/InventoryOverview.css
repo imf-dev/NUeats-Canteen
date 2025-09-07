@@ -3,6 +3,9 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  /* Ensure proper stacking context for tooltips */
+  position: relative;
+  z-index: 1;
 }
 
 /* Charts Section */
@@ -10,6 +13,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
+  /* Prevent stacking context issues */
+  position: relative;
+  z-index: auto;
 }
 
 /* Alerts Section */
@@ -17,6 +23,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
+  /* Prevent stacking context issues */
+  position: relative;
+  z-index: auto;
 }
 
 /* Responsive Design */

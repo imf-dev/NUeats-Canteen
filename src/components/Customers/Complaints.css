@@ -1,0 +1,27 @@
+.comp-complaints-container {
+  padding: 0;
+  width: 100%;
+  margin: 0;
+  min-height: auto;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: comp-fadeIn 0.5s ease-out;
+}
+
+@keyframes comp-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .comp-complaints-container {
+    padding: 0;
+  }
+}
