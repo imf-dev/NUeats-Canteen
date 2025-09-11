@@ -1,8 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
+import CustomModal from "../common/CustomModal";
 import "./D_CurrentOrders.css";
 
-const DashboardCurrentOrders = ({ currentOrders }) => {
-  const getStatusButton = (status) => {
+const DashboardCurrentOrders = ({ currentOrders, onOrderStatusChange }) => {
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: "confirm",
+    title: "",
+    message: "",
+    orderId: null,
+    newStatus: null,
+    actionText: "",
+  });
+
+  const openConfirmationModal = (orderId, currentStatus, customerName) => {
+    let title, message, newStatus, actionText;
+
+    switch (currentStatus) {
+      case "pending":
+        title = "Start Preparing Order";
+        message = `Are you sure you want to start preparing order #${orderId} for ${customerName}?`;
+        newStatus = "preparing";
+        actionText = "Start Preparing";
+        break;
+      case "preparing":
+        title = "Mark Order as Ready";
+        message = `Are you sure you want to mark order #${orderId} for ${customerName} as ready?`;
+        newStatus = "ready";
+        actionText = "Mark Ready";
+        break;
+      case "ready":
+        title = "Complete Order";
+        message = `Are you sure you want to complete order #${orderId} for ${customerName}?`;
+        newStatus = "completed";
+        actionText = "Complete Order";
+        break;
+      default:
+        return;
+    }
+
+    setModalState({
+      isOpen: true,
+      type: "confirm",
+      title,
+      message,
+      orderId,
+      newStatus,
+      actionText,
+    });
+  };
+
+  const handleConfirmAction = () => {
+    if (onOrderStatusChange && modalState.orderId && modalState.newStatus) {
+      onOrderStatusChange(modalState.orderId, modalState.newStatus);
+    }
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setModalState({
+      isOpen: false,
+      type: "confirm",
+      title: "",
+      message: "",
+      orderId: null,
+      newStatus: null,
+      actionText: "",
+    });
+  };
+
+  const getStatusButton = (status, orderId, customerName) => {
     const statusConfig = {
       preparing: { text: "Mark Ready", class: "dashboard_btn-primary" },
       ready: { text: "Complete Order", class: "dashboard_btn-success" },
@@ -22,7 +90,10 @@ const DashboardCurrentOrders = ({ currentOrders }) => {
     }
 
     return config.text ? (
-      <button className={`dashboard_action-btn ${config.class}`}>
+      <button
+        className={`dashboard_action-btn ${config.class}`}
+        onClick={() => openConfirmationModal(orderId, status, customerName)}
+      >
         {config.text}
       </button>
     ) : null;
@@ -75,12 +146,27 @@ const DashboardCurrentOrders = ({ currentOrders }) => {
                     🟡 pending
                   </span>
                 )}
-                {getStatusButton(order.status)}
+                {getStatusButton(order.status, order.id, order.customerName)}
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Portal the modal to document.body */}
+      {modalState.isOpen &&
+        ReactDOM.createPortal(
+          <CustomModal
+            isOpen={modalState.isOpen}
+            onClose={closeModal}
+            type={modalState.type}
+            title={modalState.title}
+            message={modalState.message}
+            onConfirm={handleConfirmAction}
+            confirmText={modalState.actionText}
+          />,
+          document.body
+        )}
     </div>
   );
 };

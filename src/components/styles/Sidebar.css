@@ -25,6 +25,11 @@ body {
   animation: slideInFromLeft 0.8s ease-out;
 }
 
+.sidebar,
+.sidebar * {
+  overflow-x: hidden !important;
+}
+
 /* Entrance animation keyframes */
 @keyframes slideInFromLeft {
   from {

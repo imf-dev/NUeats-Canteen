@@ -14,12 +14,15 @@ import {
 const MenuManagement = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [isMobileTabsOpen, setIsMobileTabsOpen] = useState(false);
+  const [availabilityFilter, setAvailabilityFilter] = useState("All");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const hamburgerRef = useRef(null);
+  const dropdownRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState("add"); // 'add' or 'edit'
+  const [modalMode, setModalMode] = useState("add");
   const [itemToEdit, setItemToEdit] = useState(null);
 
   // Confirmation deletion
@@ -29,10 +32,29 @@ const MenuManagement = () => {
   // Initialize with demo data
   const [menuItems, setMenuItems] = useState(initialMenuItems);
 
-  // Use imported categories instead of hardcoded tabs
-  const tabs = categories;
+  // Filter out "Unavailable" from categories and use as tabs - Fixed to avoid duplicate "All"
+  const filteredCategories = categories.filter(
+    (cat) => cat !== "Unavailable" && cat !== "All"
+  );
+  const tabs = ["All", ...filteredCategories];
 
-  // Close mobile tabs when clicking outside
+  // Updated availability filter options without emojis and better labels
+  const availabilityOptions = [
+    {
+      value: "All",
+      label: "All Items",
+    },
+    {
+      value: "Available",
+      label: "Available Only",
+    },
+    {
+      value: "Unavailable",
+      label: "Unavailable Only",
+    },
+  ];
+
+  // Close mobile tabs and dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -41,21 +63,58 @@ const MenuManagement = () => {
       ) {
         setIsMobileTabsOpen(false);
       }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filtered items based on active tab AND search term
+  // Enhanced filtering logic
   const filteredItems = menuItems.filter((item) => {
+    // Search filter
     const matchesSearch = item.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
-    if (activeTab === "All") return matchesSearch;
-    if (activeTab === "Unavailable") return !item.isAvailable && matchesSearch;
-    return item.category === activeTab && matchesSearch;
+    // Category filter
+    let matchesCategory = true;
+    if (activeTab !== "All") {
+      matchesCategory = item.category === activeTab;
+    }
+
+    // Availability filter
+    let matchesAvailability = true;
+    if (availabilityFilter === "Available") {
+      matchesAvailability = item.isAvailable === true;
+    } else if (availabilityFilter === "Unavailable") {
+      matchesAvailability = item.isAvailable === false;
+    }
+    // If "All" is selected, matchesAvailability stays true
+
+    return matchesSearch && matchesCategory && matchesAvailability;
   });
+
+  // Get counts for each availability status
+  const getAvailabilityCounts = () => {
+    const currentCategoryItems =
+      activeTab === "All"
+        ? menuItems
+        : menuItems.filter((item) => item.category === activeTab);
+
+    const available = currentCategoryItems.filter(
+      (item) => item.isAvailable
+    ).length;
+    const unavailable = currentCategoryItems.filter(
+      (item) => !item.isAvailable
+    ).length;
+    const total = currentCategoryItems.length;
+
+    return { available, unavailable, total };
+  };
+
+  const counts = getAvailabilityCounts();
 
   const toggleAvailability = (id) => {
     setMenuItems((prevItems) =>
@@ -106,7 +165,6 @@ const MenuManagement = () => {
 
   const handleSaveMenuItem = (menuItemData, mode) => {
     if (mode === "add") {
-      // Generate new ID (in real app, this would come from backend)
       const newId = Math.max(...menuItems.map((item) => item.id)) + 1;
       const newItem = {
         ...menuItemData,
@@ -114,7 +172,6 @@ const MenuManagement = () => {
       };
       setMenuItems((prevItems) => [...prevItems, newItem]);
     } else {
-      // Update existing item
       setMenuItems((prevItems) =>
         prevItems.map((item) =>
           item.id === menuItemData.id ? menuItemData : item
@@ -123,11 +180,21 @@ const MenuManagement = () => {
     }
   };
 
+  const handleAvailabilityFilterChange = (value) => {
+    setAvailabilityFilter(value);
+    setIsDropdownOpen(false);
+  };
+
+  // Get the current filter option for display
+  const getCurrentFilterOption = () => {
+    return availabilityOptions.find((opt) => opt.value === availabilityFilter);
+  };
+
   return (
     <div className="menu_layout">
       <div className="menu_main">
         <div className="menu_header">
-          <div className="header-content">
+          <div className="menu_header-content">
             <h1>Menu Management</h1>
             <p>Manage menu items and categories</p>
           </div>
@@ -152,13 +219,63 @@ const MenuManagement = () => {
                   key={tab}
                   className={`menu_tab-btn ${
                     activeTab === tab ? "menu_active" : ""
-                  } ${tab === "Unavailable" ? "menu_unavailable-tab" : ""}`}
+                  }`}
                   onClick={() => setActiveTab(tab)}
                 >
                   {tab}
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Updated Availability Filter Dropdown */}
+          <div className="menu_filter-dropdown" ref={dropdownRef}>
+            <button
+              className="menu_filter-btn"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <span className="menu_filter-label">
+                {getCurrentFilterOption()?.label}
+              </span>
+              <span
+                className={`menu_dropdown-arrow ${
+                  isDropdownOpen ? "menu_open" : ""
+                }`}
+              >
+                ▼
+              </span>
+            </button>
+
+            {isDropdownOpen && (
+              <div className="menu_dropdown-menu">
+                {availabilityOptions.map((option) => {
+                  let count;
+                  if (option.value === "All") count = counts.total;
+                  else if (option.value === "Available")
+                    count = counts.available;
+                  else count = counts.unavailable;
+
+                  return (
+                    <button
+                      key={option.value}
+                      className={`menu_dropdown-item ${
+                        availabilityFilter === option.value ? "menu_active" : ""
+                      }`}
+                      onClick={() =>
+                        handleAvailabilityFilterChange(option.value)
+                      }
+                    >
+                      <span className="menu_dropdown-item-content">
+                        <span className="menu_dropdown-text">
+                          {option.label}
+                        </span>
+                        <span className="menu_dropdown-count">({count})</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div className="menu_search-container">
@@ -172,7 +289,17 @@ const MenuManagement = () => {
           </div>
         </div>
 
-        {/* Use the new M_Cards component */}
+        {/* Results Summary */}
+        <div className="menu_results-summary">
+          Showing {filteredItems.length} item
+          {filteredItems.length !== 1 ? "s" : ""}
+          {activeTab !== "All" && ` in ${activeTab}`}
+          {availabilityFilter !== "AllItems" &&
+            ` (${availabilityFilter.toLowerCase()})`}
+          {searchTerm && ` matching "${searchTerm}"`}
+        </div>
+
+        {/* Use the M_Cards component */}
         <M_Cards
           menuItems={filteredItems}
           onToggleAvailability={toggleAvailability}

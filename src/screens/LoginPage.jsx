@@ -237,13 +237,6 @@ const LoginPage = () => {
             >
               Sign In
             </button>
-
-            <div className="login_signup-link">
-              Don't have an account?{" "}
-              <a href="#" className="login_signup-link-a">
-                Sign up here
-              </a>
-            </div>
           </div>
         </div>
       </div>
