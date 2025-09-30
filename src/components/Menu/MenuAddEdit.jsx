@@ -13,6 +13,7 @@ const MenuAddEdit = ({
     description: "",
     price: "",
     category: "",
+    prepTime: "",
     image: null,
     imagePreview: null,
   });
@@ -37,6 +38,7 @@ const MenuAddEdit = ({
           description: itemToEdit.description,
           price: itemToEdit.price.toString(),
           category: itemToEdit.category,
+          prepTime: typeof itemToEdit.prepTime === "number" ? String(itemToEdit.prepTime) : "",
           image: null,
           imagePreview: itemToEdit.image,
         };
@@ -48,6 +50,7 @@ const MenuAddEdit = ({
           description: "",
           price: "",
           category: "",
+          prepTime: "",
           image: null,
           imagePreview: null,
         };
@@ -67,6 +70,7 @@ const MenuAddEdit = ({
         formData.description !== originalDataRef.current.description ||
         formData.price !== originalDataRef.current.price ||
         formData.category !== originalDataRef.current.category ||
+        formData.prepTime !== originalDataRef.current.prepTime ||
         formData.image !== null;
       setHasChanges(hasChanged);
     }
@@ -147,6 +151,16 @@ const MenuAddEdit = ({
       newErrors.category = "Please select a category";
     }
 
+    if (!formData.prepTime.trim()) {
+      newErrors.prepTime = "Prep time is required";
+    } else if (
+      isNaN(formData.prepTime) ||
+      parseInt(formData.prepTime, 10) < 0 ||
+      !Number.isInteger(Number(formData.prepTime))
+    ) {
+      newErrors.prepTime = "Enter a valid whole number of minutes";
+    }
+
     if (mode === "add" && !formData.image) {
       newErrors.image = "Please select an image for the menu item";
     }
@@ -190,7 +204,9 @@ const MenuAddEdit = ({
         description: formData.description.trim(),
         price: parseFloat(formData.price),
         category: formData.category,
-        image: formData.imagePreview, // In real app, this would be uploaded to server
+        prepTime: parseInt(formData.prepTime, 10),
+        image: formData.imagePreview,
+        imageFile: formData.image, // actual File object for upload
         isAvailable: mode === "add" ? true : itemToEdit.isAvailable,
       };
 
@@ -213,6 +229,7 @@ const MenuAddEdit = ({
       description: "",
       price: "",
       category: "",
+      prepTime: "",
       image: null,
       imagePreview: null,
     });
@@ -303,6 +320,34 @@ const MenuAddEdit = ({
                   )}
                 </div>
               </div>
+
+            <div className="menuaddedit_form-group">
+              <label htmlFor="prepTime" className="menuaddedit_form-label">
+                Prep Time (minutes)
+              </label>
+              <input
+                id="prepTime"
+                name="prepTime"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="e.g., 10"
+                value={formData.prepTime}
+                onChange={handleInputChange}
+                className={`menuaddedit_form-input ${
+                  errors.prepTime ? "error" : ""
+                }`}
+              />
+              {errors.prepTime && (
+                <div
+                  className={`menuaddedit_error-message ${
+                    errors.prepTime ? "show" : ""
+                  }`}
+                >
+                  ⚠ {errors.prepTime}
+                </div>
+              )}
+            </div>
 
               <div className="menuaddedit_form-group">
                 <label htmlFor="description" className="menuaddedit_form-label">
