@@ -6,10 +6,8 @@ import CustomModal from "../components/common/CustomModal";
 import ScrollUpButton from "../components/common/ScrollUpButton";
 
 // Import demo data
-import {
-  menuItems as initialMenuItems,
-  categories,
-} from "../demodata/menuDemoData";
+import { categories } from "../demodata/menuDemoData";
+import { supabase } from "../lib/supabaseClient";
 
 const MenuManagement = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -29,8 +27,42 @@ const MenuManagement = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
-  // Initialize with demo data
-  const [menuItems, setMenuItems] = useState(initialMenuItems);
+  // Initialize with empty list and fetch from DB
+  const [menuItems, setMenuItems] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadMenuItems() {
+      try {
+        const { data, error } = await supabase
+          .from("menu_items")
+          .select("id, name, description, price, category, image, is_available, prep_time")
+          .order("id", { ascending: true });
+        if (error) {
+          console.error("❌ Failed to fetch menu_items:", error);
+          return;
+        }
+        if (!isMounted) return;
+        const mapped = (data || []).map((row) => ({
+          id: row.id,
+          name: row.name,
+          description: row.description ?? "",
+          price: Number(row.price),
+          category: row.category ?? "",
+          image: row.image ?? "",
+          isAvailable: !!row.is_available,
+          prepTime: typeof row.prep_time === "number" ? row.prep_time : undefined,
+        }));
+        setMenuItems(mapped);
+      } catch (err) {
+        console.error("💥 Unexpected error loading menu_items:", err);
+      }
+    }
+    loadMenuItems();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Filter out "Unavailable" from categories and use as tabs - Fixed to avoid duplicate "All"
   const filteredCategories = categories.filter(
@@ -116,12 +148,21 @@ const MenuManagement = () => {
 
   const counts = getAvailabilityCounts();
 
-  const toggleAvailability = (id) => {
-    setMenuItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, isAvailable: !item.isAvailable } : item
-      )
-    );
+  const toggleAvailability = async (id) => {
+    const current = menuItems.find((i) => i.id === id);
+    if (!current) return;
+    const nextAvailable = !current.isAvailable;
+    // optimistic update
+    setMenuItems((prev) => prev.map((i) => (i.id === id ? { ...i, isAvailable: nextAvailable } : i)));
+    const { error } = await supabase
+      .from("menu_items")
+      .update({ is_available: nextAvailable })
+      .eq("id", id);
+    if (error) {
+      console.error("❌ Failed to toggle availability:", error);
+      // revert on error
+      setMenuItems((prev) => prev.map((i) => (i.id === id ? { ...i, isAvailable: !nextAvailable } : i)));
+    }
   };
 
   const handleEdit = (id) => {
@@ -137,13 +178,19 @@ const MenuManagement = () => {
     setShowDeleteConfirm(true);
   };
 
-  const confirmDelete = () => {
-    if (itemToDelete) {
-      setMenuItems((prevItems) =>
-        prevItems.filter((item) => item.id !== itemToDelete.id)
-      );
-      setShowDeleteConfirm(false);
-      setItemToDelete(null);
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+    const id = itemToDelete.id;
+    // optimistic removal
+    const prev = menuItems;
+    setMenuItems((items) => items.filter((i) => i.id !== id));
+    setShowDeleteConfirm(false);
+    setItemToDelete(null);
+    const { error } = await supabase.from("menu_items").delete().eq("id", id);
+    if (error) {
+      console.error("❌ Failed to delete item:", error);
+      // revert on error
+      setMenuItems(prev);
     }
   };
 
@@ -163,20 +210,108 @@ const MenuManagement = () => {
     setItemToEdit(null);
   };
 
-  const handleSaveMenuItem = (menuItemData, mode) => {
+  const handleSaveMenuItem = async (menuItemData, mode) => {
+    // Upload image to Supabase Storage if a File is provided
+    async function uploadImageIfNeeded(file, nameHint) {
+      if (!(file instanceof File)) return menuItemData.image || "";
+      const allowed = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowed.includes(file.type)) {
+        console.error("❌ Invalid file type:", file.type);
+        return "";
+      }
+      const maxBytes = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxBytes) {
+        console.error("❌ File too large (max 5MB)");
+        return "";
+      }
+      const fileExt = file.type === "image/png" ? "png" : "jpg";
+      const safeName = (nameHint || "menu-item")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      const uniquePath = `menu/${Date.now()}-${safeName}.${fileExt}`;
+      const { data: uploadRes, error: uploadErr } = await supabase.storage
+        .from("menu-images")
+        .upload(uniquePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type,
+        });
+      if (uploadErr) {
+        console.error("❌ Image upload failed:", uploadErr);
+        return "";
+      }
+      const { data: publicUrlData } = supabase.storage
+        .from("menu-images")
+        .getPublicUrl(uploadRes.path);
+      return publicUrlData?.publicUrl || "";
+    }
+
     if (mode === "add") {
-      const newId = Math.max(...menuItems.map((item) => item.id)) + 1;
-      const newItem = {
-        ...menuItemData,
-        id: newId,
+      const imageUrl = await uploadImageIfNeeded(menuItemData.imageFile, menuItemData.name);
+      const payload = {
+        name: menuItemData.name,
+        description: menuItemData.description,
+        price: menuItemData.price,
+        category: menuItemData.category,
+        image: imageUrl || null,
+        is_available: true,
+        prep_time: typeof menuItemData.prepTime === "number" ? menuItemData.prepTime : null,
       };
-      setMenuItems((prevItems) => [...prevItems, newItem]);
+      const { data, error } = await supabase
+        .from("menu_items")
+        .insert(payload)
+        .select("id, name, description, price, category, image, is_available, prep_time")
+        .single();
+      if (error) {
+        console.error("❌ Failed to add item:", error);
+        return;
+      }
+      const mapped = {
+        id: data.id,
+        name: data.name,
+        description: data.description ?? "",
+        price: Number(data.price),
+        category: data.category ?? "",
+        image: data.image ?? "",
+        isAvailable: !!data.is_available,
+        prepTime: typeof data.prep_time === "number" ? data.prep_time : undefined,
+      };
+      setMenuItems((prev) => [...prev, mapped]);
     } else {
-      setMenuItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === menuItemData.id ? menuItemData : item
-        )
-      );
+      let imageUrl = menuItemData.image || "";
+      if (menuItemData.imageFile instanceof File) {
+        imageUrl = await uploadImageIfNeeded(menuItemData.imageFile, menuItemData.name);
+      }
+      const payload = {
+        name: menuItemData.name,
+        description: menuItemData.description,
+        price: menuItemData.price,
+        category: menuItemData.category,
+        image: imageUrl || null,
+        prep_time: typeof menuItemData.prepTime === "number" ? menuItemData.prepTime : null,
+      };
+      const { data, error } = await supabase
+        .from("menu_items")
+        .update(payload)
+        .eq("id", menuItemData.id)
+        .select("id, name, description, price, category, image, is_available, prep_time")
+        .single();
+      if (error) {
+        console.error("❌ Failed to update item:", error);
+        return;
+      }
+      const mapped = {
+        id: data.id,
+        name: data.name,
+        description: data.description ?? "",
+        price: Number(data.price),
+        category: data.category ?? "",
+        image: data.image ?? "",
+        isAvailable: !!data.is_available,
+        prepTime: typeof data.prep_time === "number" ? data.prep_time : undefined,
+      };
+      setMenuItems((prev) => prev.map((i) => (i.id === mapped.id ? mapped : i)));
     }
   };
 
