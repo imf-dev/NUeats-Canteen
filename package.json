@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "seed:menu": "node scripts/seedMenuItems.mjs"
+    "seed:menu": "node scripts/seedMenuItems.mjs",
+    "seed:orders": "node scripts/seedOrders.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.58.0",
