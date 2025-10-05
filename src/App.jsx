@@ -15,6 +15,7 @@ import Inventory from "./screens/Inventory.jsx";
 import Analytics from "./screens/Analytics.jsx";
 import Customers from "./screens/Customers.jsx";
 import Settings from "./screens/Settings.jsx";
+import ResetPassword from "./screens/ResetPassword.jsx";
 import Sidebar from "./components/common/Sidebar.jsx";
 import { supabase } from "./lib/supabaseClient";
 
@@ -64,6 +65,21 @@ const AppWrapper = () => {
                 exit={{ opacity: 0 }}
               >
                 <LoginPage />
+              </motion.div>
+            }
+          />
+
+          {/* Supabase Password Recovery Route */}
+          <Route
+            path="/NUeats-Canteen/auth/recovery"
+            element={
+              <motion.div
+                key="recovery"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <ResetPassword />
               </motion.div>
             }
           />
