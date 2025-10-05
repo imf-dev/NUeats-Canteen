@@ -27,6 +27,7 @@ const LoginPage = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState("Invalid email or password. Please try again.");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,6 +80,31 @@ const LoginPage = () => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSubmit(e);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    if (!email) {
+      setAlertMsg("Enter your email to receive a reset link.");
+      setShowAlert(true);
+      return;
+    }
+    try {
+      setIsResetting(true);
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) {
+        setAlertMsg(error.message || "Failed to send reset email");
+        setShowAlert(true);
+        return;
+      }
+      setAlertMsg("Password reset email sent. Please check your inbox.");
+      setShowAlert(true);
+    } catch (err) {
+      setAlertMsg(err.message || "Unexpected error while sending reset email");
+      setShowAlert(true);
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -229,8 +255,8 @@ const LoginPage = () => {
                 />
                 Remember me
               </label>
-              <a href="#" className="login_forgot-password">
-                Forgot Password?
+              <a href="#" className="login_forgot-password" onClick={handleForgotPassword}>
+                {isResetting ? "Sending..." : "Forgot Password?"}
               </a>
             </div>
 
