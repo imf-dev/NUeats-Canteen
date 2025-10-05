@@ -87,7 +87,7 @@ const CC_ResponseModal = ({
                       : "Unknown Customer"}
                   </span>
                   <span className="crm-complaint-date">
-                    • {complaint ? formatDate(complaint.created_date) : ""}
+                    • {complaint ? formatDate(complaint.created_at) : ""}
                   </span>
                 </div>
               </div>

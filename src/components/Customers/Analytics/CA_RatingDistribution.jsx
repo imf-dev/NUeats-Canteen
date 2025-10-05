@@ -1,39 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { ordersData } from "../../../demodata/ordersDemoData";
+import { getRatingsData } from "../../../lib/customerAnalyticsService";
 import "./CA_RatingDistribution.css";
 
 const CA_RatingDistribution = () => {
-  // Calculate rating distribution
-  const getRatingDistribution = () => {
-    const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  const [distribution, setDistribution] = useState({ 1:0,2:0,3:0,4:0,5:0 });
+  const [averageRating, setAverageRating] = useState(0);
 
-    ordersData.forEach((order) => {
-      if (order.rating) {
-        distribution[order.rating]++;
-      }
-    });
+  useEffect(() => {
+    const load = async () => {
+      const { distribution: dist, average } = await getRatingsData();
+      setDistribution(dist);
+      setAverageRating(average);
+    };
+    load();
+  }, []);
 
-    return distribution;
-  };
-
-  // Calculate average rating
-  const getAverageRating = () => {
-    const ratings = ordersData
-      .filter((order) => order.rating)
-      .map((order) => order.rating);
-    if (ratings.length === 0) return 0;
-    const sum = ratings.reduce((acc, rating) => acc + rating, 0);
-    return (sum / ratings.length).toFixed(1);
-  };
-
-  const distribution = getRatingDistribution();
-  const averageRating = getAverageRating();
-  const totalRatings = Object.values(distribution).reduce(
-    (sum, count) => sum + count,
-    0
-  );
-  const maxCount = Math.max(...Object.values(distribution));
+  const totalRatings = Object.values(distribution).reduce((sum, count) => sum + count, 0);
+  const maxCount = Math.max(0, ...Object.values(distribution));
 
   // Calculate percentage for progress bars
   const getBarWidth = (count) => {
