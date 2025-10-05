@@ -92,7 +92,11 @@ const LoginPage = () => {
     }
     try {
       setIsResetting(true);
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const origin = window.location.origin; // e.g., http://localhost:5173
+      const redirectTo = `${origin}/NUeats-Canteen/auth/recovery`;
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      });
       if (error) {
         setAlertMsg(error.message || "Failed to send reset email");
         setShowAlert(true);
