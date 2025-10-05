@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import ScrollUpButton from "../components/common/ScrollUpButton";
 import { getDashboardData, updateOrderStatus } from "../lib/dashboardService";
 
-// Import the new components
 import DashboardSummaryCards from "../components/Dashboard/D_SummaryCards";
 import DashboardWeeklyCard from "../components/Dashboard/D_WeeklyCard";
 import DashboardTopSellingCard from "../components/Dashboard/D_TopSellingCard";
@@ -12,7 +11,6 @@ import LoadingScreen from "../components/common/LoadingScreen";
 
 import "../styles/Dashboard.css";
 
-// Fade-in transition variants
 const pageVariants = {
   initial: { opacity: 0 },
   in: { opacity: 1 },
@@ -139,21 +137,14 @@ const Dashboard = () => {
           <p>Here's what's happening today</p>
         </div>
 
-        {/* Stats Cards */}
         <DashboardSummaryCards statsCards={dashboardData.statsCards} />
 
-        {/* Charts Section */}
         <div className="dashboard_charts-section">
-          {/* Weekly Sales Chart */}
           <DashboardWeeklyCard weeklyData={dashboardData.weeklyData} />
-
-          {/* Top Selling Items */}
           <DashboardTopSellingCard
             topSellingItems={dashboardData.topSellingItems}
           />
         </div>
-
-        {/* Current Orders */}
         <DashboardCurrentOrders 
           currentOrders={dashboardData.currentOrders}
           onOrderStatusChange={handleOrderStatusChange}
