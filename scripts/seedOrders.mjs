@@ -215,14 +215,124 @@ function generateRandomId(length) {
 }
 
 /**
+ * Generate rating for a completed order
+ */
+function generateRating(orderId, createdAt) {
+  const stars = randomInt(1, 5);
+  
+  // Higher ratings are more likely to have feedback
+  const shouldHaveFeedback = stars >= 4 ? Math.random() < 0.4 : Math.random() < 0.7;
+  
+  const positiveFeedbacks = [
+    "Great food and fast service!",
+    "Delicious meal, will order again.",
+    "Perfect portion size and taste.",
+    "Always consistent quality.",
+    "My favorite canteen!",
+    "Fast preparation and friendly staff.",
+    "Worth the price, highly recommended.",
+    "Fresh ingredients and well-cooked.",
+  ];
+  
+  const neutralFeedbacks = [
+    "It was okay, nothing special.",
+    "Average food quality.",
+    "Good but could be better.",
+    "Decent meal for the price.",
+  ];
+  
+  const negativeFeedbacks = [
+    "Food was cold when I received it.",
+    "Portion size was smaller than expected.",
+    "Too salty for my taste.",
+    "Long wait time.",
+    "Not as good as before.",
+    "Expected better quality.",
+    "Service could be improved.",
+    "Disappointed with the taste.",
+  ];
+  
+  let feedback = null;
+  if (shouldHaveFeedback) {
+    if (stars >= 4) {
+      feedback = randomPick(positiveFeedbacks);
+    } else if (stars === 3) {
+      feedback = randomPick(neutralFeedbacks);
+    } else {
+      feedback = randomPick(negativeFeedbacks);
+    }
+  }
+  
+  // Rating created a few minutes to a few hours after order
+  const ratingCreatedAt = new Date(createdAt);
+  ratingCreatedAt.setMinutes(ratingCreatedAt.getMinutes() + randomInt(15, 180));
+  
+  return {
+    order_id: orderId,
+    stars: stars,
+    feedback: feedback,
+    created_at: ratingCreatedAt.toISOString(),
+    updated_at: ratingCreatedAt.toISOString(),
+  };
+}
+
+/**
  * Main seeding function
  */
 async function seed() {
-  console.log("🌱 Seeding orders, order_items, and payments...");
+  console.log("🌱 Seeding orders, order_items, payments, and ratings...");
+
+  // Clear existing data (in correct order due to foreign key constraints)
+  console.log("\n🧹 Clearing existing data...");
+  
+  const { error: ratingsDeleteError } = await supabase
+    .from("ratings")
+    .delete()
+    .neq("rating_id", 0); // Delete all ratings
+  
+  if (ratingsDeleteError) {
+    console.error("⚠️  Warning: Could not clear ratings:", ratingsDeleteError.message);
+  } else {
+    console.log("✅ Cleared ratings");
+  }
+
+  const { error: paymentsDeleteError } = await supabase
+    .from("payments")
+    .delete()
+    .neq("payment_id", 0); // Delete all payments
+  
+  if (paymentsDeleteError) {
+    console.error("⚠️  Warning: Could not clear payments:", paymentsDeleteError.message);
+  } else {
+    console.log("✅ Cleared payments");
+  }
+
+  const { error: itemsDeleteError } = await supabase
+    .from("order_items")
+    .delete()
+    .neq("order_item_id", 0); // Delete all order items
+  
+  if (itemsDeleteError) {
+    console.error("⚠️  Warning: Could not clear order_items:", itemsDeleteError.message);
+  } else {
+    console.log("✅ Cleared order_items");
+  }
+
+  const { error: ordersDeleteError } = await supabase
+    .from("orders")
+    .delete()
+    .neq("order_id", 0); // Delete all orders
+  
+  if (ordersDeleteError) {
+    console.error("⚠️  Warning: Could not clear orders:", ordersDeleteError.message);
+  } else {
+    console.log("✅ Cleared orders");
+  }
 
   const orders = [];
   const allOrderItems = [];
   const payments = [];
+  const ratings = [];
 
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -317,6 +427,12 @@ async function seed() {
         createdAt
       );
       payments.push(payment);
+
+      // Generate rating for completed orders (80% of completed orders get rated)
+      if (orderStatus === ORDER_STATUSES.COMPLETED && Math.random() < 0.8) {
+        const rating = generateRating(orderId, createdAt);
+        ratings.push(rating);
+      }
     }
   }
 
@@ -324,6 +440,7 @@ async function seed() {
   console.log(`   ${orders.length} orders`);
   console.log(`   ${allOrderItems.length} order items`);
   console.log(`   ${payments.length} payments`);
+  console.log(`   ${ratings.length} ratings`);
 
   // Insert orders
   console.log("\n💾 Inserting orders...");
@@ -363,6 +480,21 @@ async function seed() {
     process.exit(1);
   }
   console.log(`✅ Inserted ${paymentData?.length ?? 0} payments`);
+
+  // Insert ratings
+  if (ratings.length > 0) {
+    console.log("\n💾 Inserting ratings...");
+    const { data: ratingData, error: ratingError } = await supabase
+      .from("ratings")
+      .insert(ratings)
+      .select("rating_id");
+
+    if (ratingError) {
+      console.error("❌ Failed to insert ratings:", ratingError);
+      process.exit(1);
+    }
+    console.log(`✅ Inserted ${ratingData?.length ?? 0} ratings`);
+  }
 
   console.log("\n🎉 Seeding completed successfully!");
 }
