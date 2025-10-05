@@ -1,8 +1,15 @@
 import React from "react";
 import "./O_Modal.css";
 
-const OrdersModal = ({ isOpen, onClose, order }) => {
+const OrdersModal = ({ isOpen, onClose, order, onOrderStatusChange }) => {
   if (!isOpen || !order) return null;
+
+  const handleStatusChange = (newStatus) => {
+    if (onOrderStatusChange) {
+      onOrderStatusChange(order.id, newStatus);
+    }
+    onClose();
+  };
 
   const getStatusConfig = (status) => {
     const configs = {
@@ -64,7 +71,7 @@ const OrdersModal = ({ isOpen, onClose, order }) => {
           leftTime: order.orderedTime,
           leftIcon: "🕐",
           rightLabel: "Estimated Ready Time",
-          rightTime: "1:15 PM",
+          rightTime: order.estimatedReadyTime || "N/A",
           rightIcon: "🕐",
           rightClass: "estimated-time",
         };
@@ -76,7 +83,7 @@ const OrdersModal = ({ isOpen, onClose, order }) => {
           leftTime: order.orderedTime,
           leftIcon: "🕐",
           rightLabel: "Estimated Ready Time",
-          rightTime: "1:15 PM",
+          rightTime: order.estimatedReadyTime || "N/A",
           rightIcon: "🕐",
           rightClass: "estimated-time",
         };
@@ -88,10 +95,16 @@ const OrdersModal = ({ isOpen, onClose, order }) => {
       case "preparing":
         return (
           <>
-            <button className="ordermodal_modal-btn btn-primary">
+            <button 
+              className="ordermodal_modal-btn btn-primary"
+              onClick={() => handleStatusChange("ready")}
+            >
               Mark Ready
             </button>
-            <button className="ordermodal_modal-btn btn-danger">
+            <button 
+              className="ordermodal_modal-btn btn-danger"
+              onClick={() => handleStatusChange("cancelled")}
+            >
               Cancel Order
             </button>
           </>
@@ -99,10 +112,16 @@ const OrdersModal = ({ isOpen, onClose, order }) => {
       case "ready":
         return (
           <>
-            <button className="ordermodal_modal-btn btn-primary">
+            <button 
+              className="ordermodal_modal-btn btn-primary"
+              onClick={() => handleStatusChange("completed")}
+            >
               Complete Order
             </button>
-            <button className="ordermodal_modal-btn btn-danger">
+            <button 
+              className="ordermodal_modal-btn btn-danger"
+              onClick={() => handleStatusChange("cancelled")}
+            >
               Cancel Order
             </button>
           </>
@@ -110,10 +129,16 @@ const OrdersModal = ({ isOpen, onClose, order }) => {
       case "pending":
         return (
           <>
-            <button className="ordermodal_modal-btn btn-primary">
+            <button 
+              className="ordermodal_modal-btn btn-primary"
+              onClick={() => handleStatusChange("preparing")}
+            >
               Start Preparing
             </button>
-            <button className="ordermodal_modal-btn btn-danger">
+            <button 
+              className="ordermodal_modal-btn btn-danger"
+              onClick={() => handleStatusChange("cancelled")}
+            >
               Cancel Order
             </button>
           </>

@@ -79,9 +79,17 @@ const CAC_CustomerList = ({
           >
             <div className="cac-customer-info">
               <div className="cac-customer-avatar">
-                <span className="cac-avatar-initials">
-                  {getCustomerInitials(customer.first_name, customer.last_name)}
-                </span>
+                {customer.avatar_url ? (
+                  <img
+                    src={customer.avatar_url}
+                    alt={`${customer.first_name} ${customer.last_name}`}
+                    className="cac-avatar-image"
+                  />
+                ) : (
+                  <span className="cac-avatar-initials">
+                    {getCustomerInitials(customer.first_name, customer.last_name)}
+                  </span>
+                )}
               </div>
 
               <div className="cac-customer-details">

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { supabase } from "../lib/supabaseClient";
+import { fetchUserRole } from "../lib/profileService";
 
 import "../styles/LoginPage.css";
 import nueatsLogo from "../assets/NUeats_wshadow.png";
@@ -22,31 +24,91 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  //demo only!!
   const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("Invalid email or password. Please try again.");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setShowAlert(false);
+    try {
+      const { data: signInData, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        setAlertMsg(error.message || "Login failed");
+        setShowAlert(true);
+        return;
+      }
+      const userId = signInData?.user?.id;
+      if (!userId) {
+        setAlertMsg("No user returned from login");
+        setShowAlert(true);
+        return;
+      }
 
-    const demoEmail = "admin1234";
-    const demoPassword = "admin1234";
-
-    if (email === demoEmail && password === demoPassword) {
-      setShowAlert(false);
-      console.log("Demo account signed in successfully!");
-
-      // Save login state (can be token or simple flag)
-      localStorage.setItem("isAuthenticated", "true");
+      try {
+        const role = await fetchUserRole(userId);
+        if (role !== "admin") {
+          setAlertMsg("Access denied: admin role required.");
+          setShowAlert(true);
+          await supabase.auth.signOut();
+          return;
+        }
+      } catch (profileError) {
+        setAlertMsg(profileError.message || "Failed to load profile");
+        setShowAlert(true);
+        await supabase.auth.signOut();
+        return;
+      }
 
       navigate("/NUeats-Canteen/dashboard/");
-    } else {
+    } catch (err) {
+      setAlertMsg(err.message || "Unexpected error");
       setShowAlert(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // Removed auto-redirect on mount to avoid navigation loops. We only navigate after
+  // a successful admin login in handleSubmit.
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSubmit(e);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    if (!email) {
+      setAlertMsg("Enter your email to receive a reset link.");
+      setShowAlert(true);
+      return;
+    }
+    try {
+      setIsResetting(true);
+      const origin = window.location.origin; // e.g., http://localhost:5173
+      const redirectTo = `${origin}/NUeats-Canteen/auth/recovery`;
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      });
+      if (error) {
+        setAlertMsg(error.message || "Failed to send reset email");
+        setShowAlert(true);
+        return;
+      }
+      setAlertMsg("Password reset email sent. Please check your inbox.");
+      setShowAlert(true);
+    } catch (err) {
+      setAlertMsg(err.message || "Unexpected error while sending reset email");
+      setShowAlert(true);
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -197,8 +259,8 @@ const LoginPage = () => {
                 />
                 Remember me
               </label>
-              <a href="#" className="login_forgot-password">
-                Forgot Password?
+              <a href="#" className="login_forgot-password" onClick={handleForgotPassword}>
+                {isResetting ? "Sending..." : "Forgot Password?"}
               </a>
             </div>
 
@@ -226,7 +288,7 @@ const LoginPage = () => {
                   />
                   <circle cx="12" cy="17" r="1" fill="#F35A5A" />
                 </svg>
-                <span>Invalid email or password. Please try again.</span>
+                <span>{alertMsg}</span>
               </div>
             )}
 
@@ -234,8 +296,9 @@ const LoginPage = () => {
               type="button"
               className="login_signin-button"
               onClick={handleSubmit}
+              disabled={isSubmitting}
             >
-              Sign In
+              {isSubmitting ? "Signing in..." : "Sign In"}
             </button>
           </div>
         </div>

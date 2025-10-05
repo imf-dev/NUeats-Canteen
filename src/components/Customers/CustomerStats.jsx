@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   FiUsers,
   FiShoppingCart,
@@ -6,65 +6,56 @@ import {
   FiMessageSquare,
 } from "react-icons/fi";
 import "./CustomerStats.css";
-import allcustomersDemoData from "../../demodata/allcustomersDemoData";
-import { ordersData } from "../../demodata/ordersDemoData";
+import { getCustomerStats } from "../../lib/customersService";
 
 const CustomerStats = () => {
-  // Calculate total customers
-  const totalCustomers = allcustomersDemoData.length;
+  const [stats, setStats] = useState({
+    totalCustomers: 0,
+    totalOrders: 0,
+    newCustomersThisWeek: 0,
+    totalFeedbacks: 0,
+  });
 
-  // Calculate total orders
-  const totalOrders = ordersData.length;
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await getCustomerStats();
+        setStats({
+          totalCustomers: data.totalCustomers,
+          totalOrders: data.totalOrders,
+          newCustomersThisWeek: data.newCustomersThisWeek,
+          totalFeedbacks: data.totalFeedbacks,
+        });
+      } catch (error) {
+        console.error("Error fetching customer stats:", error);
+      }
+    };
 
-  // Calculate new customers (last 7 days: Sept 2-8, 2025)
-  const today = new Date("2025-09-08");
-  const dates = [];
-
-  // Generate last 7 days (same logic as CA_NewUsers)
-  for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(today.getDate() - i);
-    dates.push(date);
-  }
-
-  const startDate = new Date(dates[0]);
-  startDate.setHours(0, 0, 0, 0);
-
-  const endDate = new Date(dates[dates.length - 1]);
-  endDate.setHours(23, 59, 59, 999);
-
-  const newCustomers = allcustomersDemoData.filter((customer) => {
-    const joinDate = new Date(customer.account_info.date_joined);
-    return joinDate >= startDate && joinDate <= endDate;
-  }).length;
-
-  // Calculate total feedbacks (orders that have feedback)
-  const totalFeedbacks = ordersData.filter(
-    (order) => order.feedback && order.feedback.trim() !== ""
-  ).length;
+    fetchStats();
+  }, []);
 
   const statsData = [
     {
       title: "Total Customers",
-      value: totalCustomers.toString(),
+      value: stats.totalCustomers.toString(),
       icon: <FiUsers />,
       color: "blue",
     },
     {
       title: "Total Orders",
-      value: totalOrders.toString(),
+      value: stats.totalOrders.toString(),
       icon: <FiShoppingCart />,
       color: "green",
     },
     {
       title: "New Customers",
-      value: newCustomers.toString(),
+      value: stats.newCustomersThisWeek.toString(),
       icon: <FiUserPlus />,
       color: "yellow",
     },
     {
       title: "Total Feedbacks",
-      value: totalFeedbacks.toString(),
+      value: stats.totalFeedbacks.toString(),
       icon: <FiMessageSquare />,
       color: "orange",
     },
