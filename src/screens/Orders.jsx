@@ -201,58 +201,59 @@ const Orders = () => {
   }, [orders, searchTerm, statusFilter]);
 
   const handleOrderStatusChange = async (orderId, nextStatus) => {
-    console.log("🔄 Updating order:", orderId, "to status:", nextStatus);
-    
-    // Capitalize first letter to match database constraint
     const capitalizedStatus = nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1);
-    
-    // Save previous state for revert
     const previousOrders = orders;
-    
-    // Optimistic update (UI uses lowercase)
-    setOrders((prev) => prev.map((o) => (String(o.id) === String(orderId) ? { ...o, status: nextStatus } : o)));
-    
+
+    // Optimistic UI update
+    setOrders((prev) =>
+      prev.map((o) => (String(o.id) === String(orderId) ? { ...o, status: nextStatus } : o))
+    );
+
     try {
-      // Update order status
-      const { data, error } = await supabase
+      // 1️⃣ Update order in DB
+      const { error: updateError } = await supabase
         .from("orders")
         .update({ status: capitalizedStatus })
-        .eq("order_id", orderId)
-        .select();
-      
-      console.log("📦 Update response - data:", data, "error:", error);
-      
-      if (error) {
-        console.error("❌ Failed to update order status:", error);
-        console.error("❌ Error details:", error.message, error.details, error.hint);
-        // Revert on error
+        .eq("order_id", orderId);
+
+      if (updateError) {
         setOrders(previousOrders);
+        console.error("❌ Failed to update order:", updateError);
         return;
       }
 
-      console.log("✅ Order status updated successfully!");
+      // 2️⃣ Call send-emails Edge Function (it will fetch user email internally)
+      const { data: emailData, error: emailError } = await supabase.functions.invoke("send-emails", {
+        body: {
+          orderId: orderId,
+          newStatus: capitalizedStatus,
+        },
+      });
 
-      // If cancelling, also cancel the corresponding payment
-      if (nextStatus === 'cancelled') {
-        console.log("💳 Cancelling payment for order:", orderId);
-        
+      if (emailError) {
+        console.error("❌ Failed to send email:", emailError);
+      } else {
+        console.log("✅ Email sent successfully");
+      }
+
+      // 3️⃣ Cancel payment if order is cancelled
+      if (nextStatus === "cancelled") {
         const { error: paymentError } = await supabase
           .from("payments")
-          .update({ status: 'cancelled' }) // lowercase for payments table
+          .update({ status: "cancelled" })
           .eq("order_id", orderId);
         
         if (paymentError) {
           console.error("❌ Failed to cancel payment:", paymentError);
-          console.error("⚠️ Order was cancelled but payment status update failed");
-        } else {
-          console.log("✅ Payment cancelled successfully!");
         }
       }
+
     } catch (err) {
       console.error("💥 Unexpected error:", err);
       setOrders(previousOrders);
     }
   };
+
 
   return (
     <div className="orders_layout">
