@@ -10,9 +10,16 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "seed:menu": "node scripts/seedMenuItems.mjs",
+    "seed:orders": "node scripts/seedOrders.mjs",
+    "seed:complaints": "node scripts/seedComplaints.mjs",
+    "seed:all": "npm run seed:menu && npm run seed:orders && npm run seed:complaints",
+    "profiles:sync": "node scripts/syncProfilesFromAuth.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.58.0",
+    "denomailer": "^0.0.0",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.542.0",
     "react": "^19.1.1",

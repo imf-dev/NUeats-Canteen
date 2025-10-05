@@ -12,8 +12,9 @@ const CC_ComplaintFilters = ({
 
   const statusOptions = [
     { value: "all", label: "All Status" },
-    { value: "open", label: "Open" },
-    { value: "resolved", label: "Resolved" },
+    { value: "Pending", label: "Pending" },
+    { value: "Open", label: "Open" },
+    { value: "Resolved", label: "Resolved" },
   ];
 
   const categoryOptions = [
