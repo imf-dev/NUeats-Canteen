@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar, FaSearch, FaChevronDown } from "react-icons/fa";
-import { ordersData } from "../../../demodata/ordersDemoData";
+import { getFeedbackList } from "../../../lib/customerAnalyticsService";
 import "./CA_CustomerFeedback.css";
 
 const CA_CustomerFeedback = () => {
@@ -8,27 +8,35 @@ const CA_CustomerFeedback = () => {
   const [selectedRating, setSelectedRating] = useState("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const [feedback, setFeedback] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      const list = await getFeedbackList();
+      setFeedback(list);
+    };
+    load();
+  }, []);
+
   // Filter feedback based on search and rating
   const getFilteredFeedback = () => {
-    let feedback = ordersData.filter((order) => order.feedback && order.rating);
+    let list = feedback;
 
     // Filter by search term
     if (searchTerm) {
-      feedback = feedback.filter(
-        (order) =>
-          order.feedback.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.customer.toLowerCase().includes(searchTerm.toLowerCase())
+      list = list.filter(
+        (item) =>
+          item.feedback.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.customer.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Filter by rating
     if (selectedRating !== "all") {
-      feedback = feedback.filter(
-        (order) => order.rating === parseInt(selectedRating)
-      );
+      list = list.filter((item) => item.rating === parseInt(selectedRating));
     }
 
-    return feedback;
+    return list;
   };
 
   const filteredFeedback = getFilteredFeedback();
