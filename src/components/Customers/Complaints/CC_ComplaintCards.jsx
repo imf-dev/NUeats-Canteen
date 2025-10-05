@@ -4,7 +4,7 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import CC_ResponseModal from "./CC_ResponseModal";
 import "./CC_ComplaintCards.css";
 
-const CC_ComplaintCards = ({ complaints, customers, onResponseSubmit }) => {
+const CC_ComplaintCards = ({ complaints, customers, onResponseSubmit, onOpenComplaint }) => {
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -97,7 +97,7 @@ const CC_ComplaintCards = ({ complaints, customers, onResponseSubmit }) => {
                         • {complaint.complaint_id}
                       </span>
                       <span className="cc-complaint-date">
-                        • {formatDate(complaint.created_date)}
+                        • {formatDate(complaint.created_at)}
                       </span>
                     </div>
                     <p className="cc-complaint-description">
@@ -105,9 +105,7 @@ const CC_ComplaintCards = ({ complaints, customers, onResponseSubmit }) => {
                     </p>
                   </div>
                 </div>
-                <div
-                  className={`cc-status-badge cc-status-${complaint.status}`}
-                >
+                <div className={`cc-status-badge cc-status-${complaint.status}`}>
                   {complaint.status}
                 </div>
               </div>
@@ -133,7 +131,7 @@ const CC_ComplaintCards = ({ complaints, customers, onResponseSubmit }) => {
                 </div>
               )}
 
-              {complaint.status === "resolved" && complaint.resolution && (
+              {complaint.status === "Resolved" && complaint.resolution && (
                 <div className="cc-resolution-box">
                   <strong>Resolution:</strong> {complaint.resolution}
                 </div>
@@ -143,7 +141,16 @@ const CC_ComplaintCards = ({ complaints, customers, onResponseSubmit }) => {
                 <div className="cc-complaint-category">
                   <span>Category: {complaint.category}</span>
                 </div>
-                {complaint.status === "open" && (
+                {complaint.status === "Pending" && (
+                  <button
+                    className="cc-respond-button"
+                    onClick={() => onOpenComplaint && onOpenComplaint(complaint.complaint_id)}
+                  >
+                    <MdOutlineAccessTime className="cc-respond-icon" />
+                    Open
+                  </button>
+                )}
+                {complaint.status === "Open" && (
                   <button
                     className="cc-respond-button"
                     onClick={() => handleRespondClick(complaint)}
