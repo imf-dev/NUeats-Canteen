@@ -17,6 +17,7 @@ const SA_SecuritySettings = ({
   onCredentialsChange,
   onToggleDropdown,
   onSaveSecuritySettings,
+  isSaving,
 }) => {
   // Close dropdowns when clicking outside
   React.useEffect(() => {
@@ -174,8 +175,9 @@ const SA_SecuritySettings = ({
         <button
           className="sasecuritysettings_save-btn"
           onClick={onSaveSecuritySettings}
+          disabled={isSaving}
         >
-          Save Security Settings
+          {isSaving ? "Saving..." : "Save Security Settings"}
         </button>
       </div>
     </div>

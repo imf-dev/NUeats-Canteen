@@ -3,7 +3,7 @@ import { FiSave, FiInfo } from "react-icons/fi";
 import { FaToggleOn, FaToggleOff } from "react-icons/fa";
 import "./SS_CanteenInfo.css";
 
-const SS_CanteenInfo = ({ canteenInfo, onSave, onCanteenInfoChange }) => {
+const SS_CanteenInfo = ({ canteenInfo, onSave, onCanteenInfoChange, isSaving }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [originalData, setOriginalData] = useState({ ...canteenInfo });
 
@@ -180,10 +180,10 @@ const SS_CanteenInfo = ({ canteenInfo, onSave, onCanteenInfoChange }) => {
         <button
           className="ss-canteen-info_save-btn"
           onClick={handleSave}
-          disabled={!isEditing}
+          disabled={!isEditing || isSaving}
         >
           <FiSave />
-          Save Canteen Info
+          {isSaving ? "Saving..." : "Save Canteen Info"}
         </button>
       </div>
     </div>

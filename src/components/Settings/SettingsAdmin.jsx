@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { adminDemoData } from "../../demodata/adminDemoData";
 import CustomModal from "../common/CustomModal";
+import LoadingScreen from "../common/LoadingScreen";
 import SA_AdminProfile from "./SettingsAdmin/SA_AdminProfile";
 import SA_ChangePass from "./SettingsAdmin/SA_ChangePass";
 import SA_SecuritySettings from "./SettingsAdmin/SA_SecuritySettings";
+import {
+  fetchAdminProfile,
+  updateAdminProfile,
+  updateAdminPassword,
+  fetchSecuritySettings,
+  updateSecuritySettings,
+  uploadProfilePicture,
+  deleteProfilePicture,
+} from "../../lib/profileService";
 import "./SettingsAdmin.css";
 
 const SettingsAdmin = () => {
@@ -18,9 +28,11 @@ const SettingsAdmin = () => {
   const [originalCredentialsData, setOriginalCredentialsData] = useState(
     adminDemoData.credentials
   );
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const [passwords, setPasswords] = useState({
-    current: credentialsData.currentPassword,
+    current: "",
     new: "",
     confirm: "",
   });
@@ -88,12 +100,191 @@ const SettingsAdmin = () => {
     });
   };
 
+  // Fetch admin profile and security settings on component mount
+  useEffect(() => {
+    const loadAdminData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch profile data
+        const profile = await fetchAdminProfile();
+        setProfileData({
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          email: profile.email,
+          phone: profile.phone,
+          profilePicture: profile.profilePicture,
+        });
+        setOriginalProfileData({
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          email: profile.email,
+          phone: profile.phone,
+          profilePicture: profile.profilePicture,
+        });
+
+        // Fetch security settings
+        const securitySettings = await fetchSecuritySettings();
+        setCredentialsData({
+          currentPassword: "", // We don't fetch the actual password for security
+          twoFactorEnabled: securitySettings.twoFactorEnabled,
+          loginNotifications: securitySettings.loginNotifications,
+          sessionTimeout: securitySettings.sessionTimeout,
+          passwordExpiry: securitySettings.passwordExpiry,
+        });
+        setOriginalCredentialsData({
+          currentPassword: "",
+          twoFactorEnabled: securitySettings.twoFactorEnabled,
+          loginNotifications: securitySettings.loginNotifications,
+          sessionTimeout: securitySettings.sessionTimeout,
+          passwordExpiry: securitySettings.passwordExpiry,
+        });
+      } catch (error) {
+        console.error("Error loading admin data:", error);
+        showModal(
+          "error",
+          "Error Loading Data",
+          "Failed to load your profile data. Please refresh the page and try again."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAdminData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Profile handlers
   const handleProfileInputChange = (field, value) => {
     setProfileData((prev) => ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleFileUpload = async (file) => {
+    if (!file) return;
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      showModal(
+        "error",
+        "File Too Large",
+        "Please select an image file smaller than 5MB."
+      );
+      return;
+    }
+
+    // Check file type
+    if (!file.type.startsWith("image/")) {
+      showModal(
+        "error",
+        "Invalid File Type",
+        "Please select a valid image file (JPG, PNG, GIF, etc.)."
+      );
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      // Delete old profile picture from storage if it exists
+      if (profileData.profilePicture) {
+        await deleteProfilePicture(profileData.profilePicture);
+      }
+
+      // Upload new picture to Supabase Storage
+      const publicUrl = await uploadProfilePicture(file);
+      
+      // Update local state
+      setProfileData((prev) => ({
+        ...prev,
+        profilePicture: publicUrl,
+      }));
+
+      // Save to database
+      await updateAdminProfile({
+        ...profileData,
+        profilePicture: publicUrl,
+      });
+
+      setOriginalProfileData({
+        ...profileData,
+        profilePicture: publicUrl,
+      });
+
+      showModal(
+        "success",
+        "Image Uploaded",
+        "Profile picture has been uploaded successfully!"
+      );
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      showModal(
+        "error",
+        "Upload Failed",
+        error.message || "There was an error uploading your image. Please try again."
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleRemoveProfilePicture = () => {
+    if (!profileData.profilePicture) {
+      showModal(
+        "warning",
+        "No Profile Picture",
+        "There is no profile picture to remove."
+      );
+      return;
+    }
+
+    showModal(
+      "confirm",
+      "Remove Profile Picture",
+      "Are you sure you want to remove your profile picture?",
+      async () => {
+        setIsSaving(true);
+        closeModal();
+        try {
+          // Delete from storage
+          await deleteProfilePicture(profileData.profilePicture);
+
+          // Update database
+          await updateAdminProfile({
+            ...profileData,
+            profilePicture: null,
+          });
+
+          // Update local state
+          setProfileData((prev) => ({
+            ...prev,
+            profilePicture: null,
+          }));
+
+          setOriginalProfileData({
+            ...profileData,
+            profilePicture: null,
+          });
+
+          showModal(
+            "success",
+            "Picture Removed",
+            "Profile picture has been removed successfully!"
+          );
+        } catch (error) {
+          console.error("Error removing profile picture:", error);
+          showModal(
+            "error",
+            "Remove Failed",
+            error.message || "Failed to remove profile picture. Please try again."
+          );
+        } finally {
+          setIsSaving(false);
+        }
+      },
+      "Remove"
+    );
   };
 
   const toggleEditMode = () => {
@@ -134,7 +325,7 @@ const SettingsAdmin = () => {
     return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ""));
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     if (!isEditMode) {
       showModal(
         "warning",
@@ -192,13 +383,27 @@ const SettingsAdmin = () => {
       return;
     }
 
-    setOriginalProfileData(profileData);
-    setIsEditMode(false);
-    showModal(
-      "success",
-      "Profile Saved",
-      "Your profile has been saved successfully!"
-    );
+    // Save to database
+    setIsSaving(true);
+    try {
+      await updateAdminProfile(profileData);
+      setOriginalProfileData(profileData);
+      setIsEditMode(false);
+      showModal(
+        "success",
+        "Profile Saved",
+        "Your profile has been saved successfully!"
+      );
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      showModal(
+        "error",
+        "Save Failed",
+        error.message || "Failed to save your profile. Please try again."
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Password handlers
@@ -273,7 +478,7 @@ const SettingsAdmin = () => {
       return;
     }
 
-    if (passwords.new === passwords.current) {
+    if (passwords.current && passwords.new === passwords.current) {
       showModal(
         "error",
         "Same Password",
@@ -293,24 +498,33 @@ const SettingsAdmin = () => {
       "confirm",
       "Update Password",
       "Are you sure you want to update your password? You will need to use the new password for future logins.",
-      () => {
-        setCredentialsData((prev) => ({
-          ...prev,
-          currentPassword: passwords.new,
-        }));
-
-        setPasswords({
-          current: passwords.new,
-          new: "",
-          confirm: "",
-        });
-
-        showModal(
-          "success",
-          "Password Updated",
-          "Your password has been updated successfully! Please remember to use your new password for future logins."
-        );
+      async () => {
+        setIsSaving(true);
         closeModal();
+        try {
+          await updateAdminPassword(passwords.new);
+
+          setPasswords({
+            current: "",
+            new: "",
+            confirm: "",
+          });
+
+          showModal(
+            "success",
+            "Password Updated",
+            "Your password has been updated successfully! Please remember to use your new password for future logins."
+          );
+        } catch (error) {
+          console.error("Error updating password:", error);
+          showModal(
+            "error",
+            "Update Failed",
+            error.message || "Failed to update password. Please try again."
+          );
+        } finally {
+          setIsSaving(false);
+        }
       },
       "Update Password"
     );
@@ -353,18 +567,42 @@ const SettingsAdmin = () => {
       "confirm",
       "Save Security Settings",
       "Are you sure you want to save these security settings? Some changes may affect how you access your account.",
-      () => {
-        setOriginalCredentialsData(credentialsData);
-        showModal(
-          "success",
-          "Security Settings Saved",
-          "Your security settings have been saved successfully!"
-        );
+      async () => {
+        setIsSaving(true);
         closeModal();
+        try {
+          await updateSecuritySettings({
+            twoFactorEnabled: credentialsData.twoFactorEnabled,
+            loginNotifications: credentialsData.loginNotifications,
+            sessionTimeout: credentialsData.sessionTimeout,
+            passwordExpiry: credentialsData.passwordExpiry,
+          });
+
+          setOriginalCredentialsData(credentialsData);
+          showModal(
+            "success",
+            "Security Settings Saved",
+            "Your security settings have been saved successfully!"
+          );
+        } catch (error) {
+          console.error("Error saving security settings:", error);
+          showModal(
+            "error",
+            "Save Failed",
+            error.message || "Failed to save security settings. Please try again."
+          );
+        } finally {
+          setIsSaving(false);
+        }
       },
       "Save Settings"
     );
   };
+
+  // Show loading screen while fetching data
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="settingsadmin_settings-admin-container">
@@ -386,7 +624,10 @@ const SettingsAdmin = () => {
         onProfileChange={handleProfileInputChange}
         onToggleEditMode={toggleEditMode}
         onSaveProfile={handleSaveProfile}
+        onFileUpload={handleFileUpload}
+        onRemoveProfilePicture={handleRemoveProfilePicture}
         showModal={showModal}
+        isSaving={isSaving}
       />
 
       {/* Change Password Card */}
@@ -396,6 +637,7 @@ const SettingsAdmin = () => {
         onPasswordChange={handlePasswordChange}
         onTogglePasswordVisibility={togglePasswordVisibility}
         onUpdatePassword={handleUpdatePassword}
+        isSaving={isSaving}
       />
 
       {/* Security Settings Card */}
@@ -408,6 +650,7 @@ const SettingsAdmin = () => {
         onCredentialsChange={handleCredentialsChange}
         onToggleDropdown={handleToggleDropdown}
         onSaveSecuritySettings={handleSaveSecuritySettings}
+        isSaving={isSaving}
       />
     </div>
   );
