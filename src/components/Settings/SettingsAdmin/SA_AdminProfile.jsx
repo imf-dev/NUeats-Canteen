@@ -14,7 +14,10 @@ const SA_AdminProfile = ({
   onProfileChange,
   onToggleEditMode,
   onSaveProfile,
+  onFileUpload,
+  onRemoveProfilePicture,
   showModal,
+  isSaving,
 }) => {
   const fileInputRef = useRef(null);
 
@@ -24,73 +27,13 @@ const SA_AdminProfile = ({
     }`.toUpperCase();
   };
 
-  const handleFileUpload = (event) => {
+  const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Check file size (limit to 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        showModal(
-          "error",
-          "File Too Large",
-          "Please select an image file smaller than 5MB."
-        );
-        return;
-      }
-
-      // Check file type
-      if (!file.type.startsWith("image/")) {
-        showModal(
-          "error",
-          "Invalid File Type",
-          "Please select a valid image file (JPG, PNG, GIF, etc.)."
-        );
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        onProfileChange("profilePicture", e.target.result);
-        showModal(
-          "success",
-          "Image Uploaded",
-          "Profile picture has been uploaded successfully!"
-        );
-      };
-      reader.onerror = () => {
-        showModal(
-          "error",
-          "Upload Failed",
-          "There was an error uploading your image. Please try again."
-        );
-      };
-      reader.readAsDataURL(file);
+      onFileUpload(file);
+      // Clear the input so the same file can be selected again
+      event.target.value = '';
     }
-  };
-
-  const handleRemoveProfilePicture = () => {
-    if (!profileData.profilePicture) {
-      showModal(
-        "warning",
-        "No Profile Picture",
-        "There is no profile picture to remove."
-      );
-      return;
-    }
-
-    showModal(
-      "confirm",
-      "Remove Profile Picture",
-      "Are you sure you want to remove your profile picture?",
-      () => {
-        onProfileChange("profilePicture", null);
-        showModal(
-          "success",
-          "Picture Removed",
-          "Profile picture has been removed successfully!"
-        );
-      },
-      "Remove"
-    );
   };
 
   return (
@@ -130,13 +73,15 @@ const SA_AdminProfile = ({
             <button
               className="saadminprofile_upload-btn"
               onClick={() => fileInputRef.current?.click()}
+              disabled={isSaving}
             >
               <FaUpload />
-              Upload New
+              {isSaving ? "Uploading..." : "Upload New"}
             </button>
             <button
               className="saadminprofile_remove-btn"
-              onClick={handleRemoveProfilePicture}
+              onClick={onRemoveProfilePicture}
+              disabled={isSaving}
             >
               <FaTrash />
               Remove
@@ -146,7 +91,7 @@ const SA_AdminProfile = ({
         <input
           type="file"
           ref={fileInputRef}
-          onChange={handleFileUpload}
+          onChange={handleFileSelect}
           accept="image/*"
           style={{ display: "none" }}
         />
@@ -202,9 +147,9 @@ const SA_AdminProfile = ({
         <button
           className="saadminprofile_save-btn"
           onClick={onSaveProfile}
-          disabled={!isEditMode}
+          disabled={!isEditMode || isSaving}
         >
-          Save Profile
+          {isSaving ? "Saving..." : "Save Profile"}
         </button>
       </div>
     </div>

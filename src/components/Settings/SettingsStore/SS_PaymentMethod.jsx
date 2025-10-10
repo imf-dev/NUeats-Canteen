@@ -6,6 +6,7 @@ const SS_PaymentMethod = ({
   paymentMethods,
   onSave,
   onPaymentMethodChange,
+  isSaving,
 }) => {
   const [originalData, setOriginalData] = useState({ ...paymentMethods });
 
@@ -77,9 +78,13 @@ const SS_PaymentMethod = ({
       </div>
 
       <div className="ss-payment-method_card-actions">
-        <button className="ss-payment-method_save-btn" onClick={handleSave}>
+        <button 
+          className="ss-payment-method_save-btn" 
+          onClick={handleSave}
+          disabled={isSaving}
+        >
           <FiSave />
-          Save Payment Methods
+          {isSaving ? "Saving..." : "Save Payment Methods"}
         </button>
       </div>
     </div>
