@@ -16,7 +16,9 @@ import Customers from "./screens/Customers.jsx";
 import Settings from "./screens/Settings.jsx";
 import ResetPassword from "./screens/ResetPassword.jsx";
 import Sidebar from "./components/common/Sidebar.jsx";
+import SessionTimeoutModal from "./components/common/SessionTimeoutModal.jsx";
 import { supabase } from "./lib/supabaseClient";
+import { useSessionTimeout } from "./hooks/useSessionTimeout";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -30,6 +32,9 @@ const AppWrapper = () => {
 
   // Hide sidebar on login page
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // Session timeout management
+  const { isWarningVisible, timeLeft, extendSession, handleLogout } = useSessionTimeout();
   useEffect(() => {
     let mounted = true;
     supabase.auth.getSession().then(({ data }) => {
@@ -51,6 +56,17 @@ const AppWrapper = () => {
     <div className="app-container">
       {/*} show sidebar only if logged in AND not on login page*/}
       {isAuthenticated && !hideSidebar && <Sidebar />}
+      
+      {/* Session Timeout Modal - only show for authenticated users */}
+      {isAuthenticated && (
+        <SessionTimeoutModal
+          isVisible={isWarningVisible}
+          timeLeft={timeLeft}
+          onExtendSession={extendSession}
+          onLogout={handleLogout}
+        />
+      )}
+      
       <AnimatePresence exitBeforeEnter>
         <Routes location={location} key={location.pathname}>
           {/* Public Route */}
