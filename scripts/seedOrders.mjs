@@ -37,7 +37,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
 // User IDs
 const USER_IDS = [
   "667c3e89-f82e-4509-8dfa-811bb214bf26",
-  "ae7c8e68-af55-49da-af66-c7a18f069694",
+  "e680211f-776e-4002-95d7-ed54f6c4a9da",
 ];
 
 // Payment methods
