@@ -24,94 +24,89 @@ function determineStatus(lastLogin) {
  */
 export async function getAllCustomers() {
   try {
-    // Fetch all orders with user information
+    // First, get all profiles with 'customer' role
+    const { data: customerProfiles, error: profilesError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("role", "customer");
+
+    if (profilesError) {
+      console.error("Error fetching customer profiles:", profilesError);
+      return [];
+    }
+
+    if (!customerProfiles || customerProfiles.length === 0) {
+      console.log("No customer profiles found in database");
+      return [];
+    }
+
+    // Get all orders to calculate order statistics for each customer
     const { data: orders, error: ordersError } = await supabase
       .from("orders")
       .select("user_id, created_at, status");
 
     if (ordersError) {
       console.error("Error fetching orders:", ordersError);
-      return [];
+      // Continue without order data
     }
 
-    if (!orders || orders.length === 0) {
-      console.log("No orders found in database");
-      return [];
+    // Create a map of user_id to their order data
+    const orderMap = new Map();
+    if (orders && orders.length > 0) {
+      orders.forEach((order) => {
+        const userId = order.user_id;
+        
+        if (!orderMap.has(userId)) {
+          orderMap.set(userId, {
+            first_order_date: order.created_at,
+            last_order_date: order.created_at,
+            total_orders: 0,
+          });
+        }
+
+        const orderData = orderMap.get(userId);
+        orderData.total_orders++;
+
+        // Update first and last order dates
+        if (new Date(order.created_at) < new Date(orderData.first_order_date)) {
+          orderData.first_order_date = order.created_at;
+        }
+        if (new Date(order.created_at) > new Date(orderData.last_order_date)) {
+          orderData.last_order_date = order.created_at;
+        }
+      });
     }
 
-    // Create a map of user_id to their data
-    const customerMap = new Map();
+    // Convert profiles to customers with order data
+    const customers = customerProfiles.map((profile) => {
+      const orderData = orderMap.get(profile.id) || {
+        first_order_date: profile.created_at,
+        last_order_date: profile.created_at,
+        total_orders: 0,
+      };
 
-    orders.forEach((order) => {
-      const userId = order.user_id;
-      
-      if (!customerMap.has(userId)) {
-        customerMap.set(userId, {
-          user_id: userId,
-          first_order_date: order.created_at,
-          last_order_date: order.created_at,
-          total_orders: 0,
-        });
-      }
-
-      const customer = customerMap.get(userId);
-      customer.total_orders++;
-
-      // Update first and last order dates
-      if (new Date(order.created_at) < new Date(customer.first_order_date)) {
-        customer.first_order_date = order.created_at;
-      }
-      if (new Date(order.created_at) > new Date(customer.last_order_date)) {
-        customer.last_order_date = order.created_at;
-      }
-    });
-
-    // Fetch profiles for enrichment (avatar_url, display_name, phone, email if present)
-    const userIds = Array.from(customerMap.keys());
-    let profilesById = new Map();
-
-    if (userIds.length > 0) {
-      const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
-        .select("*")
-        .in("id", userIds);
-
-      if (profilesError) {
-        console.warn("Warning: could not fetch profiles for enrichment:", profilesError.message);
-      } else if (profiles && profiles.length > 0) {
-        profilesById = new Map(profiles.map((p) => [p.id, p]));
-      }
-    }
-
-    // Convert map to array and format as customers
-    const customers = Array.from(customerMap.values()).map((customer) => {
-      // Determine status based on last order date
-      const daysSinceLastOrder = Math.floor(
-        (new Date() - new Date(customer.last_order_date)) / (1000 * 60 * 60 * 24)
+      // Determine status based on last order date or profile creation
+      const lastActivityDate = orderData.total_orders > 0 ? orderData.last_order_date : profile.created_at;
+      const daysSinceLastActivity = Math.floor(
+        (new Date() - new Date(lastActivityDate)) / (1000 * 60 * 60 * 24)
       );
       
       let status = "active";
-      if (daysSinceLastOrder > 90) {
+      if (daysSinceLastActivity > 90) {
         status = "suspended";
-      } else if (daysSinceLastOrder > 30) {
+      } else if (daysSinceLastActivity > 30) {
         status = "inactive";
       }
 
-      // Enrich with profile data when available
-      const profile = profilesById.get(customer.user_id) || {};
-      const displayName = profile.display_name || profile.full_name || profile.name || null;
-      const phone = profile.phone || profile.contact_number || null;
-      const email = profile.email || null;
-      const avatarUrl = profile.avatar_url || null;
-      const isSuspended = profile.is_suspended === true;
-
       // If profile marks user as suspended, override computed status
-      if (isSuspended) {
+      if (profile.is_suspended === true) {
         status = "suspended";
       }
 
+      // Parse display name
+      const displayName = profile.display_name || null;
       let firstName = "Customer";
-      let lastName = customer.user_id.substring(0, 8);
+      let lastName = profile.id.substring(0, 8);
       if (displayName && typeof displayName === "string") {
         const parts = displayName.trim().split(/\s+/);
         firstName = parts[0] || firstName;
@@ -119,22 +114,22 @@ export async function getAllCustomers() {
       }
 
       return {
-        customer_id: customer.user_id,
+        customer_id: profile.id,
         first_name: firstName,
         last_name: lastName,
-        email: email || `${customer.user_id.substring(0, 8)}@user.com`,
-        phone: phone || "N/A",
-        avatar_url: avatarUrl || null,
-        is_suspended: isSuspended,
+        email: profile.email || `${profile.id.substring(0, 8)}@user.com`,
+        phone: profile.phone || "N/A",
+        avatar_url: profile.avatar_url || null,
+        is_suspended: profile.is_suspended === true,
         status: status,
         account_info: {
-          date_joined: customer.first_order_date,
-          last_login: customer.last_order_date,
-          last_app_activity: customer.last_order_date,
+          date_joined: profile.created_at,
+          last_login: orderData.total_orders > 0 ? orderData.last_order_date : profile.created_at,
+          last_app_activity: orderData.total_orders > 0 ? orderData.last_order_date : profile.created_at,
         },
         order_summary: {
-          total_orders: customer.total_orders,
-          last_order_date: customer.last_order_date,
+          total_orders: orderData.total_orders,
+          last_order_date: orderData.total_orders > 0 ? orderData.last_order_date : null,
         },
       };
     });
