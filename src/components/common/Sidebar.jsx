@@ -7,7 +7,6 @@ import nuOnlyYellow from "../../assets/nu_only_yellow.png";
 import {
   FiHome,
   FiShoppingCart,
-  FiBox,
   FiBarChart2,
   FiUsers,
   FiUser,
@@ -33,9 +32,6 @@ const Sidebar = () => {
         break;
       case "/NUeats-Canteen/menu/":
         setActiveItem("MENU");
-        break;
-      case "/NUeats-Canteen/inventory/":
-        setActiveItem("INVENTORY");
         break;
       case "/NUeats-Canteen/analytics/":
         setActiveItem("ANALYTICS");
@@ -70,12 +66,6 @@ const Sidebar = () => {
       label: "MENU",
       icon: <GiKnifeFork />,
       path: "/NUeats-Canteen/menu/",
-    },
-    {
-      id: "INVENTORY",
-      label: "INVENTORY",
-      icon: <FiBox />,
-      path: "/NUeats-Canteen/inventory/",
     },
     {
       id: "ANALYTICS",

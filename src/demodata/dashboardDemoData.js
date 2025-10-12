@@ -2,7 +2,6 @@
 import { menuItems } from "./menuDemoData.js";
 import { computeSalesSummary } from "./salesDemoData.js";
 import { ordersData } from "./ordersDemoData.js";
-import { inventoryData } from "./inventoryDemoData.js";
 
 // Stats Cards Data
 export const getStatsCards = () => {
@@ -18,9 +17,8 @@ export const getStatsCards = () => {
     (order) => order.status === "pending"
   );
 
-  const lowStockItems = inventoryData.filter(
-    (item) => item.currentStock <= item.minStock
-  );
+  // Low stock items - placeholder data since inventory is removed
+  const lowStockItems = [];
 
   return [
     {

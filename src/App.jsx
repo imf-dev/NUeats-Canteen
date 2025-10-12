@@ -11,7 +11,6 @@ import LoginPage from "./screens/LoginPage.jsx";
 import Dashboard from "./screens/Dashboard.jsx";
 import Orders from "./screens/Orders.jsx";
 import Menu from "./screens/Menu.jsx";
-import Inventory from "./screens/Inventory.jsx";
 import Analytics from "./screens/Analytics.jsx";
 import Customers from "./screens/Customers.jsx";
 import Settings from "./screens/Settings.jsx";
@@ -126,21 +125,6 @@ const AppWrapper = () => {
                   exit={{ opacity: 0 }}
                 >
                   <Menu />
-                </motion.div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/NUeats-Canteen/inventory/"
-            element={
-              <ProtectedRoute>
-                <motion.div
-                  key="inventory"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Inventory />
                 </motion.div>
               </ProtectedRoute>
             }
