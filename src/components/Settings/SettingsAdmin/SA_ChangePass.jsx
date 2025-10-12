@@ -8,6 +8,7 @@ const SA_ChangePass = ({
   onPasswordChange,
   onTogglePasswordVisibility,
   onUpdatePassword,
+  isSaving,
 }) => {
   return (
     <div className="sachangepass_settings-card">
@@ -84,8 +85,12 @@ const SA_ChangePass = ({
       </div>
 
       <div className="sachangepass_card-actions">
-        <button className="sachangepass_save-btn" onClick={onUpdatePassword}>
-          Update Password
+        <button 
+          className="sachangepass_save-btn" 
+          onClick={onUpdatePassword}
+          disabled={isSaving}
+        >
+          {isSaving ? "Updating..." : "Update Password"}
         </button>
       </div>
     </div>

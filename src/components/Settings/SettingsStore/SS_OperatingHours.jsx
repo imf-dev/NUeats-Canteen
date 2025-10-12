@@ -6,6 +6,7 @@ const SS_OperatingHours = ({
   operatingHours,
   onSave,
   onOperatingHourChange,
+  isSaving,
 }) => {
   const [originalData, setOriginalData] = useState({ ...operatingHours });
 
@@ -101,9 +102,13 @@ const SS_OperatingHours = ({
       </div>
 
       <div className="ss-operating-hours_card-actions">
-        <button className="ss-operating-hours_save-btn" onClick={handleSave}>
+        <button 
+          className="ss-operating-hours_save-btn" 
+          onClick={handleSave}
+          disabled={isSaving}
+        >
           <FiSave />
-          Save Operating Hours
+          {isSaving ? "Saving..." : "Save Operating Hours"}
         </button>
       </div>
     </div>
