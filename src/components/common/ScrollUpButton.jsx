@@ -8,7 +8,6 @@ const RobustScrollUpButton = () => {
   // Use useCallback to ensure stable function reference
   const toggleVisibility = useCallback(() => {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    console.log("Scroll position:", scrollTop); // Debug log
 
     if (scrollTop > 300) {
       setIsVisible(true);
