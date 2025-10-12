@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Orders - Supabase Connection Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { border-color: #4CAF50; background-color: #f1f8e9; }
+        .error { border-color: #f44336; background-color: #ffebee; }
+        .info { border-color: #2196F3; background-color: #e3f2fd; }
+        button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #1976D2; }
+        pre { 
+            background-color: #f5f5f5; 
+            padding: 10px; 
+            border-radius: 4px; 
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Supabase Connection Debug Tool</h1>
+        
+        <div class="test-section info">
+            <h3>Configuration</h3>
+            <label>Supabase URL:</label>
+            <input type="text" id="supabaseUrl" placeholder="https://your-project.supabase.co">
+            
+            <label>Supabase Anon Key:</label>
+            <input type="text" id="supabaseKey" placeholder="your-anon-key">
+            
+            <button onclick="testConnection()">Test Connection</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let supabase = null;
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-section ${type}`;
+            div.innerHTML = `<pre>${message}</pre>`;
+            results.appendChild(div);
+        }
+        
+        async function testConnection() {
+            const url = document.getElementById('supabaseUrl').value;
+            const key = document.getElementById('supabaseKey').value;
+            
+            if (!url || !key) {
+                log('❌ Please enter both Supabase URL and Anon Key', 'error');
+                return;
+            }
+            
+            // Clear previous results
+            document.getElementById('results').innerHTML = '';
+            
+            try {
+                // Initialize Supabase client
+                supabase = window.supabase.createClient(url, key);
+                log('✅ Supabase client initialized successfully', 'success');
+                
+                // Test 1: Basic connection
+                log('📡 Testing basic connection...', 'info');
+                const { data: testData, error: testError } = await supabase
+                    .from("orders")
+                    .select("count")
+                    .limit(1);
+                
+                if (testError) {
+                    log(`❌ Connection failed: ${JSON.stringify(testError, null, 2)}`, 'error');
+                    return;
+                }
+                log('✅ Basic connection successful', 'success');
+                
+                // Test 2: Orders table
+                log('📊 Testing orders table...', 'info');
+                const { data: orders, error: ordersError } = await supabase
+                    .from("orders")
+                    .select("order_id, user_id, total_amount, status, created_at")
+                    .limit(5);
+                
+                if (ordersError) {
+                    log(`❌ Orders query failed: ${JSON.stringify(ordersError, null, 2)}`, 'error');
+                } else {
+                    log(`✅ Orders query successful\nFound ${orders?.length || 0} orders:\n${JSON.stringify(orders, null, 2)}`, 'success');
+                }
+                
+                // Test 3: Order items table
+                log('🛒 Testing order_items table...', 'info');
+                const { data: orderItems, error: itemsError } = await supabase
+                    .from("order_items")
+                    .select("order_id, product_id, quantity, price")
+                    .limit(5);
+                
+                if (itemsError) {
+                    log(`❌ Order items query failed: ${JSON.stringify(itemsError, null, 2)}`, 'error');
+                } else {
+                    log(`✅ Order items query successful\nFound ${orderItems?.length || 0} order items:\n${JSON.stringify(orderItems, null, 2)}`, 'success');
+                }
+                
+                // Test 4: Menu items table
+                log('🍽️ Testing menu_items table...', 'info');
+                const { data: menuItems, error: menuError } = await supabase
+                    .from("menu_items")
+                    .select("id, name, price")
+                    .limit(5);
+                
+                if (menuError) {
+                    log(`❌ Menu items query failed: ${JSON.stringify(menuError, null, 2)}`, 'error');
+                } else {
+                    log(`✅ Menu items query successful\nFound ${menuItems?.length || 0} menu items:\n${JSON.stringify(menuItems, null, 2)}`, 'success');
+                }
+                
+                // Test 5: Profiles table
+                log('👤 Testing profiles table...', 'info');
+                const { data: profiles, error: profilesError } = await supabase
+                    .from("profiles")
+                    .select("id, display_name")
+                    .limit(5);
+                
+                if (profilesError) {
+                    log(`❌ Profiles query failed: ${JSON.stringify(profilesError, null, 2)}`, 'error');
+                } else {
+                    log(`✅ Profiles query successful\nFound ${profiles?.length || 0} profiles:\n${JSON.stringify(profiles, null, 2)}`, 'success');
+                }
+                
+            } catch (error) {
+                log(`💥 Unexpected error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Auto-fill from environment if available
+        window.addEventListener('load', () => {
+            // Try to get from localStorage or other sources
+            const savedUrl = localStorage.getItem('supabaseUrl');
+            const savedKey = localStorage.getItem('supabaseKey');
+            
+            if (savedUrl) document.getElementById('supabaseUrl').value = savedUrl;
+            if (savedKey) document.getElementById('supabaseKey').value = savedKey;
+        });
+        
+        // Save credentials
+        document.getElementById('supabaseUrl').addEventListener('change', (e) => {
+            localStorage.setItem('supabaseUrl', e.target.value);
+        });
+        
+        document.getElementById('supabaseKey').addEventListener('change', (e) => {
+            localStorage.setItem('supabaseKey', e.target.value);
+        });
+    </script>
+</body>
+</html>
