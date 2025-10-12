@@ -29,7 +29,6 @@ NUeats-Canteen                          # React + Vite canteen admin portal web 
 │   │   ├── Dashboard.jsx               # Main dashboard with orders and sales overview
 │   │   ├── Orders.jsx                  # Order management and tracking system
 │   │   ├── Menu.jsx                    # Menu items management interface
-│   │   ├── Inventory.jsx               # Stock and inventory management
 │   │   ├── Analytics.jsx               # Sales analytics and performance metrics
 │   │   ├── Customers.jsx               # Customer data and relationship management
 │   │   └── Settings.jsx                # Admin and store configuration settings
@@ -54,20 +53,6 @@ NUeats-Canteen                          # React + Vite canteen admin portal web 
 │   │   ├── Menu/                       # Menu management components
 │   │   │   ├── M_Cards.jsx             # Menu item display cards
 │   │   │   └── MenuAddEdit.jsx         # Add/edit menu item form
-│   │   │
-│   │   ├── Inventory/                  # Inventory management components
-│   │   │   ├── InventoryOverview/      # Inventory dashboard components
-│   │   │   │   ├── IO_SummaryCards.jsx # Inventory summary statistics
-│   │   │   │   ├── IO_LowStockAlerts.jsx # Low stock warning system
-│   │   │   │   ├── IO_CategoryDistribution.jsx # Stock by category chart
-│   │   │   │   ├── IO_RecentUpdates.jsx # Recent inventory changes
-│   │   │   │   └── IO_TopStockLevel.jsx # Highest stock items
-│   │   │   ├── InventoryList/          # Inventory listing components
-│   │   │   │   ├── IL_StockCards.jsx   # Individual stock item cards
-│   │   │   │   ├── IL_SearchFilters.jsx # Search and filter controls
-│   │   │   │   └── IL_EditModal.jsx    # Stock editing modal
-│   │   │   └── InventoryTop/           # Top inventory items
-│   │   │       └── IT_TopItemsCards.jsx # Top performing items display
 │   │   │
 │   │   ├── Analytics/                  # Analytics and reporting components
 │   │   │   ├── A_SummaryCards.jsx      # Analytics summary metrics
@@ -121,7 +106,6 @@ NUeats-Canteen                          # React + Vite canteen admin portal web 
 │   │   ├── dashboardDemoData.js        # Sample dashboard metrics
 │   │   ├── ordersDemoData.js           # Sample order records
 │   │   ├── menuDemoData.js             # Sample menu items
-│   │   ├── inventoryDemoData.js        # Sample inventory data
 │   │   ├── allcustomersDemoData.js     # Sample customer records
 │   │   ├── complaintsDemoData.js       # Sample complaint data
 │   │   ├── salesDemoData.js            # Sample sales analytics
@@ -132,7 +116,6 @@ NUeats-Canteen                          # React + Vite canteen admin portal web 
 │       ├── Dashboard.css               # Dashboard page styling
 │       ├── Orders.css                  # Orders page styling
 │       ├── Menu.css                    # Menu page styling
-│       ├── Inventory.css               # Inventory page styling
 │       ├── Analytics.css               # Analytics page styling
 │       ├── Customers.css               # Customers page styling
 │       └── Settings.css                # Settings page styling
@@ -198,7 +181,6 @@ NUeats-Canteen                          # React + Vite canteen admin portal web 
 ## Key Features
 
 - **Real-time Order Management**: Live order tracking and status updates
-- **Inventory Control**: Stock management with low-stock alerts
 - **Sales Analytics**: Comprehensive reporting and performance metrics
 - **Customer Management**: Customer data, feedback, and complaint handling
 - **Admin Portal**: Profile management and security settings
