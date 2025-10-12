@@ -65,12 +65,11 @@ const Complaints = () => {
     const result = await createComplaintResponse(complaintId, responseText);
     if (result.success) {
       const newResp = result.response;
-      // Mark as Resolved in DB and update UI
-      const { success } = await updateComplaintStatus(complaintId, "Resolved");
+      // Add response to UI without changing status
       setComplaints((prev) =>
         prev.map((c) =>
           c.complaint_id === complaintId
-            ? { ...c, admin_responses: [newResp, ...(c.admin_responses || [])], status: "Resolved" }
+            ? { ...c, admin_responses: [newResp, ...(c.admin_responses || [])] }
             : c
         )
       );
