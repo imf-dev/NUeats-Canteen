@@ -65,12 +65,9 @@ function withTimeout(promise, ms) {
 }
 
 export async function fetchUserRole(userId) {
-  console.log("📡 Starting profile fetch for userId:", userId);
-
   // 1) Check cache first (in-memory or localStorage)
   const cached = getCachedRole(userId);
   if (cached) {
-    console.log("💾 Using cached role for user:", cached);
     return cached;
   }
 
@@ -89,19 +86,15 @@ export async function fetchUserRole(userId) {
 
     const { data, error } = await withTimeout(queryPromise, 7000);
 
-    console.log("📦 Supabase response received:", { data, error });
-
     if (error) {
       console.error("🚨 Supabase error:", error);
       throw error;
     }
 
     const role = data?.role ?? null;
-    console.log("✅ Role extracted:", role);
 
     if (role) {
       setCachedRole(userId, role);
-      console.log("💾 Cached role for future use");
     }
 
     return role;

@@ -64,6 +64,25 @@ const PAYMENT_STATUSES = {
 // Available menu items (filter out unavailable ones)
 const availableMenuItems = menuItems.filter((item) => item.isAvailable);
 
+// Create weighted distribution for menu items (some are more popular)
+const menuItemWeights = [];
+let totalWeight = 0;
+
+// Assign weights: first item gets 20%, second gets 10%, rest decrease exponentially
+for (let i = 0; i < availableMenuItems.length; i++) {
+  let weight;
+  if (i === 0) weight = 20; // 20% most popular
+  else if (i === 1) weight = 10; // 10% second most popular
+  else if (i === 2) weight = 8;
+  else if (i === 3) weight = 7;
+  else if (i === 4) weight = 6;
+  else if (i === 5) weight = 5;
+  else weight = Math.max(1, 5 - (i - 5) * 0.5); // Decreasing weights for rest
+  
+  totalWeight += weight;
+  menuItemWeights.push({ item: availableMenuItems[i], weight, cumulativeWeight: totalWeight });
+}
+
 /**
  * Generate a random integer between min and max (inclusive)
  */
@@ -76,6 +95,19 @@ function randomInt(min, max) {
  */
 function randomPick(array) {
   return array[randomInt(0, array.length - 1)];
+}
+
+/**
+ * Pick a menu item using weighted random selection
+ */
+function weightedRandomMenuItem() {
+  const rand = Math.random() * totalWeight;
+  for (const entry of menuItemWeights) {
+    if (rand <= entry.cumulativeWeight) {
+      return entry.item;
+    }
+  }
+  return availableMenuItems[0]; // Fallback
 }
 
 /**
@@ -100,11 +132,11 @@ function generateOrderItems(orderId, orderIdCounter) {
   const usedProductIds = new Set();
 
   for (let i = 0; i < numItems; i++) {
-    // Pick a unique menu item for this order
+    // Pick a unique menu item for this order using weighted selection
     let menuItem;
     let attempts = 0;
     do {
-      menuItem = randomPick(availableMenuItems);
+      menuItem = weightedRandomMenuItem(); // Use weighted selection
       attempts++;
     } while (usedProductIds.has(menuItem.id) && attempts < 10);
 
@@ -296,6 +328,17 @@ async function seed() {
     console.log("✅ Cleared ratings");
   }
 
+  const { error: cancellationsDeleteError } = await supabase
+    .from("order_cancellations")
+    .delete()
+    .neq("cancellation_id", 0); // Delete all cancellations
+  
+  if (cancellationsDeleteError) {
+    console.error("⚠️  Warning: Could not clear order_cancellations:", cancellationsDeleteError.message);
+  } else {
+    console.log("✅ Cleared order_cancellations");
+  }
+
   const { error: paymentsDeleteError } = await supabase
     .from("payments")
     .delete()
@@ -333,11 +376,36 @@ async function seed() {
   const allOrderItems = [];
   const payments = [];
   const ratings = [];
+  const cancellations = [];
 
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   
   let orderIdCounter = 1;
+
+  // Cancellation reasons
+  const CANCEL_REASONS = [
+    "Customer requested cancellation",
+    "Payment failed",
+    "Item out of stock",
+    "Customer changed mind",
+    "Duplicate order",
+    "Long wait time",
+    "Wrong order placed",
+    "Store closing early",
+  ];
+
+  const CANCEL_NOTES = [
+    "Customer called to cancel",
+    "Payment processing timeout",
+    "Informed customer via phone",
+    "Refund processed",
+    "No response from customer",
+    "Kitchen issue - unable to prepare",
+    null, // Some orders may not have additional notes
+    null,
+    null,
+  ];
 
   // Generate orders for the past 7 days
   for (let dayOffset = 6; dayOffset >= 0; dayOffset--) {
@@ -350,13 +418,13 @@ async function seed() {
     let numActiveToday = 0;
     
     if (dayOffset === 0) {
-      // Today: some completed orders + 5 active/current orders
-      numCompletedToday = randomInt(25, 40); // Completed orders for today
-      numActiveToday = 5; // Active orders (Pending, Preparing, Ready)
+      // Today: some completed orders + 3-5 active/current orders
+      numCompletedToday = randomInt(10, 12); // Completed orders for today
+      numActiveToday = randomInt(3, 5); // Active orders (Pending, Preparing, Ready)
       numOrdersForDay = numCompletedToday + numActiveToday;
     } else {
-      // Past days: 40-80 orders
-      numOrdersForDay = randomInt(40, 80);
+      // Past days: 12-16 orders per day (~100 total for the week)
+      numOrdersForDay = randomInt(12, 16);
     }
 
     console.log(`  📅 Generating ${numOrdersForDay} orders for ${date.toDateString()}...`);
@@ -428,6 +496,22 @@ async function seed() {
       );
       payments.push(payment);
 
+      // Generate cancellation record for cancelled orders
+      if (orderStatus === ORDER_STATUSES.CANCELLED) {
+        const cancelledAt = new Date(createdAt);
+        // Cancellation happens a few minutes after order was placed
+        cancelledAt.setMinutes(cancelledAt.getMinutes() + randomInt(5, 30));
+        
+        const cancellation = {
+          order_id: orderId,
+          user_id: userId,
+          reason: randomPick(CANCEL_REASONS),
+          additional_notes: randomPick(CANCEL_NOTES),
+          cancelled_at: cancelledAt.toISOString(),
+        };
+        cancellations.push(cancellation);
+      }
+
       // Generate rating for completed orders (80% of completed orders get rated)
       if (orderStatus === ORDER_STATUSES.COMPLETED && Math.random() < 0.8) {
         const rating = generateRating(orderId, createdAt);
@@ -440,6 +524,7 @@ async function seed() {
   console.log(`   ${orders.length} orders`);
   console.log(`   ${allOrderItems.length} order items`);
   console.log(`   ${payments.length} payments`);
+  console.log(`   ${cancellations.length} cancellations`);
   console.log(`   ${ratings.length} ratings`);
 
   // Insert orders
@@ -480,6 +565,21 @@ async function seed() {
     process.exit(1);
   }
   console.log(`✅ Inserted ${paymentData?.length ?? 0} payments`);
+
+  // Insert cancellations
+  if (cancellations.length > 0) {
+    console.log("\n💾 Inserting cancellations...");
+    const { data: cancellationData, error: cancellationError } = await supabase
+      .from("order_cancellations")
+      .insert(cancellations)
+      .select("cancellation_id");
+
+    if (cancellationError) {
+      console.error("❌ Failed to insert cancellations:", cancellationError);
+      process.exit(1);
+    }
+    console.log(`✅ Inserted ${cancellationData?.length ?? 0} cancellations`);
+  }
 
   // Insert ratings
   if (ratings.length > 0) {

@@ -258,6 +258,12 @@ const OrdersModal = ({ isOpen, onClose, order, onOrderStatusChange }) => {
               <div className="ordermodal_cancellation-reason">
                 <label>Cancellation Reason</label>
                 <p>{order.cancelReason}</p>
+                {order.cancelNotes && (
+                  <>
+                    <label>Additional Notes</label>
+                    <p>{order.cancelNotes}</p>
+                  </>
+                )}
               </div>
             )}
           </section>

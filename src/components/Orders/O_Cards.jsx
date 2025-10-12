@@ -4,13 +4,6 @@ import CustomModal from "../common/CustomModal";
 import "./O_Cards.css";
 
 const OrderCard = ({ order, onViewDetails, onOrderStatusChange }) => {
-  // Debug: Log the order data being passed to this component
-  console.log(`🎯 OrderCard for Order #${order.id}:`, {
-    items: order.items,
-    itemsLength: order.items?.length,
-    itemsSummary: order.itemsSummary
-  });
-
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: "confirm",
@@ -264,18 +257,14 @@ const OrderCard = ({ order, onViewDetails, onOrderStatusChange }) => {
         {/* Items */}
         <div className="orders_items">
           <h4>Order Items:</h4>
-          {console.log(`🔍 Rendering items for Order #${order.id}:`, order.items)}
           <ul>
             {order.items && order.items.length > 0 ? (
-              order.items.map((item, index) => {
-                console.log(`  📦 Rendering item ${index}:`, item);
-                return (
-                  <li key={index}>
-                    {item.name}
-                    <span className="orders_item_price">{item.price}</span>
-                  </li>
-                );
-              })
+              order.items.map((item, index) => (
+                <li key={index}>
+                  {item.name}
+                  <span className="orders_item_price">{item.price}</span>
+                </li>
+              ))
             ) : (
               <li>No items found</li>
             )}

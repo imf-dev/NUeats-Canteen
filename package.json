@@ -15,7 +15,11 @@
     "seed:orders": "node scripts/seedOrders.mjs",
     "seed:complaints": "node scripts/seedComplaints.mjs",
     "seed:all": "npm run seed:menu && npm run seed:orders && npm run seed:complaints",
-    "profiles:sync": "node scripts/syncProfilesFromAuth.mjs"
+    "profiles:sync": "node scripts/syncProfilesFromAuth.mjs",
+    "check:cancellations": "node scripts/checkCancellations.mjs",
+    "profiles:update": "node scripts/updateProfileData.mjs",
+    "profiles:test": "node scripts/testProfileTrigger.mjs",
+    "customers:check": "node scripts/checkCustomerProfiles.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.58.0",

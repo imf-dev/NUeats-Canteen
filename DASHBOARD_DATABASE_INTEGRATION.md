@@ -83,7 +83,7 @@ The dashboard will automatically fetch data when loaded. To refresh the data:
 
 ## Future Enhancements
 
-1. **Low Stock Items**: Integrate with inventory table when available
+1. **Enhanced Analytics**: Add more detailed performance metrics
 2. **Real-time Updates**: Add Supabase real-time subscriptions for live order updates
 3. **Date Range Filters**: Allow users to select custom date ranges
 4. **More Analytics**: Add hourly sales patterns, customer segments, etc.
