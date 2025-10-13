@@ -311,15 +311,24 @@ export async function getCurrentOrders() {
       });
     });
 
-    // Create user map with customer names
-    // Since we're using anon key, we'll use generic customer names for now
-    const userIds = [...new Set(orders.map(o => o.user_id))];
+    // Create user map with customer names (fetch from profiles.display_name)
+    const userIds = [...new Set(orders.map(o => o.user_id).filter(Boolean))];
     const userMap = {};
-    
-    userIds.forEach((userId, index) => {
-      // Use first 8 characters of UUID for identification
-      userMap[userId] = `Customer ${userId.slice(0, 8)}`;
-    });
+    if (userIds.length > 0) {
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, display_name")
+        .in("id", userIds);
+
+      if (profilesError) {
+        console.error("Error fetching profiles for customer names:", profilesError);
+      } else {
+        (profiles || []).forEach((p) => {
+          const fallback = p.id ? `Customer ${String(p.id).slice(0, 8)}` : "Customer";
+          userMap[p.id] = p.display_name || fallback;
+        });
+      }
+    }
 
     // Format orders for display
     const formattedOrders = orders.map((order) => {
