@@ -5,7 +5,7 @@ import "../styles/Orders.css";
 import ScrollUpButton from "../components/common/ScrollUpButton";
 import { supabase } from "../lib/supabaseClient";
 
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiChevronDown } from "react-icons/fi";
 
 const Orders = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,6 +17,10 @@ const Orders = () => {
   const [isFiltering, setIsFiltering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState([]);
+  
+  // Sort functionality
+  const [sortBy, setSortBy] = useState("date-latest");
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
   const statusOptions = [
     "All Status",
@@ -25,6 +29,15 @@ const Orders = () => {
     "Ready",
     "Completed",
     "Cancelled",
+  ];
+
+  const sortOptions = [
+    { value: "date-latest", label: "Date (Latest First)" },
+    { value: "date-oldest", label: "Date (Oldest First)" },
+    { value: "status", label: "Status" },
+    { value: "customer", label: "Customer Name" },
+    { value: "amount-high", label: "Amount (High to Low)" },
+    { value: "amount-low", label: "Amount (Low to High)" },
   ];
 
   const handleViewDetails = (order) => {
@@ -46,8 +59,7 @@ const Orders = () => {
         // 1) Fetch orders
         const { data: ordersRows, error: ordersErr } = await supabase
           .from("orders")
-          .select("order_id, user_id, total_amount, payment_method, status, created_at, updated_at")
-          .order("created_at", { ascending: false });
+          .select("order_id, user_id, total_amount, payment_method, status, created_at, updated_at");
         
         if (ordersErr) {
           console.error("❌ Failed to fetch orders:", ordersErr);
@@ -174,6 +186,23 @@ const Orders = () => {
             return "";
           }
         };
+        const toDateTime = (ts) => {
+          try {
+            const d = new Date(ts);
+            const dateStr = d.toLocaleDateString([], { 
+              year: "numeric", 
+              month: "short", 
+              day: "numeric" 
+            });
+            const timeStr = d.toLocaleTimeString([], { 
+              hour: "numeric", 
+              minute: "2-digit" 
+            });
+            return `${dateStr} at ${timeStr}`;
+          } catch (_e) {
+            return "";
+          }
+        };
 
         const mapped = (ordersRows || []).map((o) => {
           const rawItems = itemsByOrderId.get(o.order_id) || [];
@@ -228,14 +257,17 @@ const Orders = () => {
             customer: customerInfo.name || "Unknown",
             phone: customerInfo.phone || "",
             total: peso(o.total_amount),
-            orderedTime: toTime(o.created_at),
+            orderedTime: toDateTime(o.created_at),
             estimatedReadyTime,
             completedTime: undefined,
-            cancelledTime: cancellationInfo ? toTime(cancellationInfo.cancelledAt) : undefined,
+            cancelledTime: cancellationInfo ? toDateTime(cancellationInfo.cancelledAt) : undefined,
             cancelReason: cancellationInfo?.reason || null,
             cancelNotes: cancellationInfo?.additionalNotes || null,
             items,
             itemsSummary,
+            // Add raw data for sorting
+            created_at: o.created_at,
+            total_amount: o.total_amount,
           };
         });
         
@@ -257,7 +289,7 @@ const Orders = () => {
 
   const filteredOrders = useMemo(() => {
     const src = orders || [];
-    return src.filter((order) => {
+    let filtered = src.filter((order) => {
       const matchesSearch =
         (order.customer || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         String(order.id).includes(searchTerm);
@@ -266,7 +298,43 @@ const Orders = () => {
         order.status === statusFilter.toLowerCase();
       return matchesSearch && matchesStatus;
     });
-  }, [orders, searchTerm, statusFilter]);
+
+    // Sort the filtered results
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "date-latest":
+          // Sort by created_at descending (latest first)
+          const dateA = new Date(a.created_at || 0);
+          const dateB = new Date(b.created_at || 0);
+          return dateB.getTime() - dateA.getTime();
+        case "date-oldest":
+          // Sort by created_at ascending (oldest first)
+          const dateA2 = new Date(a.created_at || 0);
+          const dateB2 = new Date(b.created_at || 0);
+          return dateA2.getTime() - dateB2.getTime();
+        case "status":
+          // Sort by status alphabetically
+          return (a.status || "").localeCompare(b.status || "");
+        case "customer":
+          // Sort by customer name alphabetically
+          return (a.customer || "").localeCompare(b.customer || "");
+        case "amount-high":
+          // Sort by amount descending (high to low)
+          const amountA = Number(a.total_amount || 0);
+          const amountB = Number(b.total_amount || 0);
+          return amountB - amountA;
+        case "amount-low":
+          // Sort by amount ascending (low to high)
+          const amountA2 = Number(a.total_amount || 0);
+          const amountB2 = Number(b.total_amount || 0);
+          return amountA2 - amountB2;
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [orders, searchTerm, statusFilter, sortBy]);
 
   const handleOrderStatusChange = async (orderId, nextStatus) => {
     const capitalizedStatus = nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1);
@@ -331,7 +399,7 @@ const Orders = () => {
           <p>Track and manage all orders</p>
         </div>
 
-        {/* Search + Filter */}
+        {/* Search + Filter + Sort */}
         <div className="orders_controls">
           <div className="orders_search_container">
             <input
@@ -350,34 +418,66 @@ const Orders = () => {
             </span>
           </div>
 
-          <div className="orders_status_filter">
-            <button
-              className="orders_status_dropdown_btn"
-              onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-            >
-              {statusFilter}
-              <span className="dropdown-arrow">▼</span>
-            </button>
-            {isStatusDropdownOpen && (
-              <div className="orders_status_dropdown">
-                {statusOptions.map((status) => (
-                  <button
-                    key={status}
-                    className={`orders_dropdown_item ${
-                      statusFilter === status ? "orders_active" : ""
-                    }`}
-                    onClick={() => {
-                      setStatusFilter(status);
-                      setIsStatusDropdownOpen(false);
-                      setIsFiltering(true);
-                      setTimeout(() => setIsFiltering(false), 100);
-                    }}
-                  >
-                    {status}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="orders_filter_group">
+            <div className="orders_status_filter">
+              <button
+                className="orders_status_dropdown_btn"
+                onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+              >
+                {statusFilter}
+                <span className="dropdown-arrow">▼</span>
+              </button>
+              {isStatusDropdownOpen && (
+                <div className="orders_status_dropdown">
+                  {statusOptions.map((status) => (
+                    <button
+                      key={status}
+                      className={`orders_dropdown_item ${
+                        statusFilter === status ? "orders_active" : ""
+                      }`}
+                      onClick={() => {
+                        setStatusFilter(status);
+                        setIsStatusDropdownOpen(false);
+                        setIsFiltering(true);
+                        setTimeout(() => setIsFiltering(false), 100);
+                      }}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="orders_sort_filter">
+              <button
+                className="orders_sort_dropdown_btn"
+                onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+              >
+                {sortOptions.find(option => option.value === sortBy)?.label || "Sort by"}
+                <FiChevronDown className="dropdown-arrow-icon" />
+              </button>
+              {isSortDropdownOpen && (
+                <div className="orders_sort_dropdown">
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      className={`orders_dropdown_item ${
+                        sortBy === option.value ? "orders_active" : ""
+                      }`}
+                      onClick={() => {
+                        setSortBy(option.value);
+                        setIsSortDropdownOpen(false);
+                        setIsFiltering(true);
+                        setTimeout(() => setIsFiltering(false), 100);
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
