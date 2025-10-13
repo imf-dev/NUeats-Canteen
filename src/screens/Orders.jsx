@@ -4,8 +4,9 @@ import OrderCard from "../components/Orders/O_Cards";
 import "../styles/Orders.css";
 import ScrollUpButton from "../components/common/ScrollUpButton";
 import { supabase } from "../lib/supabaseClient";
+import { triggerAutoReadyOrders } from "../lib/autoReadyService";
 
-import { FiSearch, FiChevronDown } from "react-icons/fi";
+import { FiSearch, FiChevronDown, FiRefreshCw } from "react-icons/fi";
 
 const Orders = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,6 +22,9 @@ const Orders = () => {
   // Sort functionality
   const [sortBy, setSortBy] = useState("date-latest");
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  
+  // Auto-ready functionality
+  const [isAutoReadyLoading, setIsAutoReadyLoading] = useState(false);
 
   const statusOptions = [
     "All Status",
@@ -287,6 +291,29 @@ const Orders = () => {
     };
   }, []);
 
+  // Auto-check for ready orders every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      // Only check if there are preparing orders
+      const preparingOrders = orders.filter(order => order.status === 'preparing');
+      if (preparingOrders.length > 0) {
+        console.log("🔄 Auto-checking for ready orders...");
+        try {
+          const result = await triggerAutoReadyOrders();
+          if (result.success && result.data.updatedOrders > 0) {
+            console.log(`✅ Auto-updated ${result.data.updatedOrders} orders to Ready`);
+            // Reload the page to show updated orders
+            window.location.reload();
+          }
+        } catch (err) {
+          console.error("❌ Auto-ready check failed:", err);
+        }
+      }
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [orders]);
+
   const filteredOrders = useMemo(() => {
     const src = orders || [];
     let filtered = src.filter((order) => {
@@ -390,6 +417,26 @@ const Orders = () => {
     }
   };
 
+  const handleAutoReadyTrigger = async () => {
+    setIsAutoReadyLoading(true);
+    try {
+      const result = await triggerAutoReadyOrders();
+      if (result.success) {
+        console.log("✅ Auto-ready check completed:", result.data);
+        // Reload orders to show updated statuses
+        window.location.reload();
+      } else {
+        console.error("❌ Auto-ready check failed:", result.error);
+        alert("Failed to check for ready orders: " + result.error);
+      }
+    } catch (err) {
+      console.error("💥 Unexpected error:", err);
+      alert("Unexpected error: " + err.message);
+    } finally {
+      setIsAutoReadyLoading(false);
+    }
+  };
+
 
   return (
     <div className="orders_layout">
@@ -399,7 +446,7 @@ const Orders = () => {
           <p>Track and manage all orders</p>
         </div>
 
-        {/* Search + Filter + Sort */}
+        {/* Search + Filter + Sort + Auto-Ready */}
         <div className="orders_controls">
           <div className="orders_search_container">
             <input
@@ -478,6 +525,18 @@ const Orders = () => {
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="orders_auto_ready">
+            <button
+              className="orders_auto_ready_btn"
+              onClick={handleAutoReadyTrigger}
+              disabled={isAutoReadyLoading}
+              title="Check for orders that should be automatically marked as ready"
+            >
+              <FiRefreshCw className={isAutoReadyLoading ? "spinning" : ""} />
+              {isAutoReadyLoading ? "Checking..." : "Auto-Ready"}
+            </button>
           </div>
         </div>
 
