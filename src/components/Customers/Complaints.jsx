@@ -65,14 +65,36 @@ const Complaints = () => {
     const result = await createComplaintResponse(complaintId, responseText);
     if (result.success) {
       const newResp = result.response;
-      // Add response to UI without changing status
-      setComplaints((prev) =>
-        prev.map((c) =>
-          c.complaint_id === complaintId
-            ? { ...c, admin_responses: [newResp, ...(c.admin_responses || [])] }
-            : c
-        )
-      );
+      
+      // Update complaint status to "Resolved" when admin responds
+      const statusResult = await updateComplaintStatus(complaintId, "Resolved");
+      
+      if (statusResult.success) {
+        // Add response to UI and update status to Resolved
+        setComplaints((prev) =>
+          prev.map((c) =>
+            c.complaint_id === complaintId
+              ? { 
+                  ...c, 
+                  admin_responses: [newResp, ...(c.admin_responses || [])],
+                  status: "Resolved",
+                  resolved_at: new Date().toISOString()
+                }
+              : c
+          )
+        );
+      } else {
+        // If status update failed, still add the response but show error
+        console.error("Failed to update complaint status:", statusResult.error);
+        setComplaints((prev) =>
+          prev.map((c) =>
+            c.complaint_id === complaintId
+              ? { ...c, admin_responses: [newResp, ...(c.admin_responses || [])] }
+              : c
+          )
+        );
+        throw new Error("Response added but failed to mark as resolved");
+      }
     } else {
       throw result.error || new Error("Failed to send response");
     }

@@ -4,8 +4,9 @@ import OrderCard from "../components/Orders/O_Cards";
 import "../styles/Orders.css";
 import ScrollUpButton from "../components/common/ScrollUpButton";
 import { supabase } from "../lib/supabaseClient";
+import { triggerAutoReadyOrders } from "../lib/autoReadyService";
 
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiChevronDown, FiRefreshCw } from "react-icons/fi";
 
 const Orders = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,6 +18,13 @@ const Orders = () => {
   const [isFiltering, setIsFiltering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState([]);
+  
+  // Sort functionality
+  const [sortBy, setSortBy] = useState("date-latest");
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  
+  // Auto-ready functionality
+  const [isAutoReadyLoading, setIsAutoReadyLoading] = useState(false);
 
   const statusOptions = [
     "All Status",
@@ -25,6 +33,15 @@ const Orders = () => {
     "Ready",
     "Completed",
     "Cancelled",
+  ];
+
+  const sortOptions = [
+    { value: "date-latest", label: "Date (Latest First)" },
+    { value: "date-oldest", label: "Date (Oldest First)" },
+    { value: "status", label: "Status" },
+    { value: "customer", label: "Customer Name" },
+    { value: "amount-high", label: "Amount (High to Low)" },
+    { value: "amount-low", label: "Amount (Low to High)" },
   ];
 
   const handleViewDetails = (order) => {
@@ -46,8 +63,7 @@ const Orders = () => {
         // 1) Fetch orders
         const { data: ordersRows, error: ordersErr } = await supabase
           .from("orders")
-          .select("order_id, user_id, total_amount, payment_method, status, created_at, updated_at")
-          .order("created_at", { ascending: false });
+          .select("order_id, user_id, total_amount, payment_method, status, created_at, updated_at");
         
         if (ordersErr) {
           console.error("❌ Failed to fetch orders:", ordersErr);
@@ -174,6 +190,23 @@ const Orders = () => {
             return "";
           }
         };
+        const toDateTime = (ts) => {
+          try {
+            const d = new Date(ts);
+            const dateStr = d.toLocaleDateString([], { 
+              year: "numeric", 
+              month: "short", 
+              day: "numeric" 
+            });
+            const timeStr = d.toLocaleTimeString([], { 
+              hour: "numeric", 
+              minute: "2-digit" 
+            });
+            return `${dateStr} at ${timeStr}`;
+          } catch (_e) {
+            return "";
+          }
+        };
 
         const mapped = (ordersRows || []).map((o) => {
           const rawItems = itemsByOrderId.get(o.order_id) || [];
@@ -228,14 +261,17 @@ const Orders = () => {
             customer: customerInfo.name || "Unknown",
             phone: customerInfo.phone || "",
             total: peso(o.total_amount),
-            orderedTime: toTime(o.created_at),
+            orderedTime: toDateTime(o.created_at),
             estimatedReadyTime,
             completedTime: undefined,
-            cancelledTime: cancellationInfo ? toTime(cancellationInfo.cancelledAt) : undefined,
+            cancelledTime: cancellationInfo ? toDateTime(cancellationInfo.cancelledAt) : undefined,
             cancelReason: cancellationInfo?.reason || null,
             cancelNotes: cancellationInfo?.additionalNotes || null,
             items,
             itemsSummary,
+            // Add raw data for sorting
+            created_at: o.created_at,
+            total_amount: o.total_amount,
           };
         });
         
@@ -255,9 +291,32 @@ const Orders = () => {
     };
   }, []);
 
+  // Auto-check for ready orders every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      // Only check if there are preparing orders
+      const preparingOrders = orders.filter(order => order.status === 'preparing');
+      if (preparingOrders.length > 0) {
+        console.log("🔄 Auto-checking for ready orders...");
+        try {
+          const result = await triggerAutoReadyOrders();
+          if (result.success && result.data.updatedOrders > 0) {
+            console.log(`✅ Auto-updated ${result.data.updatedOrders} orders to Ready`);
+            // Reload the page to show updated orders
+            window.location.reload();
+          }
+        } catch (err) {
+          console.error("❌ Auto-ready check failed:", err);
+        }
+      }
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [orders]);
+
   const filteredOrders = useMemo(() => {
     const src = orders || [];
-    return src.filter((order) => {
+    let filtered = src.filter((order) => {
       const matchesSearch =
         (order.customer || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         String(order.id).includes(searchTerm);
@@ -266,7 +325,43 @@ const Orders = () => {
         order.status === statusFilter.toLowerCase();
       return matchesSearch && matchesStatus;
     });
-  }, [orders, searchTerm, statusFilter]);
+
+    // Sort the filtered results
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "date-latest":
+          // Sort by created_at descending (latest first)
+          const dateA = new Date(a.created_at || 0);
+          const dateB = new Date(b.created_at || 0);
+          return dateB.getTime() - dateA.getTime();
+        case "date-oldest":
+          // Sort by created_at ascending (oldest first)
+          const dateA2 = new Date(a.created_at || 0);
+          const dateB2 = new Date(b.created_at || 0);
+          return dateA2.getTime() - dateB2.getTime();
+        case "status":
+          // Sort by status alphabetically
+          return (a.status || "").localeCompare(b.status || "");
+        case "customer":
+          // Sort by customer name alphabetically
+          return (a.customer || "").localeCompare(b.customer || "");
+        case "amount-high":
+          // Sort by amount descending (high to low)
+          const amountA = Number(a.total_amount || 0);
+          const amountB = Number(b.total_amount || 0);
+          return amountB - amountA;
+        case "amount-low":
+          // Sort by amount ascending (low to high)
+          const amountA2 = Number(a.total_amount || 0);
+          const amountB2 = Number(b.total_amount || 0);
+          return amountA2 - amountB2;
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [orders, searchTerm, statusFilter, sortBy]);
 
   const handleOrderStatusChange = async (orderId, nextStatus) => {
     const capitalizedStatus = nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1);
@@ -322,6 +417,26 @@ const Orders = () => {
     }
   };
 
+  const handleAutoReadyTrigger = async () => {
+    setIsAutoReadyLoading(true);
+    try {
+      const result = await triggerAutoReadyOrders();
+      if (result.success) {
+        console.log("✅ Auto-ready check completed:", result.data);
+        // Reload orders to show updated statuses
+        window.location.reload();
+      } else {
+        console.error("❌ Auto-ready check failed:", result.error);
+        alert("Failed to check for ready orders: " + result.error);
+      }
+    } catch (err) {
+      console.error("💥 Unexpected error:", err);
+      alert("Unexpected error: " + err.message);
+    } finally {
+      setIsAutoReadyLoading(false);
+    }
+  };
+
 
   return (
     <div className="orders_layout">
@@ -331,7 +446,7 @@ const Orders = () => {
           <p>Track and manage all orders</p>
         </div>
 
-        {/* Search + Filter */}
+        {/* Search + Filter + Sort + Auto-Ready */}
         <div className="orders_controls">
           <div className="orders_search_container">
             <input
@@ -350,34 +465,78 @@ const Orders = () => {
             </span>
           </div>
 
-          <div className="orders_status_filter">
+          <div className="orders_filter_group">
+            <div className="orders_status_filter">
+              <button
+                className="orders_status_dropdown_btn"
+                onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+              >
+                {statusFilter}
+                <span className="dropdown-arrow">▼</span>
+              </button>
+              {isStatusDropdownOpen && (
+                <div className="orders_status_dropdown">
+                  {statusOptions.map((status) => (
+                    <button
+                      key={status}
+                      className={`orders_dropdown_item ${
+                        statusFilter === status ? "orders_active" : ""
+                      }`}
+                      onClick={() => {
+                        setStatusFilter(status);
+                        setIsStatusDropdownOpen(false);
+                        setIsFiltering(true);
+                        setTimeout(() => setIsFiltering(false), 100);
+                      }}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="orders_sort_filter">
+              <button
+                className="orders_sort_dropdown_btn"
+                onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+              >
+                {sortOptions.find(option => option.value === sortBy)?.label || "Sort by"}
+                <FiChevronDown className="dropdown-arrow-icon" />
+              </button>
+              {isSortDropdownOpen && (
+                <div className="orders_sort_dropdown">
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      className={`orders_dropdown_item ${
+                        sortBy === option.value ? "orders_active" : ""
+                      }`}
+                      onClick={() => {
+                        setSortBy(option.value);
+                        setIsSortDropdownOpen(false);
+                        setIsFiltering(true);
+                        setTimeout(() => setIsFiltering(false), 100);
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="orders_auto_ready">
             <button
-              className="orders_status_dropdown_btn"
-              onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+              className="orders_auto_ready_btn"
+              onClick={handleAutoReadyTrigger}
+              disabled={isAutoReadyLoading}
+              title="Check for orders that should be automatically marked as ready"
             >
-              {statusFilter}
-              <span className="dropdown-arrow">▼</span>
+              <FiRefreshCw className={isAutoReadyLoading ? "spinning" : ""} />
+              {isAutoReadyLoading ? "Checking..." : "Auto-Ready"}
             </button>
-            {isStatusDropdownOpen && (
-              <div className="orders_status_dropdown">
-                {statusOptions.map((status) => (
-                  <button
-                    key={status}
-                    className={`orders_dropdown_item ${
-                      statusFilter === status ? "orders_active" : ""
-                    }`}
-                    onClick={() => {
-                      setStatusFilter(status);
-                      setIsStatusDropdownOpen(false);
-                      setIsFiltering(true);
-                      setTimeout(() => setIsFiltering(false), 100);
-                    }}
-                  >
-                    {status}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 

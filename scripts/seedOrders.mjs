@@ -312,7 +312,7 @@ function generateRating(orderId, createdAt) {
  * Main seeding function
  */
 async function seed() {
-  console.log("🌱 Seeding orders, order_items, payments, and ratings...");
+  console.log("🌱 Seeding orders, order_items, payments, and ratings (excluding today)...");
 
   // Clear existing data (in correct order due to foreign key constraints)
   console.log("\n🧹 Clearing existing data...");
@@ -407,25 +407,16 @@ async function seed() {
     null,
   ];
 
-  // Generate orders for the past 7 days
-  for (let dayOffset = 6; dayOffset >= 0; dayOffset--) {
+  // Generate orders for the past 6 days (excluding today)
+  for (let dayOffset = 6; dayOffset >= 1; dayOffset--) {
     const date = new Date(today);
     date.setDate(date.getDate() - dayOffset);
 
     // Determine number of orders for this day
     let numOrdersForDay;
-    let numCompletedToday = 0;
-    let numActiveToday = 0;
     
-    if (dayOffset === 0) {
-      // Today: some completed orders + 3-5 active/current orders
-      numCompletedToday = randomInt(10, 12); // Completed orders for today
-      numActiveToday = randomInt(3, 5); // Active orders (Pending, Preparing, Ready)
-      numOrdersForDay = numCompletedToday + numActiveToday;
-    } else {
-      // Past days: 12-16 orders per day (~100 total for the week)
-      numOrdersForDay = randomInt(12, 16);
-    }
+    // Past days: 12-16 orders per day (~72-96 total for the week)
+    numOrdersForDay = randomInt(12, 16);
 
     console.log(`  📅 Generating ${numOrdersForDay} orders for ${date.toDateString()}...`);
 
@@ -437,34 +428,14 @@ async function seed() {
 
       // Determine order status
       let orderStatus;
-      if (dayOffset === 0) {
-        // Today's orders: first batch are completed, last 5 are active
-        if (i < numCompletedToday) {
-          // Completed orders (mostly completed, some cancelled)
-          const rand = Math.random();
-          if (rand < 0.85) {
-            orderStatus = ORDER_STATUSES.COMPLETED;
-          } else {
-            orderStatus = ORDER_STATUSES.CANCELLED;
-          }
-        } else {
-          // Active/current orders (Pending, Preparing, Ready)
-          orderStatus = randomPick([
-            ORDER_STATUSES.PENDING,
-            ORDER_STATUSES.PREPARING,
-            ORDER_STATUSES.READY,
-          ]);
-        }
+      // Past orders: mostly Completed, some Cancelled
+      const rand = Math.random();
+      if (rand < 0.85) {
+        // 85% Completed
+        orderStatus = ORDER_STATUSES.COMPLETED;
       } else {
-        // Past orders: mostly Completed, some Cancelled
-        const rand = Math.random();
-        if (rand < 0.85) {
-          // 85% Completed
-          orderStatus = ORDER_STATUSES.COMPLETED;
-        } else {
-          // 15% Cancelled
-          orderStatus = ORDER_STATUSES.CANCELLED;
-        }
+        // 15% Cancelled
+        orderStatus = ORDER_STATUSES.CANCELLED;
       }
 
       // Generate order items
@@ -520,7 +491,7 @@ async function seed() {
     }
   }
 
-  console.log(`\n📊 Generated:`);
+  console.log(`\n📊 Generated (past 6 days, excluding today):`);
   console.log(`   ${orders.length} orders`);
   console.log(`   ${allOrderItems.length} order items`);
   console.log(`   ${payments.length} payments`);
